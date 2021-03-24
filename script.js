@@ -37,4 +37,70 @@ window.addEventListener( 'load', (click) => {
     );
     fetch( send_contact_me );
   });
+
+  const gallery = {
+    "oinker": 0,
+    "ketris" : 0,
+    "cineflix": 0,
+    "triviacards": 0
+  }
+
+  const ketris_next = document.getElementById("ketris_pic_next");
+  ketris_next.addEventListener( 'click', (click) => {
+    const ketris_image = document.getElementById("ketris_01");
+    const ketris_imageB = document.getElementById("ketris_02");
+    const ketris_imageC = document.getElementById("ketris_03");
+    const ketris_comp = window.getComputedStyle( ketris_image );
+
+    const width = ketris_comp.getPropertyValue( 'width' ).slice(0,-2);
+    const offset = getX( ketris_image.style.transform );
+
+    let mod = (offset-width) + "px";
+    if( offset-width < width*-2 ) {
+      mod = (width*-2) + "px";
+      gallery.ketris = 2;
+    }
+
+    const effect = "translateX(" + mod + ")";
+
+    ketris_image.style.transform = effect;
+    ketris_imageB.style.transform = effect;
+    ketris_imageC.style.transform = effect;
+  });
+
+  const ketris_last = document.getElementById("ketris_pic_last");
+  ketris_last.addEventListener( 'click', (click) => {
+    const ketris_image = document.getElementById("ketris_01");
+    const ketris_imageB = document.getElementById("ketris_02");
+    const ketris_imageC = document.getElementById("ketris_03");
+    const ketris_comp = window.getComputedStyle( ketris_image );
+
+    const width = Number(
+      ketris_comp.getPropertyValue( 'width' ).slice(0,-2));
+    const offset = Number(
+      getX( ketris_image.style.transform ));
+
+
+
+    let mod = (offset+width) + "px";
+
+    if( offset+width > 0 ) {
+      mod = 0;
+      gallery.ketris = 0;
+    }
+
+    const effect = "translateX(" + mod + ")";
+
+    ketris_image.style.transform = effect;
+    ketris_imageB.style.transform = effect;
+    ketris_imageC.style.transform = effect;
+  });
+
+  window.addEventListener( 'resize', (resize) => {
+    //TODO: Reset galleries based on gallery object
+  });
 });
+
+function getX( inValue ) {
+  return inValue.slice( 11, -5 );
+}
