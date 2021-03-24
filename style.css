@@ -44,7 +44,37 @@ body {
   align-items: center;
 }
 
+#oinker_scroll {
+  height: 100%;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
 #ketris_scroll {
+  height: 100%;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+#cineflix_scroll {
+  height: 100%;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+#triviacards_scroll {
   height: 100%;
   overflow-x: hidden;
   display: flex;
