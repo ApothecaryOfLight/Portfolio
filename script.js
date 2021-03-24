@@ -54,8 +54,10 @@ window.addEventListener( 'load', (click) => {
     const oinker_comp = window.getComputedStyle( oinker_image );
 
     const width = oinker_comp.getPropertyValue( 'width' ).slice(0,-2);
+console.log( "trans:" + oinker_image.style.transform );
     const offset = getX( oinker_image.style.transform );
-console.log( width );
+console.log( "width: " + width );
+console.log( "offset: " + offset );
     let mod = (offset-width) + "px";
     gallery.oinker++;
     if( offset-width < width*-2 ) {
@@ -64,7 +66,7 @@ console.log( width );
     }
 
     const effect = "translateX(" + mod + ")";
-
+console.log( effect );
     oinker_image.style.transform = effect;
     oinker_imageB.style.transform = effect;
     oinker_imageC.style.transform = effect;
@@ -264,5 +266,5 @@ console.log( width );
 });
 
 function getX( inValue ) {
-  return inValue.slice( 11, -5 );
+  return inValue.slice( 11, -3 );
 }
