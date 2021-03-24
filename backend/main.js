@@ -21,8 +21,8 @@ app.post( '/contact_me', async function( req,res ) {
     "org: " + req.body.org + "\n" +
     "phone: " + req.body.phone + "\n" +
     "email: " + req.body.email + "\n" +
-    "message: " + req.body.message + "\n\n\n";
-  file_system.writeFile(
+    "message: " + req.body.msg + "\n\n\n";
+  file_system.appendFile(
     "contact_me.txt",
     text,
     function( error ) {

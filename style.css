@@ -223,6 +223,11 @@ body {
   font-size: 2rem;
   font-weight: bold;
 }
+@media (max-width:900px) {
+  #contact_me {
+    width: 90%;
+  }
+}
 
 
 .single_line_input {
@@ -256,10 +261,12 @@ body {
     flex-direction: column;
   }
   #bio {
-    width: 80%;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
   }
   #skills {
-    width: 80%;
+    width: 100%;
   }
 }
 
