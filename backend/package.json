@@ -1,0 +1,11 @@
+{
+  "name": "contact_me",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "cors": "latest",
+    "express": "4.17.1",
+    "nodemon": "2.0.7",
+    "npx": "10.2.2"
+  }
+}
