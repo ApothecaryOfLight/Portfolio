@@ -214,6 +214,22 @@ window.addEventListener( 'load', (click) => {
 
   window.addEventListener( 'resize', (resize) => {
     console.log( "resize" );
+    if( gallery.oinker != 0 ) {
+      const oinker_image = document.getElementById("oinker_01");
+      const oinker_imageB = document.getElementById("oinker_02");
+      const oinker_imageC = document.getElementById("oinker_03");
+      const oinker_imageD = document.getElementById("oinker_04");
+      const oinker_comp = window.getComputedStyle( oinker_image );
+
+      const width = Number(
+        oinker_comp.getPropertyValue( 'width' ).slice(0,-2));
+      const mod = (width * gallery.oinker);
+      const effect = "translateX(-" + mod + "px)";
+      oinker_image.style.transform = effect;
+      oinker_imageB.style.transform = effect;
+      oinker_imageC.style.transform = effect;
+      oinker_imageD.style.transform = effect;
+    }
     if( gallery.ketris != 0 ) {
       const ketris_image = document.getElementById("ketris_01");
       const ketris_imageB = document.getElementById("ketris_02");
@@ -229,6 +245,22 @@ window.addEventListener( 'load', (click) => {
       ketris_imageB.style.transform = effect;
       ketris_imageC.style.transform = effect;
       ketris_imageD.style.transform = effect;
+    }
+    if( gallery.triviacards != 0 ) {
+      const triviacards_image = document.getElementById("triviacards_01");
+      const triviacards_imageB = document.getElementById("triviacards_02");
+      const triviacards_imageC = document.getElementById("triviacards_03");
+      const triviacards_imageD = document.getElementById("triviacards_04");
+      const triviacards_comp = window.getComputedStyle( triviacards_image );
+
+      const width = Number(
+        triviacards_comp.getPropertyValue( 'width' ).slice(0,-2));
+      const mod = (width * gallery.triviacards);
+      const effect = "translateX(-" + mod + "px)";
+      triviacards_image.style.transform = effect;
+      triviacards_imageB.style.transform = effect;
+      triviacards_imageC.style.transform = effect;
+      triviacards_imageD.style.transform = effect;
     }
   });
 });
