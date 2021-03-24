@@ -55,7 +55,7 @@ window.addEventListener( 'load', (click) => {
 
     const width = oinker_comp.getPropertyValue( 'width' ).slice(0,-2);
     const offset = getX( oinker_image.style.transform );
-
+console.log( width );
     let mod = (offset-width) + "px";
     gallery.oinker++;
     if( offset-width < width*-2 ) {
@@ -234,7 +234,6 @@ window.addEventListener( 'load', (click) => {
       const ketris_image = document.getElementById("ketris_01");
       const ketris_imageB = document.getElementById("ketris_02");
       const ketris_imageC = document.getElementById("ketris_03");
-      const ketris_imageD = document.getElementById("ketris_04");
       const ketris_comp = window.getComputedStyle( ketris_image );
 
       const width = Number(
@@ -244,7 +243,6 @@ window.addEventListener( 'load', (click) => {
       ketris_image.style.transform = effect;
       ketris_imageB.style.transform = effect;
       ketris_imageC.style.transform = effect;
-      ketris_imageD.style.transform = effect;
     }
     if( gallery.triviacards != 0 ) {
       const triviacards_image = document.getElementById("triviacards_01");
