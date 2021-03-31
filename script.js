@@ -20,7 +20,7 @@ window.addEventListener( 'load', (click) => {
     const msg = document.getElementById("msg").value;
 console.log( msg );
     const send_contact_me = new Request(
-      'http://34.214.192.120:3000/contact_me/',
+      'https://AbesPortfolio.com:3000/contact_me/',
       {
         method: 'POST',
         body: JSON.stringify({

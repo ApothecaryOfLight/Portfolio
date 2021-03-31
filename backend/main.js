@@ -11,7 +11,14 @@ const body_parser = require('body-parser');
 app.use( body_parser.json() );
 
 /*File system*/
-const file_system = require('fs');
+const file_stream = require('fs');
+
+/*HTTPS*/
+var https = require('https');
+var privateKey = file_stream.readFileSync('/home/ubuntu/Portfolio/privkey.pem');
+var certificate = file_stream.readFileSync('/home/ubuntu/Portfolio/fullchain.pem');
+var credentials = {key: privateKey, cert: certificate};
+var server = https.createServer( credentials, app );
 
 app.post( '/contact_me', async function( req,res ) {
   console.dir( req.body );
@@ -22,7 +29,7 @@ app.post( '/contact_me', async function( req,res ) {
     "phone: " + req.body.phone + "\n" +
     "email: " + req.body.email + "\n" +
     "message: " + req.body.msg + "\n\n\n";
-  file_system.appendFile(
+  file_stream.appendFile(
     "contact_me.txt",
     text,
     function( error ) {
@@ -34,4 +41,5 @@ app.post( '/contact_me', async function( req,res ) {
   res.send( JSON.stringify({"stop":"sure"}) );
 });
 
-app.listen( 3000 );
+server.listen( 3000 );
+//app.listen( 3000 );
