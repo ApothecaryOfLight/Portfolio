@@ -14,6 +14,11 @@ if [ "$prompt" != "${prompt#[Yy]}" ] ;then
   sudo ufw enable
   cd /etc/nginx/sites-enabled && sudo sed -i "s/root \/var\/www\/html;/root \/home\/ubuntu\/Portfolio\/frontend;/g" default
   sudo systemctl restart nginx
+
+
+  #Install MySQL
+  sudo apt install mysql-server -y
+  sudo mysql_secure_installation
 fi
 
 #HTTP/HTTPS
