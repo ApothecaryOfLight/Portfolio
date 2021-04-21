@@ -68,7 +68,7 @@ app.post( '/contact_me', async function( req,res ) {
 
 app.get( '/get_errors', async function(req,res) {
   try {
-    const errors = error.get_log();
+    const errors = await error.get_log();
     res.send({
       error_log: errors
     });

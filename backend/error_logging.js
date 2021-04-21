@@ -40,7 +40,7 @@ async function log( source, message ) {
 async function get_log( page, page_size ) {
   const error_log_query =
     "SELECT timestamp, severity, source, message " +
-    "FROM error_log ";
+    "FROM error_log;";
   const [log_rows,log_fields] = await sqlPool.query( error_log_query );
   return log_rows;
 }

@@ -11,5 +11,24 @@ function get_errors() {
     .then( json => json.json() )
     .then( json => {
       console.dir( json );
+      const dom_handle = document.getElementById("error_log");
+      let dom_text = "<table rules=\'all\' style=\'border:1px solid;\'>" +
+        "<tr>" +
+          "<th>Timestamp</th>" +
+          "<th>Severity</th>" +
+          "<th>Source</th>" +
+          "<th>Message</th>" +
+        "</tr>";
+      const errors = json.error_log;
+      for( index in errors ) {
+        dom_text += "<tr>";
+        dom_text += "<td>" + errors[index].timestamp + "</td>";
+        dom_text += "<td>" + errors[index].severity + "</td>";
+        dom_text += "<td>" + errors[index].source + "</td>";
+        dom_text += "<td>" + errors[index].message + "</td>";
+        dom_text += "</tr>";
+      }
+      dom_text += "</table>"
+      dom_handle.innerHTML = dom_text;
     });
 }
