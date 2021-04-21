@@ -2,12 +2,12 @@ window.addEventListener( 'load', (click) => {
   const menu_buttons = [
     {
       "dom_name": "portfolio_button",
-      "function": "scroll_to_contact_me()",
+      "function": "launch_portfolio()",
       "button_text": "Portfolio"
     },
     {
       "dom_name": "blog_button",
-      "function": "scroll_to_contact_me()",
+      "function": "launch_blog()",
       "button_text": "Blog"
     },
     {

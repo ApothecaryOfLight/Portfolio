@@ -80,6 +80,57 @@ app.get( '/get_errors', async function(req,res) {
   }
 });
 
+app.get( '/get_blog_page/:page', async function(req,res) {
+console.dir( req.params );
+  try {
+    if( req.params.page == 1 ) {
+      //1) Get the 5 most recent posts
+      const recent_posts = "SELECT " +
+        "title, timestamp, body " +
+        "FROM blog_posts " +
+        "ORDER BY timestamp DESC " +
+        "LIMIT 5";
+console.log( recent_posts );
+      const [rec_row,rec_field] =
+        await sqlPool.query( recent_posts );
+
+      //2) Get 3 of the most recently updated posts by root
+      const recent_roots = "SELECT " +
+        "title, timestamp, body " +
+        "FROM blog_posts " +
+        "WHERE is_root = FALSE " +
+        "AND root_id <> ANY ( " +
+        "SELECT DISTINCT root_id FROM blog_posts " +
+        "ORDER BY timestamp DESC " +
+        "LIMIT 5)";
+console.log( recent_roots );
+      const [roots_row,roots_field] =
+        await sqlPool.query( recent_roots );
+      //3) Combine them.
+
+      //4) Return them.
+      
+
+    } else {
+      //1) Get the 8 most recently updated posts by root.
+    }
+
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": "Unknown error 001."
+    }));
+  } catch( error ) {
+    error.log(
+      "main.js:app.get:get_blog_page",
+      error
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error
+    }));
+  }
+});
+
 if( process.argv[2] == "https" ) {
   server.listen( 3000 );
   error.log( "main.js", "Servering listening HTTPS!" );
