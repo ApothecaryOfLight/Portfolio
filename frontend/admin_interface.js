@@ -1,7 +1,29 @@
 window.addEventListener( 'load', (window_loaded) => {
-  console.log( "All loaded!" );
-  get_errors();
+  console.log( "Admin interface loaded!" );
+
+  const admin_buttons = [
+    {
+      "dom_name": "error_log_button",
+      "function": "launch_error_log_interface()",
+      "button_text": "Error Log"
+    },
+    {
+      "dom_name": "edit_blog_button",
+      "function": "launch_edit_blog_interface()",
+      "button_text": "Edit Blog"
+    }
+  ];
+
+  populate_menu_buttons( admin_buttons );
 });
+
+function launch_error_log_interface() {
+  get_errors();
+}
+
+function launch_edit_blog_interface() {
+  console.log( "TODO: Move this to edit_blog_interface.js" );
+}
 
 function get_errors() {
   const get_errors_request = new Request(
@@ -11,7 +33,7 @@ function get_errors() {
     .then( json => json.json() )
     .then( json => {
       console.dir( json );
-      const dom_handle = document.getElementById("error_log");
+      const dom_handle = document.getElementById("error_log_container");
       let dom_text = "<table rules=\'all\' style=\'border:1px solid;\'>" +
         "<tr>" +
           "<th>Timestamp</th>" +

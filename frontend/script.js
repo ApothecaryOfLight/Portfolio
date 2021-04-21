@@ -1,13 +1,23 @@
 window.addEventListener( 'load', (click) => {
-/*  const contact_me_btn = document.getElementById("contact_me_button");
-  contact_me_btn.addEventListener( 'click', (click) => {
-    const contact_me = document.getElementById("contact_me");
-    contact_me.scrollIntoView( {
-      block: 'center',
-      behavior: 'smooth'
-    } );
-  });*/
+  const menu_buttons = [
+    {
+      "dom_name": "portfolio_button",
+      "function": "scroll_to_contact_me()",
+      "button_text": "Portfolio"
+    },
+    {
+      "dom_name": "blog_button",
+      "function": "scroll_to_contact_me()",
+      "button_text": "Blog"
+    },
+    {
+      "dom_name": "contact_me_button",
+      "function": "scroll_to_contact_me()",
+      "button_text": "Contact Me"
+    }
+  ];
 
+  populate_menu_buttons( menu_buttons );
 
   const send_message = document.getElementById("submit_contact_me");
   send_message.addEventListener( 'click', (click) => {
@@ -260,4 +270,12 @@ window.addEventListener( 'load', (click) => {
 
 function getX( inValue ) {
   return inValue.slice( 11, -3 );
+}
+
+function scroll_to_contact_me() {
+  const contact_me = document.getElementById("contact_me");
+  contact_me.scrollIntoView({
+    block: 'center',
+    behavior: 'smooth'
+  });
 }

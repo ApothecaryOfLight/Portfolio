@@ -3,9 +3,32 @@
 <head>
   <script src="ip_file.js"></script>
   <script src="admin_interface.js"></script>
+  <script src="menu.js"></script>
+
   <link rel="stylesheet" href="admin_interface.css"/>
+  <link rel="stylesheet" href="menu.css"/>
+
+  <!--Google resources.-->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round" rel="stylesheet">
+
 </head>
 <body>
-  <div id="error_log">Errors here...</div>  
+<div id="menu">
+    <div id="monogram">AA</div>
+    <div id="menu_button">
+      <span class="material-icons-round">menu</span>
+    </div>
+  </div>
+
+  <div id="menu_collapsible">
+    <div id="portfolio_button" class="menu_button">Portfolio</div>
+    <div id="blog_button" class="menu_button">Blog</div>
+    <div id="contact_me_button" class="menu_button">Contact Me</div>
+  </div>
+
+
+  <div id="error_log_container">Errors here...</div>  
 </body>
 </html>

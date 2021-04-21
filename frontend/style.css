@@ -170,7 +170,7 @@ body {
   text-indent: 2rem;
 }
 
-#menu {
+/*#menu {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -189,7 +189,7 @@ body {
 }
 #contact_me_button {
   padding-right: 50px;
-}
+}*/
 #info {
   display: flex;
   flex-direction: row;

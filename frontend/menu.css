@@ -1,3 +1,25 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+  position: fixed;
+  background: #000000CC;
+  color: white;
+  font-size: 2rem;
+  width: 100vw;
+  padding-left: 1rem;
+  padding-right: 5rem;
+  top: 0px;
+  z-index: 3;
+}
+
 #menu_button {
   padding-right: 50px
 }
@@ -26,4 +48,8 @@
 
 .menu_button:hover {
   color: pink;
+}
+
+#contact_me_button {
+  padding-right: 50px;
 }

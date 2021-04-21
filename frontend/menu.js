@@ -14,17 +14,32 @@ window.addEventListener( 'load', (window_loaded) => {
     document.getElementById("menu_collapsible");
   menu_collapsible.addEventListener( 'mouseover', menu_hover_bound );
   menu_collapsible.addEventListener( 'mouseout', menu_unhover_bound );
-
-  const contact_me_btn = document.getElementById("contact_me_button");
-  contact_me_btn.addEventListener( 'click', (click) => {
-    hide_menu();
-    const contact_me = document.getElementById("contact_me");
-    contact_me.scrollIntoView( {
-      block: 'center',
-      behavior: 'smooth'
-    } );
-  });
 });
+
+function populate_menu_buttons( inButtons ) {
+  const menu_collapsible =
+    document.getElementById("menu_collapsible");
+  let dom_text = "";
+  for( index in inButtons ) {
+    const button_ref = inButtons[index];
+    dom_text += "<div onclick=\'" +
+      button_ref.function + "; " +
+      "hide_menu(); " +
+      "\' " +
+      "class=\'menu_button\'>" + button_ref.button_text +
+      "</div>";
+  }
+  console.log( dom_text );
+  menu_collapsible.innerHTML = dom_text;
+}
+
+function bind_buttons( inButtons ) {
+
+}
+
+function unbind_buttons( inButtons ) {
+
+}
 
 const menu = {
   is_open: false
