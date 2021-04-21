@@ -21,8 +21,16 @@ if [ "$prompt" != "${prompt#[Yy]}" ] ;then
   sudo mysql_secure_installation
 fi
 
+#MySQL Schema
+echo -n "Setup SQL Schema? (y/n)"
+read prompt
+if [ "$prompt" != "${prompt#[Yy]}" ] ;then
+  ./create_schema.sh
+  sudo mysql < create_schema.sql
+fi
+
 #HTTP/HTTPS
-echo -n "Setup HTTPS? (y/n)"
+echo -n "Setup HTTPS? (y/n/skip)"
 read prompt
 if [ "$prompt" != "${prompt#[Yy]}" ] ;then
   sudo apt-get install certbot
@@ -31,7 +39,7 @@ if [ "$prompt" != "${prompt#[Yy]}" ] ;then
   sudo ufw allow https
   sfuo ufw allow 'Nginx HTTPS'
   echo "const ip = 'https://abesportfolio.net:3000/';" > frontend/ip_file.js
-else
+elif [ "$prompt" != "${prompt#[Nn]}" ] ;then
   sudo ufw allow 'Nginx HTTP'
   echo "const ip = 'http://54.218.94.125:3000/';" > frontend/ip_file.js
 fi
