@@ -1,3 +1,5 @@
+console.log( process.argv[2] );
+
 /* Express */
 const express = require('express');
 const app = express();
@@ -15,10 +17,16 @@ const file_stream = require('fs');
 
 /*HTTPS*/
 var https = require('https');
-var privateKey = file_stream.readFileSync('/home/ubuntu/Portfolio/privkey.pem');
-var certificate = file_stream.readFileSync('/home/ubuntu/Portfolio/fullchain.pem');
-var credentials = {key: privateKey, cert: certificate};
-var server = https.createServer( credentials, app );
+var privateKey;
+var certificate;
+var credentials;
+
+if( process.argv[2] == "https" ) {
+  privateKey = file_stream.readFileSync('/home/ubuntu/Portfolio/privkey.pem');
+  certificate = file_stream.readFileSync('/home/ubuntu/Portfolio/fullchain.pem');
+  credentials = {key: privateKey, cert: certificate};
+  server = https.createServer( credentials, app );
+}
 
 /*MySQL*/
 const mysql = require('mysql2');
@@ -32,7 +40,7 @@ const sqlPool = mysql.createPoolPromise({
 });
 
 /*Error Logging*/
-const error_log = require('./error_logging.js');
+//const error_log = require('./error_logging.js');
 
 app.post( '/contact_me', async function( req,res ) {
   console.dir( req.body );
@@ -55,5 +63,11 @@ app.post( '/contact_me', async function( req,res ) {
   res.send( JSON.stringify({"stop":"sure"}) );
 });
 
-server.listen( 3000 );
-//app.listen( 3000 );
+if( process.argv[2] == "https" ) {
+  server.listen( 3000 );
+//  log( "main.js", "Servering listening HTTPS!" );
+} else {
+  app.listen( 3000 );
+//  log( "main.js", "Servering listening HTTP!" );
+}
+

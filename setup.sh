@@ -39,9 +39,9 @@ if [ "$prompt" != "${prompt#[Yy]}" ] ;then
   sudo ufw allow https
   sfuo ufw allow 'Nginx HTTPS'
   echo "const ip = 'https://abesportfolio.net:3000/';" > frontend/ip_file.js
-  screen -d -m -S backend bash -c 'cd backend && npm i && ./run.sh'
+  screen -d -m -S backend bash -c 'cd backend && npm i && ./run-https.sh'
 elif [ "$prompt" != "${prompt#[Nn]}" ] ;then
   sudo ufw allow 'Nginx HTTP'
   echo "const ip = 'http://54.218.94.125:3000/';" > frontend/ip_file.js
-  screen -d -m -S backend bash -c 'cd backend && npm i && ./run.sh'
+  screen -d -m -S backend bash -c 'cd backend && npm i && ./run-http.sh'
 fi
