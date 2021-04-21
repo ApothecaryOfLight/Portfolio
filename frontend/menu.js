@@ -49,7 +49,7 @@ function menu_unhover( hover_event ) {
 function show_menu() {
   const menu_collapsible =
     document.getElementById("menu_collapsible");
-  menu_collapsible.style["height"] = "250px";
+  menu_collapsible.style["height"] = "12rem";
   menu.is_open = true;
 }
 

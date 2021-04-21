@@ -3,20 +3,26 @@
 }
 
 #menu_collapsible {
-/*  display: none;*/
-  background: purple;
+  background: #000000CC;
   color: white;
   z-index: 4;
   position: fixed;
-  width: 15%;
+  width: 19%;
   margin-left: 85%;
   margin-top: 4rem;
   top: 0px;
   height: 0px;
-  transition: height 2s;
-/*  transform: height(200px);*/
+  transition: height 1s;
+  border-radius: 0px 0px 0px 15%;
+  font-size: 1.6rem;
+  font-weight: bold;
 }
 
-/*#menu_collapsible:hover {
-  transform: height(200px);
-}*/
+.menu_button {
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+
+.menu_button:hover {
+  color: pink;
+}
