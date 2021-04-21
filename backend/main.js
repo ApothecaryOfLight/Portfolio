@@ -22,6 +22,17 @@ var server = https.createServer( credentials, app );
 
 /*MySQL*/
 const mysql = require('mysql2');
+const sqlPool = mysql.createPoolPromise({
+  host: 'localhost',
+  user: 'Flashcards_User',
+  password: 'Flashcards_Password',
+  database: 'Flashcards',
+  connectionLimit: 45,
+  multipleStatements: true
+});
+
+/*Error Logging*/
+const error_log = require('./error_logging.js');
 
 app.post( '/contact_me', async function( req,res ) {
   console.dir( req.body );
