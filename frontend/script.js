@@ -11,14 +11,11 @@ window.addEventListener( 'load', (click) => {
 
   const send_message = document.getElementById("submit_contact_me");
   send_message.addEventListener( 'click', (click) => {
-    console.log( "test");
-
     const name = document.getElementById("name").value;
     const org = document.getElementById("org").value;
     const phone = document.getElementById("phone").value;
     const email = document.getElementById("email").value;
     const msg = document.getElementById("msg").value;
-console.log( msg );
     const send_contact_me = new Request(
       'https://AbesPortfolio.com:3000/contact_me/',
       {
@@ -54,10 +51,7 @@ console.log( msg );
     const oinker_comp = window.getComputedStyle( oinker_image );
 
     const width = oinker_comp.getPropertyValue( 'width' ).slice(0,-2);
-console.log( "trans:" + oinker_image.style.transform );
     const offset = getX( oinker_image.style.transform );
-console.log( "width: " + width );
-console.log( "offset: " + offset );
     let mod = (offset-width) + "px";
     gallery.oinker++;
     if( offset-width < width*-2 ) {
@@ -66,7 +60,6 @@ console.log( "offset: " + offset );
     }
 
     const effect = "translateX(" + mod + ")";
-console.log( effect );
     oinker_image.style.transform = effect;
     oinker_imageB.style.transform = effect;
     oinker_imageC.style.transform = effect;
