@@ -41,24 +41,43 @@ const sqlPool = mysql.createPoolPromise({
 const error = require('./error_logging.js');
 
 app.post( '/contact_me', async function( req,res ) {
-  console.dir( req.body );
-//  console.log( req.body.test );
-  const text =
-    "name: " + req.body.name + "\n" +
-    "org: " + req.body.org + "\n" +
-    "phone: " + req.body.phone + "\n" +
-    "email: " + req.body.email + "\n" +
-    "message: " + req.body.msg + "\n\n\n";
-  file_stream.appendFile(
-    "contact_me.txt",
-    text,
-    function( error ) {
-      if( error ) {
-        throw error;
+  try {
+    const text =
+      "name: " + req.body.name + "\n" +
+      "org: " + req.body.org + "\n" +
+      "phone: " + req.body.phone + "\n" +
+      "email: " + req.body.email + "\n" +
+      "message: " + req.body.msg + "\n\n\n";
+    file_stream.appendFile(
+      "contact_me.txt",
+      text,
+      function( error ) {
+        if( error ) {
+          throw error;
+        }
       }
-    }
-  );
-  res.send( JSON.stringify({"stop":"sure"}) );
+    );
+    res.send( JSON.stringify({"stop":"sure"}) );
+  } catch(error) {
+    error.log(
+      "main.js:app.post:contact_me",
+      error
+    );
+  }
+});
+
+app.get( '/get_errors', async function(req,res) {
+  try {
+    const errors = error.get_log();
+    res.send({
+      error_log: errors
+    });
+  } catch(error) {
+    error.log(
+      "main.js:app.get:error_log",
+      error
+    );
+  }
 });
 
 if( process.argv[2] == "https" ) {

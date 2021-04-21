@@ -11,6 +11,7 @@ if [ "$prompt" != "${prompt#[Yy]}" ] ;then
   #Install Nginx
   sudo apt-get install nginx -y
   sudo ufw allow ssh
+  sudo ufw allow 3000
   sudo ufw enable
   cd /etc/nginx/sites-enabled && sudo sed -i "s/root \/var\/www\/html;/root \/home\/ubuntu\/Portfolio\/frontend;/g" default
   sudo systemctl restart nginx
