@@ -10,10 +10,29 @@ const sqlPool = mysql.createPoolPromise({
 });
 
 async function log( source, message ) {
+  const timestamp = new Date();
+  let timestamp_string = timestamp.toISOString();
+  timestamp_string = timestamp_string.replace( /T/, " " );
+  timestamp_string = timestamp_string.slice(
+    0,
+    timestamp_string.length - 5
+  );
+
+  const new_error_id_query =
+    "SELECT Portfolio.generate_new_id( 0 ) as new_id;";
+  const [new_error_row,new_error_field] =
+    await sqlPool.query( new_error_id_query );
+  const new_error_id = new_error_row[0].new_id;
+
   const add_error_query =
     "INSERT INTO error_log " +
-    "(source, message) VALUES " +
-    "(\'" + source "\', \'" + message + "\');"
+    "(error_id, source, message, timestamp) VALUES " +
+    "(" + new_error_id + 
+    ", \'" + source +
+    "\', \'" + message +
+    "\', " +
+    "\'" + timestamp_string + "\'" +
+    ");"
   const [add_rows,add_fields] = await sqlPool.query( add_error_query );
   return add_rows;
 }
@@ -29,3 +48,6 @@ async function get_log( page, page_size ) {
 function get_log_by_search( search, page, page_size ) {
 
 }
+
+exports.log = log;
+exports.get_log = get_log;

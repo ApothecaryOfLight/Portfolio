@@ -1,5 +1,3 @@
-console.log( process.argv[2] );
-
 /* Express */
 const express = require('express');
 const app = express();
@@ -32,15 +30,15 @@ if( process.argv[2] == "https" ) {
 const mysql = require('mysql2');
 const sqlPool = mysql.createPoolPromise({
   host: 'localhost',
-  user: 'Flashcards_User',
-  password: 'Flashcards_Password',
-  database: 'Flashcards',
-  connectionLimit: 45,
+  user: 'Portfolio_User',
+  password: 'Portfolio_Password',
+  database: 'Portfolio',
+  connectionLimit: 50,
   multipleStatements: true
 });
 
 /*Error Logging*/
-//const error_log = require('./error_logging.js');
+const error = require('./error_logging.js');
 
 app.post( '/contact_me', async function( req,res ) {
   console.dir( req.body );
@@ -65,9 +63,9 @@ app.post( '/contact_me', async function( req,res ) {
 
 if( process.argv[2] == "https" ) {
   server.listen( 3000 );
-//  log( "main.js", "Servering listening HTTPS!" );
+  error.log( "main.js", "Servering listening HTTPS!" );
 } else {
   app.listen( 3000 );
-//  log( "main.js", "Servering listening HTTP!" );
+  error.log( "main.js", "Servering listening HTTP!" );
 }
 
