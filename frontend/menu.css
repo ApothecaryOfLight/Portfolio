@@ -1,0 +1,22 @@
+#menu_button {
+  padding-right: 50px
+}
+
+#menu_collapsible {
+/*  display: none;*/
+  background: purple;
+  color: white;
+  z-index: 4;
+  position: absolute;
+  width: 15%;
+  margin-left: 85%;
+  margin-top: 4rem;
+  top: 0px;
+  height: 0px;
+  transition: height 2s;
+/*  transform: height(200px);*/
+}
+
+/*#menu_collapsible:hover {
+  transform: height(200px);
+}*/
