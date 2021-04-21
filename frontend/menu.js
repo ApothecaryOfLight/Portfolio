@@ -14,6 +14,16 @@ window.addEventListener( 'load', (window_loaded) => {
     document.getElementById("menu_collapsible");
   menu_collapsible.addEventListener( 'mouseover', menu_hover_bound );
   menu_collapsible.addEventListener( 'mouseout', menu_unhover_bound );
+
+  const contact_me_btn = document.getElementById("contact_me_button");
+  contact_me_btn.addEventListener( 'click', (click) => {
+    hide_menu();
+    const contact_me = document.getElementById("contact_me");
+    contact_me.scrollIntoView( {
+      block: 'center',
+      behavior: 'smooth'
+    } );
+  });
 });
 
 const menu = {
@@ -21,21 +31,32 @@ const menu = {
 }
 function menu_click( click_event ) {
   console.log( "click!" );
-  const menu_collapsible =
-    document.getElementById("menu_collapsible");
   if( menu.is_open == false ) {
-    menu_collapsible.style["height"] = "250px";
-    menu.is_open = true;
+    show_menu();
   } else {
-    menu_collapsible.style["height"] = "0px";
-    menu.is_open = false;
+    hide_menu();
   }
 }
 
 function menu_hover( hover_event ) {
-  console.log( "hover " + hover_event );
+//  console.log( "hover " + hover_event );
 }
 
 function menu_unhover( hover_event ) {
-  console.log( "unhover " + hover_event );
+//  console.log( "unhover " + hover_event );
 }
+
+function show_menu() {
+  const menu_collapsible =
+    document.getElementById("menu_collapsible");
+  menu_collapsible.style["height"] = "250px";
+  menu.is_open = true;
+}
+
+function hide_menu() {
+  const menu_collapsible =
+    document.getElementById("menu_collapsible");
+  menu_collapsible.style["height"] = "0px";
+  menu.is_open = false;
+}
+
