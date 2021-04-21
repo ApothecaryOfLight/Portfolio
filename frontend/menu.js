@@ -29,6 +29,7 @@ function populate_menu_buttons( inButtons ) {
       "class=\'menu_button\'>" + button_ref.button_text +
       "</div>";
   }
+  menu.height = (inButtons.length * 4) + "rem";
   console.log( dom_text );
   menu_collapsible.innerHTML = dom_text;
 }
@@ -42,7 +43,8 @@ function unbind_buttons( inButtons ) {
 }
 
 const menu = {
-  is_open: false
+  is_open: false,
+  height: "12px"
 }
 function menu_click( click_event ) {
   console.log( "click!" );
@@ -64,7 +66,7 @@ function menu_unhover( hover_event ) {
 function show_menu() {
   const menu_collapsible =
     document.getElementById("menu_collapsible");
-  menu_collapsible.style["height"] = "12rem";
+  menu_collapsible.style["height"] = menu.height;
   menu.is_open = true;
 }
 
