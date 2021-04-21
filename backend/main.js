@@ -20,6 +20,9 @@ var certificate = file_stream.readFileSync('/home/ubuntu/Portfolio/fullchain.pem
 var credentials = {key: privateKey, cert: certificate};
 var server = https.createServer( credentials, app );
 
+/*MySQL*/
+const mysql = require('mysql2');
+
 app.post( '/contact_me', async function( req,res ) {
   console.dir( req.body );
 //  console.log( req.body.test );
