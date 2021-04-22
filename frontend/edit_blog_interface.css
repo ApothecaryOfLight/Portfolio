@@ -1,0 +1,13 @@
+#edit_blog_interface {
+  display: none;
+  margin-top: 5rem;
+}
+
+#new_blog_title {
+  width: 50%;
+}
+
+#new_blog_body {
+  width: 50%;
+  height: 15rem;
+}

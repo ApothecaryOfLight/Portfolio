@@ -9,7 +9,7 @@ const sqlPool = mysql.createPoolPromise({
   multipleStatements: true
 });
 
-async function log( source, message ) {
+function get_timestamp() {
   const timestamp = new Date();
   let timestamp_string = timestamp.toISOString();
   timestamp_string = timestamp_string.replace( /T/, " " );
@@ -17,6 +17,11 @@ async function log( source, message ) {
     0,
     timestamp_string.length - 5
   );
+  return timestamp_string;
+}
+
+async function log( source, message ) {
+  const timestamp_string = get_timestamp();
 
   const new_error_id_query =
     "SELECT Portfolio.generate_new_id( 0 ) as new_id;";
@@ -51,3 +56,4 @@ function get_log_by_search( search, page, page_size ) {
 
 exports.log = log;
 exports.get_log = get_log;
+exports.get_timestamp = get_timestamp;

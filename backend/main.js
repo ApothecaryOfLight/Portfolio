@@ -51,17 +51,17 @@ app.post( '/contact_me', async function( req,res ) {
     file_stream.appendFile(
       "contact_me.txt",
       text,
-      function( error ) {
-        if( error ) {
-          throw error;
+      function( error_obj ) {
+        if( error_obj ) {
+          throw error_obj;
         }
       }
     );
     res.send( JSON.stringify({"stop":"sure"}) );
-  } catch(error) {
+  } catch(error_obj) {
     error.log(
       "main.js:app.post:contact_me",
-      error
+      error_obj
     );
   }
 });
@@ -72,10 +72,10 @@ app.get( '/get_errors', async function(req,res) {
     res.send({
       error_log: errors
     });
-  } catch(error) {
+  } catch(error_obj) {
     error.log(
       "main.js:app.get:error_log",
-      error
+      error_obj
     );
   }
 });
@@ -90,43 +90,136 @@ console.dir( req.params );
         "FROM blog_posts " +
         "ORDER BY timestamp DESC " +
         "LIMIT 5";
-console.log( recent_posts );
       const [rec_row,rec_field] =
         await sqlPool.query( recent_posts );
 
       //2) Get 3 of the most recently updated posts by root
-      const recent_roots = "SELECT " +
+/*      const recent_roots = "SELECT " +
         "title, timestamp, body " +
         "FROM blog_posts " +
         "WHERE is_root = FALSE " +
-        "AND root_id <> ANY ( " +
-        "SELECT DISTINCT root_id FROM blog_posts " +
+        "AND root_id <> ANY (SELECT * FROM (" +
+        "SELECT DISTINCT root_id, timestamp FROM blog_posts " +
         "ORDER BY timestamp DESC " +
-        "LIMIT 5)";
-console.log( recent_roots );
+        "LIMIT 5) wrapped)";*/
+      const recent_roots = "SELECT " +
+        "A.title, A.timestamp, A.body " +
+        "FROM blog_posts A " +
+        "INNER JOIN blog_posts B " +
+        "ON A.root_id = B.post_id " +
+        "WHERE B.root_id IS NULL " +
+        "ORDER BY A.timestamp "
+        "LIMIT 5;";
       const [roots_row,roots_field] =
         await sqlPool.query( recent_roots );
       //3) Combine them.
-
+      const blog_posts_obj = {
+        "recent_posts": rec_row,
+        "root_posts": roots_row,
+        "page": 1
+      };
       //4) Return them.
-      
-
+      res.send( JSON.stringify({
+        "result": "success",
+        "blog_posts": blog_posts_obj
+      }));
     } else {
       //1) Get the 8 most recently updated posts by root.
-    }
+      const offset = 5 + (req.params.page-1)*8;
+      const paginated_posts = "SELECT " +
+        "title, timestamp, body " +
+        "FROM blog_posts " +
+        "WHERE is_root = FALSE " +
+        "AND root_id <> ANY (SELECT * FROM (" +
+        "SELECT DISTINCT root_id, timestamp FROM blog_posts " +
+        "ORDER BY timestamp DESC " +
+        "LIMIT " + offset + ",8) wrapped)";
+      const [page_row,page_field] =
+        await sqlPool.query( paginated_posts );
 
-    res.send( JSON.stringify({
-      "result": "failure",
-      "reason": "Unknown error 001."
-    }));
-  } catch( error ) {
+      //2) Return them.
+      res.send( JSON.stringify({
+        "result": "success",
+        "blog_posts": {
+          "recent_posts": page_row,
+          "page": req.params.page
+        }
+      }));
+    }
+  } catch( error_obj ) {
     error.log(
       "main.js:app.get:get_blog_page",
-      error
+      error_obj
     );
     res.send( JSON.stringify({
       "result": "failure",
-      "reason": error
+      "reason": error_obj
+    }));
+  }
+});
+
+app.post( '/new_blog_post', async function(req,res) {
+  try {
+    const timestamp = error.get_timestamp();
+    const new_post_id_query = "SELECT " +
+      "Portfolio.generate_new_id( 1 ) as new_id;";
+    const [new_id_row,new_id_field] =
+      await sqlPool.query( new_post_id_query );
+    const new_blog_post_id = new_id_row[0].new_id;
+
+    let root_id;
+    if( req.body.root == -1 ) {
+      root_id = "NULL";
+    } else {
+      root_id = req.body.root;
+    }
+
+    const new_blog_post_query = "INSERT INTO blog_posts " +
+      "(title, body, timestamp, root_id, postorder, post_id) " +
+      "VALUES ( " +
+      "\'" + req.body.title + "\', " +
+      "\'" + req.body.body + "\', " +
+      "\'" + timestamp + "\', " +
+      root_id + "," +
+      "0, " +
+      new_blog_post_id + " );";
+
+    const [new_blog_post_row,new_blog_post_field] =
+      await sqlPool.query( new_blog_post_query );
+    res.send( JSON.stringify({
+      "result": "success"
+    }));
+  } catch( error_obj ) {
+    error.log(
+      "main.js:app.post:new_blog_page",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+app.get( '/get_root_posts', async function(req,res) {
+  try {
+    const query_roots = "SELECT title, post_id " +
+      "FROM blog_posts " +
+      "WHERE root_id IS NULL;"
+    const [roots_row,roots_field] =
+      await sqlPool.query( query_roots );
+    res.send( JSON.stringify({
+      "result": "success",
+      "roots": roots_row
+    }));
+  } catch( error_obj ) {
+    error.log(
+      "main.js:app.get:get_root_posts",
+      errro_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": errro_obj
     }));
   }
 });
