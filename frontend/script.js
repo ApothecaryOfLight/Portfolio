@@ -273,6 +273,7 @@ function getX( inValue ) {
 }
 
 function scroll_to_contact_me() {
+  launch_portfolio();
   const contact_me = document.getElementById("contact_me");
   contact_me.scrollIntoView({
     block: 'center',

@@ -20,6 +20,27 @@ function get_timestamp() {
   return timestamp_string;
 }
 
+async function process_text( inText ) {
+  let processed_text = inText.replace(
+    /\'/g,
+    "&#39;"
+  );
+  processed_text = processed_text.replace(
+    /\"/g,
+    "&#34;"
+  );
+  processed_text = processed_text.replace(
+    /\\/g,
+    "&#92;"
+  );
+  processed_text = processed_text.replace(
+    /\//g,
+    "&#47;"
+  );
+  return processed_text;
+
+}
+
 async function log( source, message ) {
   const timestamp_string = get_timestamp();
 
@@ -34,7 +55,7 @@ async function log( source, message ) {
     "(error_id, source, message, timestamp) VALUES " +
     "(" + new_error_id + 
     ", \'" + source +
-    "\', \'" + message +
+    "\', \'" + await process_text(JSON.stringify(message)) +
     "\', " +
     "\'" + timestamp_string + "\'" +
     ");"

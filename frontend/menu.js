@@ -30,7 +30,6 @@ function populate_menu_buttons( inButtons ) {
       "</div>";
   }
   menu.height = (inButtons.length * 4) + "rem";
-  console.log( dom_text );
   menu_collapsible.innerHTML = dom_text;
 }
 

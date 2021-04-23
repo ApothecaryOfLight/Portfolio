@@ -59,7 +59,7 @@ app.post( '/contact_me', async function( req,res ) {
     );
     res.send( JSON.stringify({"stop":"sure"}) );
   } catch(error_obj) {
-    error.log(
+    await error.log(
       "main.js:app.post:contact_me",
       error_obj
     );
@@ -73,7 +73,7 @@ app.get( '/get_errors', async function(req,res) {
       error_log: errors
     });
   } catch(error_obj) {
-    error.log(
+    await error.log(
       "main.js:app.get:error_log",
       error_obj
     );
@@ -81,7 +81,6 @@ app.get( '/get_errors', async function(req,res) {
 });
 
 app.get( '/get_blog_page/:page', async function(req,res) {
-console.dir( req.params );
   try {
     if( req.params.page == 1 ) {
       //1) Get the 5 most recent posts
@@ -126,14 +125,22 @@ console.dir( req.params );
     } else {
       //1) Get the 8 most recently updated posts by root.
       const offset = 5 + (req.params.page-1)*8;
-      const paginated_posts = "SELECT " +
+/*      const paginated_posts = "SELECT " +
         "title, timestamp, body " +
         "FROM blog_posts " +
         "WHERE is_root = FALSE " +
         "AND root_id <> ANY (SELECT * FROM (" +
         "SELECT DISTINCT root_id, timestamp FROM blog_posts " +
         "ORDER BY timestamp DESC " +
-        "LIMIT " + offset + ",8) wrapped)";
+        "LIMIT " + offset + ",8) wrapped)";*/
+      const paginated_posts = "SELECT " +
+        "curr.title, curr.timestamp, curr.body " +
+        "root.title, root.post_id " +
+        "FROM blog_posts curr " +
+        "INNER JOIN blog_posts root " +
+        "ON curr.root_id = root.post_id " +
+        "ORDER BY timestamp DESC " +
+        "LIMIT " + offset + ",8);";
       const [page_row,page_field] =
         await sqlPool.query( paginated_posts );
 
@@ -147,8 +154,30 @@ console.dir( req.params );
       }));
     }
   } catch( error_obj ) {
-    error.log(
+    await error.log(
       "main.js:app.get:get_blog_page",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+app.get( '/page_count', async function(req,res) {
+  try {
+    const page_count_query = "SELECT COUNT(post_id) as post_count " +
+      "FROM blog_posts;";
+    const [count_row,count_field] =
+      await sqlPool.query( page_count_query );
+    res.send( JSON.stringify({
+      "result": "success",
+      "post_count": count_row[0].post_count
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.get:get_page_count",
       error_obj
     );
     res.send( JSON.stringify({
@@ -190,8 +219,42 @@ app.post( '/new_blog_post', async function(req,res) {
       "result": "success"
     }));
   } catch( error_obj ) {
-    error.log(
+    await error.log(
       "main.js:app.post:new_blog_page",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+app.post( '/edit_blog_post', async function(req,res) {
+  try {
+    let root_id;
+    if( req.body.root == -1 ) {
+      root_id = "NULL";
+    } else {
+      root_id = req.body.root;
+    }
+
+    const update_query = "UPDATE blog_posts " +
+      "SET title = \'" + req.body.title + "\', " +
+      "body = \'" + req.body.body + "\', " +
+//      "SET updated_timestamp = " + req.body.timestamp +
+      "root_id = " + root_id + ", " +
+      "postorder = 0 " + " " +
+      "WHERE post_id = " + req.body.post_id + ";"
+    const [update_row,update_field] =
+      await sqlPool.query( update_query );
+
+    res.send( JSON.stringify({
+      "result": "success"
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.post:edit_blog_page",
       error_obj
     );
     res.send( JSON.stringify({
@@ -213,8 +276,53 @@ app.get( '/get_root_posts', async function(req,res) {
       "roots": roots_row
     }));
   } catch( error_obj ) {
-    error.log(
+    await error.log(
       "main.js:app.get:get_root_posts",
+      errro_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": errro_obj
+    }));
+  }
+});
+
+app.get( '/get_existing_posts', async function(req,res) {
+  try {
+    const query_existing = "SELECT title, post_id " +
+      "FROM blog_posts";
+    const [existing_row,existing_field] =
+      await sqlPool.query( query_existing );
+    res.send( JSON.stringify({
+      "result": "success",
+      "existing": existing_row
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.get:get_existing_posts",
+      errro_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": errro_obj
+    }));
+  }
+});
+
+app.get( '/get_blog_post/:post_id', async function(req,res) {
+  try {
+    const get_post = "SELECT " +
+      "title, body, timestamp, post_id, root_id, postorder " +
+      "FROM blog_posts " +
+      "WHERE post_id = " + req.params.post_id + ";";
+    const [post_row,post_field] = await sqlPool.query( get_post );
+    res.send( JSON.stringify({
+      "result": "success",
+      "post_data": post_row[0]
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.get:get_blog_post",
       errro_obj
     );
     res.send( JSON.stringify({
@@ -226,9 +334,7 @@ app.get( '/get_root_posts', async function(req,res) {
 
 if( process.argv[2] == "https" ) {
   server.listen( 3000 );
-  error.log( "main.js", "Servering listening HTTPS!" );
 } else {
   app.listen( 3000 );
-  error.log( "main.js", "Servering listening HTTP!" );
 }
 

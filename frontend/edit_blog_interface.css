@@ -7,6 +7,10 @@
   width: 50%;
 }
 
+#new_blog_blurb {
+  width: 50%;
+}
+
 #new_blog_body {
   width: 50%;
   height: 15rem;
