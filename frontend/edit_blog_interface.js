@@ -78,6 +78,9 @@ function blank_fields() {
   while( images.length > 0 ) {
     images.pop();
   }
+  const image_container =
+    document.getElementById("new_blog_images_container");
+  image_container.innerHTML = "";
 }
 
 /*Root Posts*/
@@ -127,15 +130,26 @@ function compose_existing( existing ) {
 }
 
 function load_blog_post( inPostID ) {
-console.log( "getting:" + inPostID );
   const existing_request = new Request (
     ip + "get_blog_post/" + inPostID
   );
   fetch( existing_request )
     .then( response => response.json() )
     .then( json => {
-console.dir( json.post_data );
       render_blog_post( json.post_data );
+    });
+
+  const existing_images_request = new Request (
+    ip + "get_blog_images/" + inPostID
+  );
+console.log( inPostID );
+  fetch( existing_images_request )
+    .then( response => response.json() )
+    .then( json => {
+console.dir( json );
+      Object.assign( images, json.images_data );
+console.dir( images );
+      render_blog_images();
     });
 }
 
@@ -256,8 +270,6 @@ function blog_interface_detach_button_events() {
 }
 
 function submit_post() {
-//console.dir( inPostID );
-console.log( "submit_post" );
   const title_field =
     document.getElementById("new_blog_title");
   const body_field =
@@ -282,8 +294,6 @@ console.log( "submit_post" );
       "password_hash": "???",
       "images": images
     };
-console.dir( JSON.parse(JSON.stringify(images)) );
-console.dir( new_post_object );
     const new_post_request = new Request(
       ip + 'new_blog_post',
       {

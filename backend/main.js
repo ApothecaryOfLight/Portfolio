@@ -208,12 +208,7 @@ app.post( '/new_blog_post', async function(req,res) {
       "0, " +
       new_blog_post_id + " ); ";
 
-console.log( "imgs#:" + req.body.images.length );
-
     for( index in req.body.images ) {
-console.log( "image_id: " + req.body.images[index].image_id );
-console.log( "temp_image_id: " + req.body.images[index].temp_image_id );
-console.log( "new_blog_post_id: " + new_blog_post_id );
       new_blog_post_query += "INSERT INTO blog_images " +
         "( image_id, local_image_id, post_id, image_data ) " +
         "VALUES " +
@@ -222,9 +217,6 @@ console.log( "new_blog_post_id: " + new_blog_post_id );
         new_blog_post_id + ", \'" +
         req.body.images[index].image_data + "\' ); "
     }
-console.log( new_blog_post_query.substr( 0, 500 ) );
-
-//console.log( new_blog_post_query );
 
     const [new_blog_post_row,new_blog_post_field] =
       await sqlPool.query( new_blog_post_query );
@@ -280,11 +272,13 @@ app.post( '/edit_blog_post', async function(req,res) {
 app.get( '/get_blog_images/:post_id', async function(req,res) {
   try {
     const get_images_query = "SELECT " +
-      "image_data, alt_text, image_id " +
-      "FROM blog_images "
-      "WHERE post_id = " + req.params.post_id + ";"
+      "image_data, alt_text, image_id, local_image_id " +
+      "FROM blog_images " +
+      "WHERE post_id = " + req.params.post_id +
+      ";"
     const [images_row,images_field] =
       await sqlPool.query( get_images_query );
+console.log( images_row.length );
     res.send( JSON.stringify({
       "result": "success",
       "images_data": images_row
