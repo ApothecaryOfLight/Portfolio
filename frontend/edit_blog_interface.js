@@ -1,6 +1,6 @@
 function launch_edit_blog_interface() {
   show_edit_blog_interface();
-  blog_interface_attach_events();
+  blog_interface_attach_button_events();
 
   render_edit_blog_interface();
 }
@@ -18,91 +18,6 @@ function show_edit_blog_interface() {
     document.getElementById("error_log_container");
   error_log_container.style.display = "none";
   edit_blog_interface.style.display = "block";
-}
-
-function blog_interface_attach_events() {
-  const submit_new_btn =
-    document.getElementById("submit_post");
-
-  submit_new_btn.addEventListener( 'click', (click) => {
-    const title_field =
-      document.getElementById("new_blog_title");
-    const body_field =
-      document.getElementById("new_blog_body");
-    const root_id_field =
-      document.getElementById("new_blog_root");
-
-    const title_text = title_field.value;
-    const body_text = body_field.value;
-    const root_id = root_id_field.value;
-
-    const edit_post_dropdown =
-      document.getElementById("new_blog_old_post");
-    const edit_post_id = edit_post_dropdown.value;
-
-    if( edit_post_id == -1 ) {
-      const new_post_object = JSON.stringify({
-        "title": process_outgoing_text( title_text ),
-        "body": process_outgoing_text( body_text ),
-        "root": root_id,
-        "postorder": "???",
-        "password_hash": "???"
-      });
-      const new_post_request = new Request(
-        ip + 'new_blog_post',
-        {
-          method: "POST",
-          body: new_post_object,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      fetch( new_post_request )
-        .then( response => response.json() )
-        .then( json => {
-          render_edit_blog_interface();
-        });
-    } else {
-      const edit_post_object = JSON.stringify({
-        "post_id": edit_post_id,
-        "title": process_outgoing_text( title_text ),
-        "body": process_outgoing_text( body_text ),
-        "root": root_id,
-        "postorder": "???",
-        "password_hash": "???"
-      });
-      const edit_post_request = new Request(
-        ip + 'edit_blog_post',
-        {
-          method: "POST",
-          body: edit_post_object,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      fetch( edit_post_request )
-        .then( response => response.json() )
-        .then( json => {
-          render_edit_blog_interface();
-        });
-    }
-  });
-
-  const edit_posts_dropdown = 
-    document.getElementById("new_blog_old_post");
-  edit_posts_dropdown.addEventListener( 'change', (change) => {
-    if( change.path[0].value != -1 ) {
-      load_blog_post( change.path[0].value );
-    } else {
-      blank_fields();
-    }
-  });
-}
-
-function blog_interface_detach_events() {
-  
 }
 
 function process_outgoing_text( inText ) {
@@ -160,6 +75,9 @@ function blank_fields() {
   title_field.value = "";
   root_field.value = "-1";
   body_field.value = "";
+  while( images.length > 0 ) {
+    images.pop();
+  }
 }
 
 /*Root Posts*/
@@ -209,12 +127,14 @@ function compose_existing( existing ) {
 }
 
 function load_blog_post( inPostID ) {
+console.log( "getting:" + inPostID );
   const existing_request = new Request (
     ip + "get_blog_post/" + inPostID
   );
   fetch( existing_request )
     .then( response => response.json() )
     .then( json => {
+console.dir( json.post_data );
       render_blog_post( json.post_data );
     });
 }
@@ -230,4 +150,297 @@ function render_blog_post( post_data ) {
     root_field.value = -1;
   }
   body_field.value = process_incoming_text( post_data.body );
+}
+
+
+/*Images*/
+function get_blog_images( post_id ) {
+  const get_blog_images_request = new Request(
+    ip + "get_blog_images/" + post_id
+  );
+  fetch( get_blog_images_request )
+    .then( response => response.json() )
+    .then( json => {
+      //TODO: Fill images object.
+      render_blog_images();
+    });
+}
+
+function render_blog_images() {
+  if( images.length == 0 ) {
+    return;
+  }
+  let html_string = "";
+  for( index in images ) {
+    html_string += "<div class=\'image_container\'>" +
+      "<div class=\'image_header\'>" +
+      "<input type=\'checkbox\'/>Blurb Image" +
+      "</div>" +
+      "<div class=\'image_body\'>" +
+      "<img class=\'image_image\' " +
+      "src=\'" + images[index].image_data + "\'>" +
+      "<div class=\'image_tools\'>" +
+      "<button class=\'image_delete\'>X</button>" +
+      "<button class=\'image_copy_link\'>Copy Link</button>" +
+      "</div>" +
+      "</div></div>";
+  }
+  const image_container =
+    document.getElementById("new_blog_images_container");
+  image_container.innerHTML = html_string;
+}
+
+
+
+//button_events
+const button_events = [
+  {
+    element_name: "submit_post",
+    event: "click",
+    func: submit_post,
+    bound: []
+  },
+  {
+    element_name: "new_blog_old_post",
+    event: "change",
+    func: new_blog_old_post,
+    bound: []
+  },
+  {
+    element_name: "add_new_image",
+    event: "click",
+    func: select_image,
+    bound: []
+  }
+];
+
+function blog_interface_attach_button_events( inPostID ) {
+  for( index in button_events ) {
+    const event_ref = button_events[index];
+    const button_ref =
+      document.getElementById( event_ref.element_name );
+    if( inPostID ) {
+      const func_ref = event_ref.func.bind( null, inPostID );
+      button_ref.addEventListener(
+        event_ref.event,
+        func_ref
+      );
+      event_ref.bound.push( func_ref );
+    } else {
+      button_ref.addEventListener(
+        event_ref.event,
+        event_ref.func
+      );
+    }
+  }
+}
+
+function blog_interface_detach_button_events() {
+  for( index in button_events ) {
+    const event_ref = button_events[index];
+    const button_ref =
+      document.getElementById( event_ref.element_name );
+    if( event_ref.bound ) {
+      while( event_ref.bound.length > 0 ) {
+        button_ref.removeEventListener(
+          event_ref.event,
+          event_ref.bound[ event_ref.bound.length ]
+        );
+        event_ref.bound.pop();
+      }
+    } else {
+      const func_ref = event_ref.func;
+      button_ref.removeEventListener( func_ref );
+    }
+  }
+}
+
+function submit_post() {
+//console.dir( inPostID );
+console.log( "submit_post" );
+  const title_field =
+    document.getElementById("new_blog_title");
+  const body_field =
+    document.getElementById("new_blog_body");
+  const root_id_field =
+    document.getElementById("new_blog_root");
+
+  const title_text = title_field.value;
+  const body_text = body_field.value;
+  const root_id = root_id_field.value;
+
+  const edit_post_dropdown =
+    document.getElementById("new_blog_old_post");
+  const edit_post_id = edit_post_dropdown.value;
+
+  if( edit_post_id  == -1 ) {
+    const new_post_object = {
+      "title": process_outgoing_text( title_text ),
+      "body": process_outgoing_text( body_text ),
+      "root": root_id,
+      "postorder": "???",
+      "password_hash": "???",
+      "images": images
+    };
+console.dir( JSON.parse(JSON.stringify(images)) );
+console.dir( new_post_object );
+    const new_post_request = new Request(
+      ip + 'new_blog_post',
+      {
+        method: "POST",
+        body: JSON.stringify( new_post_object ),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    fetch( new_post_request )
+      .then( response => response.json() )
+      .then( json => {
+        render_edit_blog_interface();
+      });
+  } else {
+    const edit_post_object = JSON.stringify({
+      "post_id": edit_post_id,
+      "title": process_outgoing_text( title_text ),
+      "body": process_outgoing_text( body_text ),
+      "root": root_id,
+      "postorder": "???",
+      "password_hash": "???"
+    });
+    const edit_post_request = new Request(
+      ip + 'edit_blog_post',
+      {
+        method: "POST",
+        body: edit_post_object,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    fetch( edit_post_request )
+      .then( response => response.json() )
+      .then( json => {
+        render_edit_blog_interface();
+      });
+  }
+}
+
+function new_blog_old_post() {
+  const edit_post_dropdown =
+    document.getElementById("new_blog_old_post");
+  const edit_post_id = edit_post_dropdown.value;
+
+  if( edit_post_id != -1 ) {
+    load_blog_post( edit_post_id );
+    get_blog_images( edit_post_id );
+    blog_interface_detach_button_events();
+    blog_interface_attach_button_events( edit_post_id );
+  } else {
+    blank_fields();
+    blog_interface_detach_button_events();
+    //TODO: Grey out buttons until complete.
+    get_new_post_id();
+  }
+}
+
+function get_new_post_id() {
+  const new_id_request = new Request(
+    ip + "new_id"
+  );
+  fetch( new_id_request )
+    .then( response => response.json() )
+    .then( json => {
+      blog_interface_attach_button_events( json.new_post_id );
+    });
+}
+
+//On exit/navigate away, if ID genereated but unused, release.
+function release_post_id( inPostID ) {
+  if( inPostID ) {
+    const release_id_request = new Request(
+      ip + "release_id/" + inPostID
+    );
+    fetch( release_id_request )
+      .then( response => response.json() )
+      .then( json => {
+        console.log( "ID released." );
+      });
+  }
+}
+
+const images = [];
+
+function add_image( inPostID ) {
+
+}
+
+function select_image() {
+console.log( "Select image" );
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';/**/
+  input.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL( file );
+    reader.onload = readerEvent => {
+      store_image( readerEvent );
+    }
+  }
+  input.click();
+}
+
+function generate_temp_image_id() {
+  const ids = [];
+  for( index in images ) {
+    ids.push( images[index].image_id );
+  }
+  for( i=0; i<100; i++ ) {
+    if( !ids.includes( i ) ) {
+      return i;
+    }
+  }
+  //TODO: Throw ID generation error.
+}
+
+function store_image( inImageData ) {
+  //1) Get size.
+  const size = inImageData.total/1000000;
+  if( size > 15 ) {
+    alert( "Image too large!" );
+    return;
+  }
+
+  //2) Get MIME type.
+  const mime_type = inImageData.srcElement.result.substr(
+    5,
+    inImageData.srcElement.result.indexOf(";")-5
+  );
+
+  //3) Get the image data.
+  const content = inImageData.target.result;
+  const pos = inImageData.target.result.indexOf( "," );
+  const data = content.substr( pos+1 );
+
+  //4) Compose raw data string.
+  const rawImageData = "data:" + mime_type + ";base64," + data;
+
+  images.push({
+    "image_data": rawImageData,
+    "temp_image_id": generate_temp_image_id()
+  });
+
+  render_blog_images();
+  //5) Send to sever.
+/*  const blog_image_request = new Request(
+    ip + "upload_blog_image",
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        "image_data": rawImageData
+      })
+    }
+  );*/
+  //fetch(
 }

@@ -2,11 +2,13 @@
 <html>
 <head>
   <script src="ip_file.js"></script>
+  <script src="loading_modal.js"></script>
   <script src="edit_blog_interface.js"></script>
   <script src="edit_portfolio_interface.js"></script>
   <script src="admin_interface.js"></script>
   <script src="menu.js"></script>
 
+  <link rel="stylesheet" href="loading_modal.css"/>
   <link rel="stylesheet" href="edit_blog_interface.css"/>
   <link rel="stylesheet" href="edit_portfolio_interface.css"/>
   <link rel="stylesheet" href="admin_interface.css"/>
@@ -37,24 +39,29 @@
   </div>
 
   <div id="edit_blog_interface">
-    <div>
+    <div id="new_blog_existing_prompt_container">
       Existing Post:
       <select id="new_blog_old_post">
       </select>
     </div>
-    <div>
+    <div id="new_blog_title_prompt_contianer">
       Title:
       <input id="new_blog_title" type="text"/>
     </div>
-    <div>
+    <div id="new_blog_root_prompt_container">
       Root:
       <select id="new_blog_root">
         <option value="-1">New Series</option>
       </select>
     </div>
-    <div>
+    <div id="new_blog_body_prompt_container">
       Body:
       <textarea id="new_blog_body"></textarea>
+    </div>
+    <div id="new_blog_image_prompt_container">
+      Images:
+      <div id="new_blog_images_container"></div>
+      <button id="add_new_image">Add Image</button>
     </div>
     <div>
       <button id="submit_post">Submit Blog Post</button>

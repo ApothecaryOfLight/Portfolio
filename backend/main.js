@@ -93,14 +93,6 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         await sqlPool.query( recent_posts );
 
       //2) Get 3 of the most recently updated posts by root
-/*      const recent_roots = "SELECT " +
-        "title, timestamp, body " +
-        "FROM blog_posts " +
-        "WHERE is_root = FALSE " +
-        "AND root_id <> ANY (SELECT * FROM (" +
-        "SELECT DISTINCT root_id, timestamp FROM blog_posts " +
-        "ORDER BY timestamp DESC " +
-        "LIMIT 5) wrapped)";*/
       const recent_roots = "SELECT " +
         "A.title, A.timestamp, A.body " +
         "FROM blog_posts A " +
@@ -125,14 +117,6 @@ app.get( '/get_blog_page/:page', async function(req,res) {
     } else {
       //1) Get the 8 most recently updated posts by root.
       const offset = 5 + (req.params.page-1)*8;
-/*      const paginated_posts = "SELECT " +
-        "title, timestamp, body " +
-        "FROM blog_posts " +
-        "WHERE is_root = FALSE " +
-        "AND root_id <> ANY (SELECT * FROM (" +
-        "SELECT DISTINCT root_id, timestamp FROM blog_posts " +
-        "ORDER BY timestamp DESC " +
-        "LIMIT " + offset + ",8) wrapped)";*/
       const paginated_posts = "SELECT " +
         "curr.title, curr.timestamp, curr.body " +
         "root.title, root.post_id " +
@@ -196,6 +180,7 @@ app.post( '/new_blog_post', async function(req,res) {
       await sqlPool.query( new_post_id_query );
     const new_blog_post_id = new_id_row[0].new_id;
 
+    //Get the root id.
     let root_id;
     if( req.body.root == -1 ) {
       root_id = "NULL";
@@ -203,7 +188,17 @@ app.post( '/new_blog_post', async function(req,res) {
       root_id = req.body.root;
     }
 
-    const new_blog_post_query = "INSERT INTO blog_posts " +
+    //Get a blog image ID for each image.
+    for( index in req.body.images ) {
+      const new_image_id_query = "SELECT " +
+        "Portfolio.generate_new_id( 2 ) as new_image_id;";
+      const [new_image_id_row,new_image_id_field] =
+        await sqlPool.query( new_image_id_query );
+      req.body.images[index].image_id =
+        new_image_id_row[0].new_image_id;
+    }
+
+    let new_blog_post_query = "INSERT INTO blog_posts " +
       "(title, body, timestamp, root_id, postorder, post_id) " +
       "VALUES ( " +
       "\'" + req.body.title + "\', " +
@@ -211,7 +206,25 @@ app.post( '/new_blog_post', async function(req,res) {
       "\'" + timestamp + "\', " +
       root_id + "," +
       "0, " +
-      new_blog_post_id + " );";
+      new_blog_post_id + " ); ";
+
+console.log( "imgs#:" + req.body.images.length );
+
+    for( index in req.body.images ) {
+console.log( "image_id: " + req.body.images[index].image_id );
+console.log( "temp_image_id: " + req.body.images[index].temp_image_id );
+console.log( "new_blog_post_id: " + new_blog_post_id );
+      new_blog_post_query += "INSERT INTO blog_images " +
+        "( image_id, local_image_id, post_id, image_data ) " +
+        "VALUES " +
+        " ( " + req.body.images[index].image_id + ", " +
+        req.body.images[index].temp_image_id + ", " +
+        new_blog_post_id + ", \'" +
+        req.body.images[index].image_data + "\' ); "
+    }
+console.log( new_blog_post_query.substr( 0, 500 ) );
+
+//console.log( new_blog_post_query );
 
     const [new_blog_post_row,new_blog_post_field] =
       await sqlPool.query( new_blog_post_query );

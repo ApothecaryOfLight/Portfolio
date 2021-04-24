@@ -15,3 +15,23 @@
   width: 50%;
   height: 15rem;
 }
+
+/*Images*/
+.image_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.image_body {
+  display: flex;
+  flex-direciton: row;
+}
+
+.image_tools {
+  display: flex;
+  flex-direction: column;
+}
+
+.image_image {
+  max-height: 400px;
+}
