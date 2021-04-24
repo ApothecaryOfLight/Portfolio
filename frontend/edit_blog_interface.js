@@ -1,6 +1,6 @@
 function launch_edit_blog_interface() {
   show_edit_blog_interface();
-  blog_interface_attach_button_events();
+  blog_interface_attach_events();
 
   render_edit_blog_interface();
 }
@@ -83,6 +83,7 @@ function blank_fields() {
   image_container.innerHTML = "";
 }
 
+
 /*Root Posts*/
 function get_roots() {
   const roots_request = new Request (
@@ -105,6 +106,7 @@ function compose_roots( roots ) {
   const dropdown = document.getElementById("new_blog_root");
   dropdown.innerHTML = dom_string;
 }
+
 
 /*Existing Posts*/
 function get_existing_posts() {
@@ -142,13 +144,10 @@ function load_blog_post( inPostID ) {
   const existing_images_request = new Request (
     ip + "get_blog_images/" + inPostID
   );
-console.log( inPostID );
   fetch( existing_images_request )
     .then( response => response.json() )
     .then( json => {
-console.dir( json );
       Object.assign( images, json.images_data );
-console.dir( images );
       render_blog_images();
     });
 }
@@ -168,18 +167,6 @@ function render_blog_post( post_data ) {
 
 
 /*Images*/
-function get_blog_images( post_id ) {
-  const get_blog_images_request = new Request(
-    ip + "get_blog_images/" + post_id
-  );
-  fetch( get_blog_images_request )
-    .then( response => response.json() )
-    .then( json => {
-      //TODO: Fill images object.
-      render_blog_images();
-    });
-}
-
 function render_blog_images() {
   if( images.length == 0 ) {
     return;
@@ -205,9 +192,8 @@ function render_blog_images() {
 }
 
 
-
-//button_events
-const button_events = [
+//Events
+const events = [
   {
     element_name: "submit_post",
     event: "click",
@@ -228,20 +214,20 @@ const button_events = [
   }
 ];
 
-function blog_interface_attach_button_events( inPostID ) {
-  for( index in button_events ) {
-    const event_ref = button_events[index];
-    const button_ref =
+function blog_interface_attach_events( inPostID ) {
+  for( index in events ) {
+    const event_ref = events[index];
+    const element_ref =
       document.getElementById( event_ref.element_name );
     if( inPostID ) {
       const func_ref = event_ref.func.bind( null, inPostID );
-      button_ref.addEventListener(
+      element_ref.addEventListener(
         event_ref.event,
         func_ref
       );
       event_ref.bound.push( func_ref );
     } else {
-      button_ref.addEventListener(
+      element_ref.addEventListener(
         event_ref.event,
         event_ref.func
       );
@@ -249,14 +235,14 @@ function blog_interface_attach_button_events( inPostID ) {
   }
 }
 
-function blog_interface_detach_button_events() {
-  for( index in button_events ) {
-    const event_ref = button_events[index];
-    const button_ref =
+function blog_interface_detach_events() {
+  for( index in events ) {
+    const event_ref = events[index];
+    const element_ref =
       document.getElementById( event_ref.element_name );
     if( event_ref.bound ) {
       while( event_ref.bound.length > 0 ) {
-        button_ref.removeEventListener(
+        element_ref.removeEventListener(
           event_ref.event,
           event_ref.bound[ event_ref.bound.length ]
         );
@@ -264,7 +250,7 @@ function blog_interface_detach_button_events() {
       }
     } else {
       const func_ref = event_ref.func;
-      button_ref.removeEventListener( func_ref );
+      element_ref.removeEventListener( func_ref );
     }
   }
 }
@@ -343,12 +329,12 @@ function new_blog_old_post() {
 
   if( edit_post_id != -1 ) {
     load_blog_post( edit_post_id );
-    get_blog_images( edit_post_id );
-    blog_interface_detach_button_events();
-    blog_interface_attach_button_events( edit_post_id );
+    //get_blog_images( edit_post_id );
+    blog_interface_detach_events();
+    blog_interface_attach_events( edit_post_id );
   } else {
     blank_fields();
-    blog_interface_detach_button_events();
+    blog_interface_detach_events();
     //TODO: Grey out buttons until complete.
     get_new_post_id();
   }
@@ -361,7 +347,7 @@ function get_new_post_id() {
   fetch( new_id_request )
     .then( response => response.json() )
     .then( json => {
-      blog_interface_attach_button_events( json.new_post_id );
+      blog_interface_attach_events( json.new_post_id );
     });
 }
 
@@ -442,15 +428,4 @@ function store_image( inImageData ) {
   });
 
   render_blog_images();
-  //5) Send to sever.
-/*  const blog_image_request = new Request(
-    ip + "upload_blog_image",
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        "image_data": rawImageData
-      })
-    }
-  );*/
-  //fetch(
 }

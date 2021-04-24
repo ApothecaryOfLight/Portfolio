@@ -278,7 +278,6 @@ app.get( '/get_blog_images/:post_id', async function(req,res) {
       ";"
     const [images_row,images_field] =
       await sqlPool.query( get_images_query );
-console.log( images_row.length );
     res.send( JSON.stringify({
       "result": "success",
       "images_data": images_row
