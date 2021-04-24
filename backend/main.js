@@ -264,6 +264,30 @@ app.post( '/edit_blog_post', async function(req,res) {
   }
 });
 
+app.get( '/get_blog_images/:post_id', async function(req,res) {
+  try {
+    const get_images_query = "SELECT " +
+      "image_data, alt_text, image_id " +
+      "FROM blog_images "
+      "WHERE post_id = " + req.params.post_id + ";"
+    const [images_row,images_field] =
+      await sqlPool.query( get_images_query );
+    res.send( JSON.stringify({
+      "result": "success",
+      "images_data": images_row
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.post:get_blog_images",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
 app.get( '/get_root_posts', async function(req,res) {
   try {
     const query_roots = "SELECT title, post_id " +
@@ -278,11 +302,11 @@ app.get( '/get_root_posts', async function(req,res) {
   } catch( error_obj ) {
     await error.log(
       "main.js:app.get:get_root_posts",
-      errro_obj
+      error_obj
     );
     res.send( JSON.stringify({
       "result": "failure",
-      "reason": errro_obj
+      "reason": error_obj
     }));
   }
 });
@@ -300,11 +324,11 @@ app.get( '/get_existing_posts', async function(req,res) {
   } catch( error_obj ) {
     await error.log(
       "main.js:app.get:get_existing_posts",
-      errro_obj
+      error_obj
     );
     res.send( JSON.stringify({
       "result": "failure",
-      "reason": errro_obj
+      "reason": error_obj
     }));
   }
 });
@@ -323,11 +347,11 @@ app.get( '/get_blog_post/:post_id', async function(req,res) {
   } catch( error_obj ) {
     await error.log(
       "main.js:app.get:get_blog_post",
-      errro_obj
+      error_obj
     );
     res.send( JSON.stringify({
       "result": "failure",
-      "reason": errro_obj
+      "reason": error_obj
     }));
   }
 });
