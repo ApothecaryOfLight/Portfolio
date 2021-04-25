@@ -50,3 +50,12 @@
 .page_button:hover {
   background: #DDDDDD;
 }
+
+.blog_image {
+  width: 70%;
+  display: block;
+  margin-top: 1rem;
+  margin-top: 1rem;
+  margin-left: 15%;
+  margin-right: 15%;
+}

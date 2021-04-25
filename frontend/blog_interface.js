@@ -96,7 +96,7 @@ function emplace_images( blog_data ) {
         post_id,
         local_image_id
       );
-      const image_string = "<img src=\'" +
+      const image_string = "<img class=\'blog_image\' src=\'" +
         image_data +
         "\'>";
       const new_string = first_half + image_string + second_half;
