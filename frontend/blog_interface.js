@@ -59,38 +59,30 @@ function find_image_tag( inText ) {
 }
 
 function get_image( blog_data, post_id, local_image_id ) {
-console.log( "post_id: " + post_id );
-console.log( "local_image_id: " + local_image_id );
   const ref = blog_data.recent_posts_images;
-  for( index in ref ) {
-    if( ref[index].local_image_id == local_image_id ) {
-      if( ref[index].post_id == post_id ) {
-        return ref[index].image_data;
+  for( indexB in ref ) {
+    if( ref[indexB].local_image_id == local_image_id ) {
+      if( ref[indexB].post_id == post_id ) {
+        return ref[indexB].image_data;
       }
     }
   }
 }
 
 function emplace_images( blog_data ) {
-console.log( "emplacing images" );
   //1) Iterate through recent_posts.
   for( index in blog_data.recent_posts ) {
-//    const body_text_ref = blog_data.recent_posts[index].body;
     const post_id = blog_data.recent_posts[index].post_id;
     let start_index = 
       blog_data.recent_posts[index].body.indexOf( "[[[image=" );
     while( start_index != -1 ) {
-console.log( "string: " + blog_data.recent_posts[index].body );
       const end_index = 
         blog_data.recent_posts[index].body.indexOf( "]]]" );
-console.log( "start_index: " + Number(start_index+9) );
-console.log( "end_index: " + end_index );
       const local_image_id_text =
         blog_data.recent_posts[index].body.substring(
           start_index+9,
           end_index
         );
-console.log( "local_image_id_text: " + local_image_id_text );
       const local_image_id = Number( local_image_id_text );
       const first_half = 
         blog_data.recent_posts[index].body.substr( 0, start_index );
@@ -103,7 +95,7 @@ console.log( "local_image_id_text: " + local_image_id_text );
         blog_data,
         post_id,
         local_image_id
-      )
+      );
       const image_string = "<img src=\'" +
         image_data +
         "\'>";
