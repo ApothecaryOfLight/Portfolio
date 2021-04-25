@@ -171,6 +171,7 @@ function render_blog_images() {
   if( images.length == 0 ) {
     return;
   }
+console.dir( images );
   let html_string = "";
   for( index in images ) {
     html_string += "<div class=\'image_container\'>" +
@@ -182,13 +183,27 @@ function render_blog_images() {
       "src=\'" + images[index].image_data + "\'>" +
       "<div class=\'image_tools\'>" +
       "<button class=\'image_delete\'>X</button>" +
-      "<button class=\'image_copy_link\'>Copy Link</button>" +
+      "<button class=\'image_copy_link\' " +
+      "onclick=\'copy_link( " +
+      images[index].local_image_id + ")\' " +
+      ">Copy Link</button>" +
       "</div>" +
       "</div></div>";
   }
   const image_container =
     document.getElementById("new_blog_images_container");
   image_container.innerHTML = html_string;
+}
+
+function copy_link( inLocalID ) {
+  console.log( inLocalID );
+  const image_place_text = "[[[image=" + inLocalID + "]]]";
+/*  navigator.clipboard.writeText( image_place_text );*/
+  const body = document.getElementById("new_blog_body");
+  console.log( body.selectionStart );
+  body.value = body.value.substr( 0, body.selectionStart ) +
+    image_place_text +
+    body.value.substr( body.selectionStart, body.value.length );
 }
 
 
@@ -372,7 +387,6 @@ function add_image( inPostID ) {
 }
 
 function select_image() {
-console.log( "Select image" );
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';/**/
@@ -424,7 +438,7 @@ function store_image( inImageData ) {
 
   images.push({
     "image_data": rawImageData,
-    "temp_image_id": generate_temp_image_id()
+    "local_image_id": generate_temp_image_id()
   });
 
   render_blog_images();

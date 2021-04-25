@@ -85,7 +85,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
     if( req.params.page == 1 ) {
       //1) Get the 5 most recent posts
       const recent_posts = "SELECT " +
-        "title, timestamp, body " +
+        "title, timestamp, body, post_id " +
         "FROM blog_posts " +
         "ORDER BY timestamp DESC " +
         "LIMIT 5";
@@ -94,7 +94,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
 
       //2) Get 3 of the most recently updated posts by root
       const recent_roots = "SELECT " +
-        "A.title, A.timestamp, A.body " +
+        "A.title, A.timestamp, A.body, A.post_id " +
         "FROM blog_posts A " +
         "INNER JOIN blog_posts B " +
         "ON A.root_id = B.post_id " +
@@ -103,13 +103,53 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         "LIMIT 5;";
       const [roots_row,roots_field] =
         await sqlPool.query( recent_roots );
-      //3) Combine them.
+
+      //3) Get the images for the posts.
+      const recent_post_ids = [];
+      let recent_post_where_predicate = "";
+      for( index in rec_row ) {
+        recent_post_ids.push( rec_row[index].post_id );
+        recent_post_where_predicate += rec_row[index].post_id;
+        if( index < rec_row.length-1 ) {
+          recent_post_where_predicate += " OR post_id = ";
+        }
+      }
+      const recent_post_images_query = "SELECT " +
+        "image_id, local_image_id, image_data, post_id " +
+        "FROM blog_images " +
+        "WHERE post_id = " +
+        recent_post_where_predicate + ";";
+      const [recent_images_row,recent_images_fields] =
+        await sqlPool.query( recent_post_images_query );
+
+
+      const recent_roots_ids = [];
+      let recent_roots_where_predicate = "";
+      for( index in roots_row ) {
+        recent_roots_ids.push( roots_row[index].post_id );
+        recent_roots_where_predicate += roots_row[index].post_id;
+        if( index < roots_row.length-1 ) {
+          recent_roots_where_predicate += " OR post_id = ";
+        }
+      }
+      const recent_roots_images_query = "SELECT " +
+        "image_id, local_image_id, image_data, post_id " +
+        "FROM blog_images " +
+        "WHERE post_id = " +
+        recent_roots_where_predicate + ";";
+      const [roots_images_row,roots_images_fields] =
+        await sqlPool.query( recent_roots_images_query );
+
+      //4) Combine them.
       const blog_posts_obj = {
         "recent_posts": rec_row,
         "root_posts": roots_row,
-        "page": 1
+        "page": 1,
+        "recent_posts_images": recent_images_row,
+        "root_posts_images": roots_images_row
       };
-      //4) Return them.
+
+      //5) Return them.
       res.send( JSON.stringify({
         "result": "success",
         "blog_posts": blog_posts_obj
@@ -213,7 +253,7 @@ app.post( '/new_blog_post', async function(req,res) {
         "( image_id, local_image_id, post_id, image_data ) " +
         "VALUES " +
         " ( " + req.body.images[index].image_id + ", " +
-        req.body.images[index].temp_image_id + ", " +
+        req.body.images[index].local_image_id + ", " +
         new_blog_post_id + ", \'" +
         req.body.images[index].image_data + "\' ); "
     }

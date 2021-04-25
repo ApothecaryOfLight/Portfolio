@@ -18,6 +18,8 @@ async function get_blog_page( inPage ) {
 }
 
 function render_blog( blog_data ) {
+console.dir( blog_data );
+emplace_images( blog_data );
   get_blog_page_count();
 
   const blog =
@@ -52,17 +54,77 @@ function render_blog( blog_data ) {
   blog.innerHTML = recent_posts_dom;
 }
 
+function find_image_tag( inText ) {
+  return inText.indexOf( "image[[[" );
+}
+
+function get_image( blog_data, post_id, local_image_id ) {
+console.log( "post_id: " + post_id );
+console.log( "local_image_id: " + local_image_id );
+  const ref = blog_data.recent_posts_images;
+  for( index in ref ) {
+    if( ref[index].local_image_id == local_image_id ) {
+      if( ref[index].post_id == post_id ) {
+        return ref[index].image_data;
+      }
+    }
+  }
+}
+
+function emplace_images( blog_data ) {
+console.log( "emplacing images" );
+  //1) Iterate through recent_posts.
+  for( index in blog_data.recent_posts ) {
+//    const body_text_ref = blog_data.recent_posts[index].body;
+    const post_id = blog_data.recent_posts[index].post_id;
+    let start_index = 
+      blog_data.recent_posts[index].body.indexOf( "[[[image=" );
+    while( start_index != -1 ) {
+console.log( "string: " + blog_data.recent_posts[index].body );
+      const end_index = 
+        blog_data.recent_posts[index].body.indexOf( "]]]" );
+console.log( "start_index: " + Number(start_index+9) );
+console.log( "end_index: " + end_index );
+      const local_image_id_text =
+        blog_data.recent_posts[index].body.substring(
+          start_index+9,
+          end_index
+        );
+console.log( "local_image_id_text: " + local_image_id_text );
+      const local_image_id = Number( local_image_id_text );
+      const first_half = 
+        blog_data.recent_posts[index].body.substr( 0, start_index );
+      const second_half =
+        blog_data.recent_posts[index].body.substr(
+          end_index+3,
+          blog_data.recent_posts[index].body.length
+        );
+      const image_data = get_image(
+        blog_data,
+        post_id,
+        local_image_id
+      )
+      const image_string = "<img src=\'" +
+        image_data +
+        "\'>";
+      const new_string = first_half + image_string + second_half;
+      blog_data.recent_posts[index].body = new_string;
+      start_index =
+        blog_data.recent_posts[index].body.indexOf( "[[[image=" );
+    }
+  }
+}
+
+
 /*Pagination*/
 async function get_blog_page_count() {
   const get_blog_page_request = new Request(
     ip + "page_count"
   );
-  console.log( "get_blog_page_count()" );
   fetch( get_blog_page_request )
     .then( response => response.json() )
     .then( json => {
       if( json.result == "success" ) {
-        console.dir( json );
         render_blog_pagination( json.post_count );
       } else {
         console.error( json.reason );
@@ -74,13 +136,11 @@ function render_blog_pagination( inPostCount ) {
   const blog_pagination_container =
     document.getElementById("blog_interface_pagination_container");
   const page_count = Math.ceil( (inPostCount - 5)/8 );
-  console.log( page_count );
   let page_buttons = "";
   for( i=1; i<=page_count; i++ ) {
     page_buttons += "<div class=\'page_button\'>" +
       i + "</div>";
   }
-  console.log( page_buttons );
   blog_pagination_container.innerHTML = page_buttons;
 }
 
