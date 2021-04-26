@@ -18,8 +18,7 @@ async function get_blog_page( inPage ) {
 }
 
 function render_blog( blog_data ) {
-console.dir( blog_data );
-emplace_images( blog_data );
+  emplace_images( blog_data );
   get_blog_page_count();
 
   const blog =

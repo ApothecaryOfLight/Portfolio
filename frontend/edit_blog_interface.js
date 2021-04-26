@@ -1,5 +1,6 @@
 function launch_edit_blog_interface() {
   show_edit_blog_interface();
+  blog_interface_detach_events();
   blog_interface_attach_events();
 
   render_edit_blog_interface();
@@ -237,6 +238,7 @@ const events = [
 ];
 
 function blog_interface_attach_events( inPostID ) {
+console.log( "attach" );
   for( index in events ) {
     const event_ref = events[index];
     const element_ref =
@@ -258,6 +260,7 @@ function blog_interface_attach_events( inPostID ) {
 }
 
 function blog_interface_detach_events() {
+console.log( "detach" );
   for( index in events ) {
     const event_ref = events[index];
     const element_ref =
@@ -384,6 +387,7 @@ function get_new_post_id() {
   fetch( new_id_request )
     .then( response => response.json() )
     .then( json => {
+      blog_interface_detach_events();
       blog_interface_attach_events( json.new_post_id );
     });
 }
