@@ -275,6 +275,27 @@ app.post( '/new_blog_post', async function(req,res) {
   }
 });
 
+app.get( '/delete_post/:post_id', async function(req,res) {
+  try {
+    const delete_query = "DELETE FROM blog_posts " +
+      "WHERE post_id = " + req.params.post_id + ";";
+    const [del_row,del_field] =
+      await sqlPool.query( delete_query );
+    res.send( JSON.stringify({
+      "result": "success"
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.post:new_blog_page",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
 app.post( '/edit_blog_post', async function(req,res) {
   try {
     let root_id;

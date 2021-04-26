@@ -138,6 +138,7 @@ function load_blog_post( inPostID ) {
   fetch( existing_request )
     .then( response => response.json() )
     .then( json => {
+      blank_fields();
       render_blog_post( json.post_data );
     });
 
@@ -225,6 +226,12 @@ const events = [
     element_name: "add_new_image",
     event: "click",
     func: select_image,
+    bound: []
+  },
+  {
+    element_name: "new_blog_delete",
+    event: "click",
+    func: delete_post,
     bound: []
   }
 ];
@@ -333,6 +340,21 @@ function submit_post() {
       .then( response => response.json() )
       .then( json => {
         render_edit_blog_interface();
+      });
+  }
+}
+
+function delete_post( inPostID ) {
+  if( inPostID ) {
+    const delete_post = new Request(
+      ip + "delete_post/" + inPostID
+    );
+    fetch( delete_post )
+      .then( response => response.json() )
+      .then( json => {
+        console.log( "Successfully deleted!" );
+        get_existing_posts();
+        blank_fields();
       });
   }
 }
