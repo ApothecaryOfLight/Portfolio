@@ -1,18 +1,20 @@
 function launch_edit_blog_interface() {
+console.log( "launch_edit_blog_interface" );
   show_edit_blog_interface();
-  blog_interface_detach_events();
   blog_interface_attach_events();
 
   render_edit_blog_interface();
 }
 
 function render_edit_blog_interface() {
+console.log( "render_edit_blog_interface" );
   get_roots();
   get_existing_posts();
   blank_fields();
 }
 
 function show_edit_blog_interface() {
+console.log( "shot_edit_blog_interface" );
   const edit_blog_interface =
     document.getElementById("edit_blog_interface");
   const error_log_container =
@@ -22,6 +24,7 @@ function show_edit_blog_interface() {
 }
 
 function process_outgoing_text( inText ) {
+console.log( "process_outgoing_text" );
   let processed_text = inText.replace(
     /\'/g,
     "&#39;"
@@ -46,6 +49,7 @@ function process_outgoing_text( inText ) {
 }
 
 function process_incoming_text( inText ) {
+console.log( "process_incoming_text" );
   let processed_text = inText.replace(
     /&#39;/g,
     "\'"
@@ -70,6 +74,7 @@ function process_incoming_text( inText ) {
 }
 
 function blank_fields() {
+console.log( "blank_fields" );
   const title_field = document.getElementById("new_blog_title");
   const root_field = document.getElementById("new_blog_root");
   const body_field = document.getElementById("new_blog_body");
@@ -87,6 +92,7 @@ function blank_fields() {
 
 /*Root Posts*/
 function get_roots() {
+console.log( "get_roots" );
   const roots_request = new Request (
     ip + "get_root_posts"
   );
@@ -98,6 +104,7 @@ function get_roots() {
 }
 
 function compose_roots( roots ) {
+console.log( "compose_roots" );
   let dom_string = "<option value=\'-1\'>New Series</option>";
   for( index in roots ) {
     dom_string += "<option value=\'";
@@ -111,6 +118,7 @@ function compose_roots( roots ) {
 
 /*Existing Posts*/
 function get_existing_posts() {
+console.log( "get_existing_posts" );
   const existing_request = new Request (
     ip + "get_existing_posts"
   );
@@ -122,6 +130,8 @@ function get_existing_posts() {
 }
 
 function compose_existing( existing ) {
+console.log( "compose_existing: " );
+console.dir( existing );
   let dom_string = "<option value=\'-1\'>New Post</option>";
   for( index in existing ) {
     dom_string += "<option value=\'";
@@ -133,6 +143,7 @@ function compose_existing( existing ) {
 }
 
 function load_blog_post( inPostID ) {
+console.log( "load_blog_post: " + inPostID );
   const existing_request = new Request (
     ip + "get_blog_post/" + inPostID
   );
@@ -155,6 +166,8 @@ function load_blog_post( inPostID ) {
 }
 
 function render_blog_post( post_data ) {
+console.log( "render_blog_post" );
+console.dir( post_data );
   const title_field = document.getElementById("new_blog_title");
   const root_field = document.getElementById("new_blog_root");
   const body_field = document.getElementById("new_blog_body");
@@ -170,10 +183,10 @@ function render_blog_post( post_data ) {
 
 /*Images*/
 function render_blog_images() {
+console.log( "render_blog_images" );
   if( images.length == 0 ) {
     return;
   }
-console.dir( images );
   let html_string = "";
   for( index in images ) {
     html_string += "<div class=\'image_container\'>" +
@@ -198,6 +211,7 @@ console.dir( images );
 }
 
 function copy_link( inLocalID ) {
+console.log( "copy_link : " + inLocalID );
   console.log( inLocalID );
   const image_place_text = "[[[image=" + inLocalID + "]]]";
 /*  navigator.clipboard.writeText( image_place_text );*/
@@ -238,6 +252,7 @@ const events = [
 ];
 
 function blog_interface_attach_events( inPostID ) {
+  blog_interface_detach_events();
 console.log( "attach" );
   for( index in events ) {
     const event_ref = events[index];
@@ -249,12 +264,14 @@ console.log( "attach" );
         event_ref.event,
         func_ref
       );
+console.log( "adding: " + event_ref.element_name );
       event_ref.bound.push( func_ref );
     } else {
       element_ref.addEventListener(
         event_ref.event,
         event_ref.func
       );
+console.log( "addingB: " + event_ref.element_name );
     }
   }
 }
@@ -263,24 +280,35 @@ function blog_interface_detach_events() {
 console.log( "detach" );
   for( index in events ) {
     const event_ref = events[index];
-    const element_ref =
+
+    const delE = document.getElementById( event_ref.element_name );
+    const newE = delE.cloneNode( true );
+    delE.parentNode.replaceChild( newE, delE );
+/*    const element_ref =
       document.getElementById( event_ref.element_name );
+console.log( event_ref.element_name );
     if( event_ref.bound ) {
       while( event_ref.bound.length > 0 ) {
+console.log( "=========> Removing " );
+console.log( "=========> " + event_ref.bound.length );
         element_ref.removeEventListener(
           event_ref.event,
           event_ref.bound[ event_ref.bound.length ]
         );
         event_ref.bound.pop();
       }
+console.log( event_ref.bound.length );
     } else {
+console.log( "=========> " + "boundless" );
       const func_ref = event_ref.func;
       element_ref.removeEventListener( func_ref );
     }
+  }*/
   }
 }
 
 function submit_post() {
+console.log( "submit_post" );
   const title_field =
     document.getElementById("new_blog_title");
   const body_field =
@@ -348,6 +376,7 @@ function submit_post() {
 }
 
 function delete_post( inPostID ) {
+console.log( "delete_post" );
   if( inPostID ) {
     const delete_post = new Request(
       ip + "delete_post/" + inPostID
@@ -363,6 +392,7 @@ function delete_post( inPostID ) {
 }
 
 function new_blog_old_post() {
+console.log( "new_blog_old_post" );
   const edit_post_dropdown =
     document.getElementById("new_blog_old_post");
   const edit_post_id = edit_post_dropdown.value;
@@ -370,30 +400,31 @@ function new_blog_old_post() {
   if( edit_post_id != -1 ) {
     load_blog_post( edit_post_id );
     //get_blog_images( edit_post_id );
-    blog_interface_detach_events();
     blog_interface_attach_events( edit_post_id );
   } else {
     blank_fields();
-    blog_interface_detach_events();
+    blog_interface_attach_events();
+//    blog_interface_detach_events();
     //TODO: Grey out buttons until complete.
     get_new_post_id();
   }
 }
 
 function get_new_post_id() {
+console.log( "get_new_post_id" );
   const new_id_request = new Request(
     ip + "new_id"
   );
   fetch( new_id_request )
     .then( response => response.json() )
     .then( json => {
-      blog_interface_detach_events();
       blog_interface_attach_events( json.new_post_id );
     });
 }
 
 //On exit/navigate away, if ID genereated but unused, release.
 function release_post_id( inPostID ) {
+console.log( "release_post_id: " + inPostID );
   if( inPostID ) {
     const release_id_request = new Request(
       ip + "release_id/" + inPostID
@@ -413,6 +444,7 @@ function add_image( inPostID ) {
 }
 
 function select_image() {
+console.log( "select_image" );
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';/**/
@@ -428,6 +460,7 @@ function select_image() {
 }
 
 function generate_temp_image_id() {
+console.log( "generate_temp_image_id" );
   const ids = [];
   for( index in images ) {
     ids.push( images[index].image_id );
@@ -441,6 +474,8 @@ function generate_temp_image_id() {
 }
 
 function store_image( inImageData ) {
+console.log( "store_image" );
+console.dir( inImageData );
   //1) Get size.
   const size = inImageData.total/1000000;
   if( size > 15 ) {
