@@ -8,7 +8,7 @@ app.use(cors());
 
 /*Body data*/
 const body_parser = require('body-parser');
-app.use( body_parser.json() );
+app.use( body_parser.json({limit:'4MB'}) );
 
 /*File system*/
 const file_stream = require('fs');
