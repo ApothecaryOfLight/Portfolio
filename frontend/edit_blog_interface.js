@@ -6,6 +6,7 @@ function launch_edit_blog_interface() {
 }
 
 function render_edit_blog_interface() {
+console.log( "render_edit_blog_interface" );
   get_roots();
   get_existing_posts();
   blank_fields();
@@ -69,6 +70,7 @@ function process_incoming_text( inText ) {
 }
 
 function blank_fields() {
+console.log( "blank_fields" );
   const title_field = document.getElementById("new_blog_title");
   const root_field = document.getElementById("new_blog_root");
   const body_field = document.getElementById("new_blog_body");
@@ -157,6 +159,8 @@ function render_blog_post( post_data ) {
   const title_field = document.getElementById("new_blog_title");
   const root_field = document.getElementById("new_blog_root");
   const body_field = document.getElementById("new_blog_body");
+  const dropdown = document.getElementById("new_blog_old_post");
+  dropdown.value = post_data.post_id;
   title_field.value = process_incoming_text( post_data.title );
   if( post_data.root_id != null ) {
     root_field.value = post_data.root_id;
@@ -197,11 +201,9 @@ console.dir( images );
 }
 
 function copy_link( inLocalID ) {
-  console.log( inLocalID );
   const image_place_text = "[[[image=" + inLocalID + "]]]";
 /*  navigator.clipboard.writeText( image_place_text );*/
   const body = document.getElementById("new_blog_body");
-  console.log( body.selectionStart );
   body.value = body.value.substr( 0, body.selectionStart ) +
     image_place_text +
     body.value.substr( body.selectionStart, body.value.length );
@@ -349,11 +351,11 @@ function delete_post( inPostID ) {
   }
 }
 
+//GOTO
 function new_blog_old_post() {
   const edit_post_dropdown =
     document.getElementById("new_blog_old_post");
   const edit_post_id = edit_post_dropdown.value;
-
   if( edit_post_id != -1 ) {
     load_blog_post( edit_post_id );
     //get_blog_images( edit_post_id );
@@ -361,7 +363,6 @@ function new_blog_old_post() {
   } else {
     blank_fields();
     blog_interface_attach_events();
-//    blog_interface_detach_events();
     //TODO: Grey out buttons until complete.
     get_new_post_id();
   }
