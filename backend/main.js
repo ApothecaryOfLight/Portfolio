@@ -423,6 +423,255 @@ app.get( '/get_blog_post/:post_id', async function(req,res) {
   }
 });
 
+
+/*Portfolio*/
+app.get( '/get_portfolio_entries', async function(req,res) {
+  try {
+    const get_portfolio_entries = "SELECT " +
+      "portfolio_title, portfolio_entry_id " +
+      "FROM portfolio_entries;";
+    const [entries_rows,entries_fields] =
+      await sqlPool.query( get_portfolio_entries );
+    res.send( JSON.stringify({
+      "result": "success",
+      "portfolio_entries": entries_rows
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.get:get_portfolio_entries",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+//TODO: Put all of these queries into a single transaction
+app.post( '/add_portfolio_entry', async function(req,res) {
+  try {
+    //1) Get the portfolio entry ID (or generate new one).
+    let new_entity_id;
+    if( !req.body.portfolio_entry_id ) {
+      const get_portfolio_id = "SELECT " +
+        "Portfolio.generate_new_id( 3 ) as new_id;";
+      const [new_id_row,new_id_field] =
+        await sqlPool.query( get_portfolio_id );
+      new_entity_id = new_id_row[0].new_id;
+    } else {
+      new_entity_id = req.body.portfolio_entry_id;
+    }
+
+
+    //2) Add or update the portfolio entity itself.
+    if( req.body.portfolio_entry_id ) {
+      const update_portfolio_entry_query = "UPDATE " +
+        "portfolio_entries SET " +
+        "portfolio_title = \'" + req.body.title + "\', " +
+        "portfolio_text = \'" + req.body.description + "\', " +
+        "portfolio_flags = \'" + req.body.flags + "\', " +
+        "github_link = \'" + req.body.github + "\', " +
+        "live_page = \'" + req.body.live_page + "\' " +
+        "WHERE portfolio_entry_id = " +
+        req.body.portfolio_entry_id + ";";
+      const [update_row,update_field] =
+        await sqlPool.query( update_portfolio_entry_query );
+    } else {
+      const add_portfolio_entry_query = "INSERT INTO " +
+        "portfolio_entries " +
+        "(portfolio_entry_id, portfolio_title, " +
+        "portfolio_text, portfolio_flags, " +
+        "github_link, live_page) " +
+        "VALUES " +
+        "( " +
+        new_entity_id + ", " +
+        "\'" + req.body.title + "\', " +
+        "\'" + req.body.description + "\', " +
+        "\'" + req.body.flags + "\', " +
+        "\'" + req.body.github + "\', " +
+        "\'" + req.body.live_page + "\');";
+      const [add_entry_row,add_entry_field] =
+        await sqlPool.query( add_portfolio_entry_query );
+    }
+//TODO: If images have been removed, delete them.
+//TODO: Compress local_image_ids
+
+    const images_to_delete = [];
+    const images_to_add = [];
+    const check_local_image_id_query = "SELECT " +
+      "local_image_id " +
+      "FROM portfolio_images " +
+      "WHERE portfolio_entry_id = " +
+      new_entity_id + ";";
+    const [local_rows,local_fields] =
+      await sqlPool.query( check_local_image_id_query );
+
+    const max_image_id_query = "SELECT " +
+      "MAX( local_image_id ) as max_local_image_id " +
+      "FROM portfolio_images " +
+      "WHERE portfolio_entry_id = " +
+      new_entity_id + ";";
+    const [max_row,max_field] =
+      await sqlPool.query( max_image_id_query );
+    const max_local_image_id =
+      max_row[0].max_local_image_id ?? 0;
+    for( index in req.body.images ) {
+      const image_ref = req.body.images[index];
+      if( !local_rows.includes( image_ref.local_image_id ) ) {
+        if( image_ref.local_image_id < max_local_image_id ) {
+          images_to_delete.push( image_ref.local_image_id );
+        } else {
+          images_to_add.push({
+            "local_image_id": image_ref.local_image_id,
+            "image_data": image_ref.image_data
+          });
+        }
+      }
+    }
+
+    //) Delete images that have been removed.
+    if( images_to_delete.length > 0 ) {
+      let delete_image_predicate = "(";
+      for( indexC in images_to_delete ) {
+        delete_image_predicate +=
+          "local_image_id = " +
+          images_to_delete[indexC];
+        if( indexC < images_to_delete.length ) {
+          delete_image_predicate += " OR ";
+        }
+      }
+      delete_image_predicate += ") "
+      const delete_images_query = "DELETE FROM " +
+        "portfolio_images " +
+        "WHERE portfolio_entry_id = " +
+        new_entity_id + " AND " +
+        delete_image_predicate + ";";
+      const [del_row,del_field] =
+        await sqlPool.query( delete_images_query );
+    }
+
+    //) Insert the new images.
+    if( images_to_add.length > 0 ) {
+      let insert_image_values = "VALUES ";
+      for( index in images_to_add ) {
+        insert_image_values += "( " +
+          "(SELECT Portfolio.generate_new_id(4)), " +
+          images_to_add[index].local_image_id + ", " +
+          new_entity_id + ", " +
+          "\'" +
+          images_to_add[index].image_data +
+          "\' " +
+          "), ";
+      }
+      insert_image_values = insert_image_values.substr(
+        0,
+        insert_image_values.length-2
+      );
+      const insert_images_query = "INSERT INTO " +
+        "portfolio_images " +
+        "(image_id, local_image_id, " +
+        "portfolio_entry_id, image_data ) " +
+        insert_image_values + ";";
+      const [insert_row,insert_field] =
+        await sqlPool.query( insert_images_query );
+    }
+
+    //) Compress the local_image_ids to ensure consistency.
+    const query_local_image_ids = "SELECT " +
+      "local_image_id FROM portfolio_images " +
+      "WHERE portfolio_entry_id = " + new_entity_id + ";";
+    const [locals_row,locals_field] =
+      await sqlPool.query( query_local_image_ids );
+    for( index in locals_row ) {
+      const update_query = "UPDATE portfolio_images " +
+        "SET local_image_id = " + index + " " +
+        "WHERE local_image_id = " +
+        locals_row[index].local_image_id + ";";
+      const [upd_row,upd_field] =
+        await sqlPool.query( update_query );
+    }
+
+
+    res.send( JSON.stringify({
+      "result": "success"
+    }));
+  } catch( error_obj ) {
+    const error_message = error_obj.toString();
+    await error.log(
+      "main.js:app.post:add_portfolio_entry",
+      error_message
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_message
+    }));
+  }
+});
+
+app.get(
+  '/get_portfolio_entry/:portfolio_entity_id',
+  async function(req,res) {
+  try {
+    //1) Get portfolio entity
+    const get_portfolio_entry_query = "SELECT " +
+      "portfolio_entry_id, portfolio_title, " +
+      "portfolio_text, portfolio_flags, github_link, " +
+      "live_page " +
+      "FROM portfolio_entries " +
+      "WHERE portfolio_entry_id = " +
+      req.params.portfolio_entity_id + ";";
+    const [entry_row,entry_field] =
+      await sqlPool.query( get_portfolio_entry_query );
+
+    //2) Get portfolio images
+    const get_portfolio_images_query = "SELECT " +
+      "image_data, image_id, local_image_id " +
+      "FROM portfolio_images " +
+      "WHERE portfolio_entry_id = " +
+      req.params.portfolio_entity_id + ";";
+    const [image_rows,image_fields] =
+      await sqlPool.query( get_portfolio_images_query );
+
+    res.send( JSON.stringify({
+      "result": "success",
+      "portfolio_entry": entry_row[0],
+      "images": image_rows
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.get:get_portfolio_entry",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+app.get( '/delete_entity/:entity_id', async function(req,res) {
+  try {
+    const delete_query = "DELETE FROM portfolio_entries " +
+      "WHERE portfolio_entry_id = " +
+      req.params.entity_id + ";";
+    const [del_row,del_field] = await
+      sqlPool.query( delete_query );
+    res.send( JSON.stringify({
+      "result": "success"
+    }));
+  } catch( error ) {
+    await error.log(
+      "main.js:app.get:delete_entity",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
 if( process.argv[2] == "https" ) {
   server.listen( 3000 );
 } else {

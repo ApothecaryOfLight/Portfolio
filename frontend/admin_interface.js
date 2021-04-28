@@ -11,6 +11,11 @@ window.addEventListener( 'load', (window_loaded) => {
       "dom_name": "edit_blog_button",
       "function": "launch_edit_blog_interface()",
       "button_text": "Edit Blog"
+    },
+    {
+      "dom_name": "edit_portfolio_button",
+      "function": "launch_edit_portfolio_interface()",
+      "button_text": "Edit Portfolio"
     }
   ];
 
@@ -23,8 +28,13 @@ function launch_error_log_interface() {
     document.getElementById("edit_blog_interface");
   const error_log_container =
     document.getElementById("error_log_container");
+  const edit_portfolio_interface =
+    document.getElementById("edit_portfolio_interface");
+
   edit_blog_interface.style.display = "none";
   error_log_container.style.display = "block";
+  edit_portfolio_interface.style.display = "none";
+
   get_errors();
 }
 

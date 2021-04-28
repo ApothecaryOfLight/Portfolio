@@ -43,7 +43,6 @@ async function process_text( inText ) {
 
 async function log( source, message ) {
   const timestamp_string = get_timestamp();
-
   const new_error_id_query =
     "SELECT Portfolio.generate_new_id( 0 ) as new_id;";
   const [new_error_row,new_error_field] =
@@ -55,7 +54,7 @@ async function log( source, message ) {
     "(error_id, source, message, timestamp) VALUES " +
     "(" + new_error_id + 
     ", \'" + source +
-    "\', \'" + await process_text(JSON.stringify(message)) +
+    "\', \'" + await process_text( message ) +
     "\', " +
     "\'" + timestamp_string + "\'" +
     ");"

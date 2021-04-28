@@ -1,0 +1,25 @@
+#edit_portfolio_interface {
+  display: none;
+  margin-top: 5rem;
+}
+
+#portfolio_title_field {
+  width: 80%;
+}
+
+#portfolio_github_field {
+  width: 80%;
+}
+
+#portfolio_live_page_field {
+  width: 80%;
+}
+
+#portfolio_description_field {
+  width: 80%;
+  height: 5rem;
+}
+
+#portfolio_flags_field {
+  width: 80%;
+}

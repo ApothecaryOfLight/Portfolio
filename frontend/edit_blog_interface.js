@@ -17,8 +17,12 @@ function show_edit_blog_interface() {
     document.getElementById("edit_blog_interface");
   const error_log_container =
     document.getElementById("error_log_container");
+  const edit_portfolio_interface =
+    document.getElementById("edit_portfolio_interface");
+
   error_log_container.style.display = "none";
   edit_blog_interface.style.display = "block";
+  edit_portfolio_interface.style.display = "none";
 }
 
 function process_outgoing_text( inText ) {
