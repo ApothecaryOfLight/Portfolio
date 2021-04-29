@@ -1,0 +1,10 @@
+.scroll {
+  height: 100%;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}

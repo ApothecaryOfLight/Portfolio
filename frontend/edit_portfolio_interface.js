@@ -282,6 +282,7 @@ function generate_portfolio_temp_image_id() {
 }
 
 function render_portfolio_image_gallery() {
+console.dir( portfolio_images );
   if( portfolio_images.length == 0 ) {
     return;
   }
@@ -292,13 +293,21 @@ function render_portfolio_image_gallery() {
       "<img class=\'portfolio_image_image\' " +
       "src=\'" + portfolio_images[index].image_data + "\'>" +
       "<div class=\'portfolio_image_tools\'>" +
-      "<button class=\'portfolio_image_delete\'>X</button>" +
+      "<button class=\'portfolio_image_delete\' " +
+      "onclick=\'delete_portfolio_image(" +
+      portfolio_images[index].local_image_id +
+      ");\'" +
+      ">X</button>" +
       "</div>" +
       "</div></div>";
   }
   const portfolio_images_container =
     document.getElementById("portfolio_images_container");
   portfolio_images_container.innerHTML = html_string;
+}
+
+function delete_portfolio_image( inLocalImageID ) {
+  console.log( "delete image: " + inLocalImageID );
 }
 
 function get_portfolio_images_object() {
@@ -315,7 +324,6 @@ function get_portfolio_images_object() {
 
 /*Submit*/
 function portfolio_submit_entry( existingPortfolioEntryID ) {
-console.log( "portfoio_submit_entry" );
   const title_field =
     document.getElementById("portfolio_title_field");
   const github_field =
@@ -336,8 +344,6 @@ console.log( "portfoio_submit_entry" );
     "flags": flags_field.value,
     "images": get_portfolio_images_object()
   };
-
-  console.dir( portfolio_entry_object );
 
   const submit_portfolio_request = new Request(
     ip + "add_portfolio_entry",

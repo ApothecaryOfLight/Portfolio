@@ -581,13 +581,16 @@ app.post( '/add_portfolio_entry', async function(req,res) {
     const query_local_image_ids = "SELECT " +
       "local_image_id FROM portfolio_images " +
       "WHERE portfolio_entry_id = " + new_entity_id + ";";
+console.log( query_local_image_ids );
     const [locals_row,locals_field] =
       await sqlPool.query( query_local_image_ids );
     for( index in locals_row ) {
       const update_query = "UPDATE portfolio_images " +
         "SET local_image_id = " + index + " " +
         "WHERE local_image_id = " +
-        locals_row[index].local_image_id + ";";
+        locals_row[index].local_image_id + " " +
+        "LIMIT 1" +
+        ";";
       const [upd_row,upd_field] =
         await sqlPool.query( update_query );
     }
@@ -646,6 +649,40 @@ app.get(
     res.send( JSON.stringify({
       "result": "failure",
       "reason": error_obj
+    }));
+  }
+});
+
+//TODO: Cache this response on startup until it is updated.
+app.get( '/get_portfolio', async function(req,res) {
+  try {
+    const get_portfolio_query = "SELECT " +
+      "portfolio_entry_id, portfolio_title, " +
+      "portfolio_text, portfolio_flags, github_link, " +
+      "live_page " +
+      "FROM portfolio_entries;";
+    const [port_rows,port_fields ] =
+      await sqlPool.query( get_portfolio_query );
+
+    const get_portfolio_images = "SELECT " +
+      "image_data, portfolio_entry_id " +
+      "FROM portfolio_images;";
+    const [image_rows,image_fields] =
+      await sqlPool.query( get_portfolio_images );
+
+    res.send( JSON.stringify({
+      "result": "success",
+      "portfolio_data": port_rows,
+      "portfolio_images": image_rows
+    }));
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.get:get_portfolio",
+      error_obj.toString()
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj.toString()
     }));
   }
 });
