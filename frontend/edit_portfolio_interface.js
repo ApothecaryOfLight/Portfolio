@@ -252,40 +252,46 @@ function portfolio_add_image_to_gallery( inImageData ) {
 
   portfolio_images.push({
     "image_data": rawImageData,
-    "local_image_id": generate_portfolio_temp_image_id()
+    local_image_id: generate_new_local_id()
   });
 
   render_portfolio_image_gallery();
 }
 
-function delete_image_from_gallery() {
-
+function generate_new_local_id() {
+  const local_ids = [];
+  for( index in portfolio_images ) {
+    local_ids.push( portfolio_images[index].local_image_id );
+  }
+  let new_local_id = 0;
+  while( local_ids.includes( new_local_id ) ) {
+    new_local_id++;
+  }
 }
 
-function generate_portfolio_temp_image_id() {
-//  const ids = [];
-  let max = 0;
-  for( index in portfolio_images ) {
-    //ids.push( portfolio_images[index].local_image_id );
-    max = Math.max(
-      portfolio_images[index].local_image_id,
-      max
-    );
-  }
-  return max;
-/*  for( i=0; i<100; i++ ) {
-    if( !ids.includes( i ) ) {
-      return i;
+function delete_image_from_gallery( id, local_id ) {
+console.log( "\n\ndelete_image_from_gallery." );
+console.log( id + "/" + local_id );
+  if( id ) {
+    for( index in portfolio_images ) {
+      if( id ) {
+        if( portfolio_images[index].image_id == id ) {
+          portfolio_images.splice( index, 1 );
+          render_portfolio_image_gallery();
+        }
+      } else {
+        if( portfolio_images[index].local_image_id == local_id ) {
+          portfolio_images.splice( index, 1 );
+          render_portfolio_image_gallery();
+        }
+      }
     }
-  }*/
-  //TODO: Throw ID generation error.
+  }
 }
 
 function render_portfolio_image_gallery() {
+console.log( "\n\nrender portfolio images " );
 console.dir( portfolio_images );
-  if( portfolio_images.length == 0 ) {
-    return;
-  }
   let html_string = "";
   for( index in portfolio_images ) {
     html_string += "<div class=\'portfolio_image_container\'>" +
@@ -294,30 +300,35 @@ console.dir( portfolio_images );
       "src=\'" + portfolio_images[index].image_data + "\'>" +
       "<div class=\'portfolio_image_tools\'>" +
       "<button class=\'portfolio_image_delete\' " +
-      "onclick=\'delete_portfolio_image(" +
+      "onclick=\'delete_image_from_gallery(" +
+      portfolio_images[index].image_id + ", " +
       portfolio_images[index].local_image_id +
       ");\'" +
       ">X</button>" +
       "</div>" +
       "</div></div>";
   }
+console.log( "STRING: " + html_string.substr(0,50) );
   const portfolio_images_container =
     document.getElementById("portfolio_images_container");
   portfolio_images_container.innerHTML = html_string;
 }
 
-function delete_portfolio_image( inLocalImageID ) {
-  console.log( "delete image: " + inLocalImageID );
-}
-
 function get_portfolio_images_object() {
   const portfolio_images_object = [];
   for( index in portfolio_images ) {
+    let image_id;
+    if( !portfolio_images[index].image_id ) {
+      image_id = null;
+    } else {
+      image_id = portfolio_images[index].image_id;
+    }
     portfolio_images_object.push({
-      "local_image_id": portfolio_images[index].local_image_id,
-      "image_data": portfolio_images[index].image_data
+      "image_data": portfolio_images[index].image_data,
+      "image_id": image_id
     });
   }
+console.dir( portfolio_images_object );
   return portfolio_images_object;
 }
 

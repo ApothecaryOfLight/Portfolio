@@ -115,7 +115,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         }
       }
       const recent_post_images_query = "SELECT " +
-        "image_id, local_image_id, image_data, post_id " +
+        "image_id, image_data, post_id " +
         "FROM blog_images " +
         "WHERE post_id = " +
         recent_post_where_predicate + ";";
@@ -133,7 +133,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         }
       }
       const recent_roots_images_query = "SELECT " +
-        "image_id, local_image_id, image_data, post_id " +
+        "image_id, image_data, post_id " +
         "FROM blog_images " +
         "WHERE post_id = " +
         recent_roots_where_predicate + ";";
@@ -250,10 +250,9 @@ app.post( '/new_blog_post', async function(req,res) {
 
     for( index in req.body.images ) {
       new_blog_post_query += "INSERT INTO blog_images " +
-        "( image_id, local_image_id, post_id, image_data ) " +
+        "( image_id, post_id, image_data ) " +
         "VALUES " +
         " ( " + req.body.images[index].image_id + ", " +
-        req.body.images[index].local_image_id + ", " +
         new_blog_post_id + ", \'" +
         req.body.images[index].image_data + "\' ); "
     }
@@ -333,7 +332,7 @@ app.post( '/edit_blog_post', async function(req,res) {
 app.get( '/get_blog_images/:post_id', async function(req,res) {
   try {
     const get_images_query = "SELECT " +
-      "image_data, alt_text, image_id, local_image_id " +
+      "image_data, alt_text, image_id " +
       "FROM blog_images " +
       "WHERE post_id = " + req.params.post_id +
       ";"
@@ -463,7 +462,6 @@ app.post( '/add_portfolio_entry', async function(req,res) {
       new_entity_id = req.body.portfolio_entry_id;
     }
 
-
     //2) Add or update the portfolio entity itself.
     if( req.body.portfolio_entry_id ) {
       const update_portfolio_entry_query = "UPDATE " +
@@ -494,105 +492,83 @@ app.post( '/add_portfolio_entry', async function(req,res) {
       const [add_entry_row,add_entry_field] =
         await sqlPool.query( add_portfolio_entry_query );
     }
-//TODO: If images have been removed, delete them.
-//TODO: Compress local_image_ids
 
+//TODO: Split image code between new project and update project.
+
+    //1) Query existing image_ids.
+    const get_image_ids_query = "SELECT image_id " +
+      "FROM portfolio_images " +
+      "WHERE portfolio_entry_id = " +
+      req.body.portfolio_entry_id + ";";
+    const [image_id_rows,image_id_fields] =
+      await sqlPool.query( get_image_ids_query );
+    const exist_image_ids = [];
+    const server_image_ids = [];
+    for( server_index in image_id_rows ) {
+      server_image_ids.push( image_id_rows[server_index].image_id );
+    }
+
+    //2) Get the image_ids submitted in the request.
+    const req_image_ids = [];
+    const req_image_data = [];
+    for( req_index in req.body.images ) {
+      if( req.body.images[req_index].image_id == null ) {
+        req_image_data.push(
+          req.body.images[req_index].image_data
+        );
+      } else {
+        req_image_ids.push(
+          req.body.images[req_index].image_id
+        );
+      }
+    }
+
+    //3) Determine which, if any, images to delete.
     const images_to_delete = [];
-    const images_to_add = [];
-    const check_local_image_id_query = "SELECT " +
-      "local_image_id " +
-      "FROM portfolio_images " +
-      "WHERE portfolio_entry_id = " +
-      new_entity_id + ";";
-    const [local_rows,local_fields] =
-      await sqlPool.query( check_local_image_id_query );
-
-    const max_image_id_query = "SELECT " +
-      "MAX( local_image_id ) as max_local_image_id " +
-      "FROM portfolio_images " +
-      "WHERE portfolio_entry_id = " +
-      new_entity_id + ";";
-    const [max_row,max_field] =
-      await sqlPool.query( max_image_id_query );
-    const max_local_image_id =
-      max_row[0].max_local_image_id ?? 0;
-    for( index in req.body.images ) {
-      const image_ref = req.body.images[index];
-      if( !local_rows.includes( image_ref.local_image_id ) ) {
-        if( image_ref.local_image_id < max_local_image_id ) {
-          images_to_delete.push( image_ref.local_image_id );
-        } else {
-          images_to_add.push({
-            "local_image_id": image_ref.local_image_id,
-            "image_data": image_ref.image_data
-          });
-        }
+    for( index_server in server_image_ids ) {
+      const ref = server_image_ids[index_server];
+      if( !req_image_ids.includes( ref ) ) {
+        images_to_delete.push( ref );
       }
     }
 
-    //) Delete images that have been removed.
     if( images_to_delete.length > 0 ) {
-      let delete_image_predicate = "(";
-      for( indexC in images_to_delete ) {
-        delete_image_predicate +=
-          "local_image_id = " +
-          images_to_delete[indexC];
-        if( indexC < images_to_delete.length ) {
-          delete_image_predicate += " OR ";
+      let delete_images_predicate = "WHERE ";
+      for( del_index in images_to_delete ) {
+        delete_images_predicate += "image_id = " +
+          images_to_delete[del_index];
+        if( del_index < images_to_delete.length-1 ) {
+          delete_images_predicate += " OR ";
         }
       }
-      delete_image_predicate += ") "
-      const delete_images_query = "DELETE FROM " +
-        "portfolio_images " +
-        "WHERE portfolio_entry_id = " +
-        new_entity_id + " AND " +
-        delete_image_predicate + ";";
-      const [del_row,del_field] =
-        await sqlPool.query( delete_images_query );
+      const delete_query = "DELETE FROM " +
+        "portfolio_images " + delete_images_predicate + ";";
+      const [del_rows,del_fields] =
+        await sqlPool.query( delete_query );
     }
 
-    //) Insert the new images.
-    if( images_to_add.length > 0 ) {
+    //4) Insert the new images.
+    if( req_image_data.length > 0 ) {
       let insert_image_values = "VALUES ";
-      for( index in images_to_add ) {
+      for( index in req_image_data ) {
         insert_image_values += "( " +
           "(SELECT Portfolio.generate_new_id(4)), " +
-          images_to_add[index].local_image_id + ", " +
           new_entity_id + ", " +
           "\'" +
-          images_to_add[index].image_data +
+          req_image_data[index] +
           "\' " +
-          "), ";
+          ")";
+        if( index < req_image_data.length-1 ) {
+          insert_image_values += ", ";
+        }
       }
-      insert_image_values = insert_image_values.substr(
-        0,
-        insert_image_values.length-2
-      );
       const insert_images_query = "INSERT INTO " +
         "portfolio_images " +
-        "(image_id, local_image_id, " +
+        "(image_id, " +
         "portfolio_entry_id, image_data ) " +
         insert_image_values + ";";
       const [insert_row,insert_field] =
         await sqlPool.query( insert_images_query );
-    }
-
-    //) Compress the local_image_ids to ensure consistency.
-    const query_local_image_ids = "SELECT " +
-      "local_image_id FROM portfolio_images " +
-      "WHERE portfolio_entry_id = " + new_entity_id + ";";
-console.log( query_local_image_ids );
-    const [locals_row,locals_field] =
-      await sqlPool.query( query_local_image_ids );
-    for( index in locals_row ) {
-      const update_query = "UPDATE portfolio_images " +
-        "SET local_image_id = " + index + " " +
-        "WHERE local_image_id = " +
-        locals_row[index].local_image_id + " " +
-        "LIMIT 1" +
-        ";";
-      const [upd_row,upd_field] =
-        await sqlPool.query( update_query );
     }
 
 
@@ -629,7 +605,7 @@ app.get(
 
     //2) Get portfolio images
     const get_portfolio_images_query = "SELECT " +
-      "image_data, image_id, local_image_id " +
+      "image_data, image_id " +
       "FROM portfolio_images " +
       "WHERE portfolio_entry_id = " +
       req.params.portfolio_entity_id + ";";
