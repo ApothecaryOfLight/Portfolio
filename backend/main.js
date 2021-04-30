@@ -19,6 +19,9 @@ var privateKey;
 var certificate;
 var credentials;
 
+/*DB Backup*/
+const {exec} = require("child_process");
+
 if( process.argv[2] == "https" ) {
   privateKey = file_stream.readFileSync('/home/ubuntu/Portfolio/privkey.pem');
   certificate = file_stream.readFileSync('/home/ubuntu/Portfolio/fullchain.pem');
@@ -91,7 +94,6 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         "LIMIT 5;";
       const [rec_row,rec_field] =
         await sqlPool.query( recent_posts );
-console.log( "A" );
 
       //2) Get 3 of the most recently updated posts by root
       const recent_roots = "SELECT " +
@@ -104,7 +106,6 @@ console.log( "A" );
         "LIMIT 5;";
       const [roots_row,roots_field] =
         await sqlPool.query( recent_roots );
-console.log( "B" );
 
       //3) Get the images for the posts.
       const recent_post_ids = [];
@@ -123,7 +124,6 @@ console.log( "B" );
         recent_post_where_predicate + ";";
       const [recent_images_row,recent_images_fields] =
         await sqlPool.query( recent_post_images_query );
-console.log( "C" );
 
       let roots_images_row_out = null;
       if( roots_row.length > 0 ) {
@@ -141,12 +141,10 @@ console.log( "C" );
           "FROM blog_images " +
           "WHERE post_id = " +
           recent_roots_where_predicate + ";";
-console.log( "rec: " +recent_roots_images_query );
         const [roots_images_row,roots_images_fields] =
           await sqlPool.query( recent_roots_images_query );
         roots_images_row_out = roots_images_row;
       }
-console.log( "D" );
 
       //4) Combine them.
       const blog_posts_obj = {
@@ -697,9 +695,94 @@ app.get( '/delete_entity/:entity_id', async function(req,res) {
     res.send( JSON.stringify({
       "result": "success"
     }));
-  } catch( error ) {
+  } catch( error_obj  ) {
     await error.log(
       "main.js:app.get:delete_entity",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+app.post( '/upload_database', async function(req,res) {
+  try {
+    const passphrase = "5101924eb0febac1f19f6529acc4883a";
+    if( req.body.passphrase != passphrase ) {
+      await error.log(
+        "main.js:app.post:upload_database",
+        "Incorrect passphrase used in database upload attempt."
+      );
+      return;
+    }
+    file_stream.writeFile(
+      "database_backup.sql",
+      req.body.data,
+      'utf8',
+      async () => {
+       const load = await exec(
+          "mysql " +
+          "--user='Portfolio_User' " +
+          "--password='Portfolio_Password' " +
+          " < database_backup.sql",
+          async (error,stdout,stderr) => {
+            res.send( JSON.stringify({
+              "result": "success"
+            }));
+          }
+       );
+      }
+    );
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.post:upload_database",
+      error_obj
+    );
+    res.send( JSON.stringify({
+      "result": "failure",
+      "reason": error_obj
+    }));
+  }
+});
+
+app.post( '/download_database', async function(req,res) {
+  try {
+    const passphrase = "5101924eb0febac1f19f6529acc4883a";
+    if( req.body.passphrase != passphrase ) {
+      await error.log(
+        "main.js:app.post:download_database",
+        "Incorrect passphrase used in database download attempt."
+      );
+      res.send( JSON.stringify({
+        "result": "failure",
+        "reason": "Authentication failure."
+      }));
+      return;
+    }
+    const dump = await exec(
+      "mysqldump --no-tablespaces --user='Portfolio_User' " +
+        "--password='Portfolio_Password' " +
+        "--databases Portfolio > backup.sql",
+      async (error,stdout,stderr) => {
+        if( error ) { console.error( error ); }
+        if( stderr ) { console.log( stderr ); }
+        file_stream.readFile(
+          'backup.sql',
+          'utf8',
+          (error,data) => {
+            res.send( JSON.stringify({
+              "result": "success",
+              "data": data
+            }));
+          }
+        );
+      }
+    );
+  } catch( error_obj ) {
+    await error.log(
+      "main.js:app.post:download_database",
       error_obj
     );
     res.send( JSON.stringify({

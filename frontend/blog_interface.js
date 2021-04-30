@@ -29,11 +29,12 @@ function render_blog( blog_data ) {
   const blog =
     document.getElementById("blog_interface_recent_post_container");
   const recent_posts = blog_data.recent_posts;
+
   //1) Compose the most recent blog posts.
   let recent_posts_dom = "";
   for( index in recent_posts ) {
     const js_date = new Date( recent_posts[index].timestamp );
-    const datestring = js_date.toLocaleTimeString();
+    const datestring = js_date.toLocaleDateString();
     const timestring = js_date.toLocaleTimeString();
 
     recent_posts_dom += "<div class=\'recent_blog_post\'>";
@@ -81,10 +82,10 @@ function emplace_images( blog_data ) {
   //1) Iterate through recent_posts.
   for( index in blog_data.recent_posts ) {
     const post_id = blog_data.recent_posts[index].post_id;
-    let start_index = 
+    let start_index =
       blog_data.recent_posts[index].body.indexOf( "[[[image=" );
     while( start_index != -1 ) {
-      const end_index = 
+      const end_index =
         blog_data.recent_posts[index].body.indexOf( "]]]" );
       const local_image_id_text =
         blog_data.recent_posts[index].body.substring(
@@ -92,7 +93,7 @@ function emplace_images( blog_data ) {
           end_index
         );
       const local_image_id = Number( local_image_id_text );
-      const first_half = 
+      const first_half =
         blog_data.recent_posts[index].body.substr( 0, start_index );
       const second_half =
         blog_data.recent_posts[index].body.substr(

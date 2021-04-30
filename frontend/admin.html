@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="md5.min.js"></script>
   <script src="ip_file.js"></script>
   <script src="loading_modal.js"></script>
   <script src="edit_blog_interface.js"></script>
   <script src="edit_portfolio_interface.js"></script>
   <script src="admin_interface.js"></script>
   <script src="menu.js"></script>
+  <script src="database_backup_interface.js"></script>
 
   <link rel="stylesheet" href="loading_modal.css"/>
   <link rel="stylesheet" href="edit_blog_interface.css"/>
   <link rel="stylesheet" href="edit_portfolio_interface.css"/>
   <link rel="stylesheet" href="admin_interface.css"/>
   <link rel="stylesheet" href="menu.css"/>
+  <link rel="stylesheet" href="database_backup_interface.css"/>
 
   <!--Google resources.-->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -104,6 +107,12 @@
     <div id="portfolio_images_container">
     </div>
     <button id="portfolio_submit_entry">Submit Entry</button>
+  </div>
+
+  <div id="database_backup_interface">
+    <input id="admin_passphrase" type="text"/>
+    <button id="upload_db">Upload</button>
+    <button id="download_db">Download</button>
   </div>
 </body>
 </html>

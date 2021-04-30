@@ -6,10 +6,13 @@ function launch_edit_portfolio_interface() {
     document.getElementById("error_log_container");
   const edit_portfolio_interface =
     document.getElementById("edit_portfolio_interface");
+  const database_backup_interface =
+    document.getElementById("database_backup_interface");
 
   edit_blog_interface.style.display = "none";
   error_log_container.style.display = "none";
   edit_portfolio_interface.style.display = "block";
+  database_backup_interface.style.display = "none";
 
   attach_events();
   get_portfolio_entries();
