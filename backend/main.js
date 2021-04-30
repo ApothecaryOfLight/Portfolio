@@ -315,12 +315,81 @@ app.post( '/edit_blog_post', async function(req,res) {
     const update_query = "UPDATE blog_posts " +
       "SET title = \'" + req.body.title + "\', " +
       "body = \'" + req.body.body + "\', " +
-//      "SET updated_timestamp = " + req.body.timestamp +
       "root_id = " + root_id + ", " +
       "postorder = 0 " + " " +
       "WHERE post_id = " + req.body.post_id + ";"
     const [update_row,update_field] =
       await sqlPool.query( update_query );
+
+    //1) Get list of images attached in DB to post.
+    const get_image_ids = "SELECT image_id " +
+      "FROM blog_images " +
+      "WHERE post_id = " + req.body.post_id + ";";
+    const [image_rows,image_fields] =
+      await sqlPool.query( get_image_ids );
+    const existing_image_ids = [];
+    for( index in image_rows ) {
+      existing_image_ids.push( image_rows[index].image_id );
+    }
+
+    const req_image_ids = [];
+    //2) Get image ids to delete and image data to insert.
+    const image_data = [];
+    const del_image_ids = [];
+    for( let image_index in req.body.images ) {
+      if( req.body.images[image_index].image_id == null ) {
+        image_data.push(
+          req.body.images[image_index]
+        );
+      } else {
+        const img_id = req.body.images[image_index].image_id;
+        req_image_ids.push( img_id );
+      }
+    }
+
+    for( let server_index in existing_image_ids ) {
+      const server_img_id = existing_image_ids[server_index];
+      if( !req_image_ids.includes( server_img_id ) ) {
+        del_image_ids.push( server_img_id );
+      }
+    }
+
+    //3) Insert new images.
+    if( image_data.length > 0 ) {
+      let values = "";
+      for( insert_index in image_data ) {
+        values += "(" +
+          "(SELECT Portfolio.generate_new_id(2)), " +
+          image_data.local_image_id + ", " +
+          req.body.post_id + ", " +
+          "\'" + image_data.image_data + "\')";
+        if( insert_index < image_data.length-1 ) {
+          values += ", ";
+        }
+      }
+      const insert_query = "INSERT INTO blog_images " +
+        "(image_id, local_image_id, post_id, image_data) " +
+        "VALUES " + values + ";"
+      const [insert_row,insert_field] =
+        await sqlPool.query( insert_query );
+    }
+
+    //4) Delete removed images.
+    if( del_image_ids.length > 0 ) {
+      let del_predicate = "";
+      for( let del_index in del_image_ids ) {
+        del_predicate += "image_id = " +
+          del_image_ids[del_index];
+        if( del_index < del_image_ids.length-1 ) {
+          del_predicate += " OR "
+        }
+      }
+      const delete_query = "DELETE FROM blog_images " +
+        "WHERE " + del_predicate + ";";
+      const [del_rows,del_fields] =
+        await sqlPool.query( delete_query );
+    }
+
 
     res.send( JSON.stringify({
       "result": "success"

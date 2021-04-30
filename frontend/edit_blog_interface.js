@@ -194,7 +194,11 @@ console.dir( images );
       "<img class=\'image_image\' " +
       "src=\'" + images[index].image_data + "\'>" +
       "<div class=\'image_tools\'>" +
-      "<button class=\'image_delete\'>X</button>" +
+      "<button class=\'image_delete\' " +
+      "onclick=\'delete_blog_image(" +
+      images[index].local_image_id +
+      ")\' " +
+      ">X</button>" +
       "<button class=\'image_copy_link\' " +
       "onclick=\'copy_link( " +
       images[index].local_image_id + ")\' " +
@@ -214,6 +218,16 @@ function copy_link( inLocalID ) {
   body.value = body.value.substr( 0, body.selectionStart ) +
     image_place_text +
     body.value.substr( body.selectionStart, body.value.length );
+}
+
+function delete_blog_image( inLocalID ) {
+  console.log( "Deleting blog image: " + inLocalID );
+  for( image_index in images ) {
+    if( images[image_index].local_image_id == inLocalID ) {
+      images.splice( image_index, 1 );
+      render_blog_images();
+    }
+  }
 }
 
 
@@ -291,7 +305,7 @@ function submit_post() {
   const edit_post_dropdown =
     document.getElementById("new_blog_old_post");
   const edit_post_id = edit_post_dropdown.value;
-
+console.dir( JSON.parse(JSON.stringify(images)) );
   if( edit_post_id  == -1 ) {
     const new_post_object = {
       "title": process_outgoing_text( title_text ),
@@ -323,7 +337,8 @@ function submit_post() {
       "body": process_outgoing_text( body_text ),
       "root": root_id,
       "postorder": "???",
-      "password_hash": "???"
+      "password_hash": "???",
+      "images": images
     });
     const edit_post_request = new Request(
       ip + 'edit_blog_post',
@@ -458,7 +473,8 @@ function store_image( inImageData ) {
 
   images.push({
     "image_data": rawImageData,
-    "local_image_id": generate_temp_image_id()
+    "local_image_id": generate_temp_image_id(),
+    "image_id": null
   });
 
   render_blog_images();
