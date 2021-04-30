@@ -1,4 +1,6 @@
 window.addEventListener( 'load', (click) => {
+  launch_portfolio();
+
   const menu_buttons = [
     {
       "dom_name": "portfolio_button",

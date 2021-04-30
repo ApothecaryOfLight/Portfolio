@@ -13,7 +13,12 @@ async function get_blog_page( inPage ) {
   fetch( get_blog_request )
     .then( response => response.json() )
     .then( json => {
-      render_blog( json.blog_posts );
+      if( json.result == "success" ) {
+        render_blog( json.blog_posts );
+      } else {
+        console.log( "ERROR" );
+        console.log( json.reason );
+      }
     });
 }
 
@@ -119,6 +124,7 @@ async function get_blog_page_count() {
       if( json.result == "success" ) {
         render_blog_pagination( json.post_count );
       } else {
+        console.log( "ERROR" );
         console.error( json.reason );
       }
     });

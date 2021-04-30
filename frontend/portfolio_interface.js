@@ -8,15 +8,15 @@ function launch_portfolio() {
 }
 
 function get_dynamic_portfolio() {
-console.log( "requesting" );
+  const req_time = Date.now();
   const portfolio_request = new Request(
     ip + "get_portfolio"
   );
   fetch( portfolio_request )
     .then( response => response.json() )
     .then( json => {
-console.log( "received" );
-console.dir( json.portfolio_data );
+      const rec = Date.now();
+      console.log( (rec - req_time) + "ms" );
       render_dynamic_portfolio(
         json.portfolio_data,
         json.portfolio_images

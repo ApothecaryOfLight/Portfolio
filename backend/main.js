@@ -88,9 +88,10 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         "title, timestamp, body, post_id " +
         "FROM blog_posts " +
         "ORDER BY timestamp DESC " +
-        "LIMIT 5";
+        "LIMIT 5;";
       const [rec_row,rec_field] =
         await sqlPool.query( recent_posts );
+console.log( "A" );
 
       //2) Get 3 of the most recently updated posts by root
       const recent_roots = "SELECT " +
@@ -103,6 +104,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         "LIMIT 5;";
       const [roots_row,roots_field] =
         await sqlPool.query( recent_roots );
+console.log( "B" );
 
       //3) Get the images for the posts.
       const recent_post_ids = [];
@@ -121,24 +123,30 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         recent_post_where_predicate + ";";
       const [recent_images_row,recent_images_fields] =
         await sqlPool.query( recent_post_images_query );
+console.log( "C" );
 
-
-      const recent_roots_ids = [];
-      let recent_roots_where_predicate = "";
-      for( index in roots_row ) {
-        recent_roots_ids.push( roots_row[index].post_id );
-        recent_roots_where_predicate += roots_row[index].post_id;
-        if( index < roots_row.length-1 ) {
-          recent_roots_where_predicate += " OR post_id = ";
+      let roots_images_row_out = null;
+      if( roots_row.length > 0 ) {
+        const recent_roots_ids = [];
+        let recent_roots_where_predicate = "";
+        for( index in roots_row ) {
+          recent_roots_ids.push( roots_row[index].post_id );
+          recent_roots_where_predicate += roots_row[index].post_id;
+          if( index < roots_row.length-1 ) {
+            recent_roots_where_predicate += " OR post_id = ";
+          }
         }
+        const recent_roots_images_query = "SELECT " +
+          "image_id, image_data, post_id, local_image_id " +
+          "FROM blog_images " +
+          "WHERE post_id = " +
+          recent_roots_where_predicate + ";";
+console.log( "rec: " +recent_roots_images_query );
+        const [roots_images_row,roots_images_fields] =
+          await sqlPool.query( recent_roots_images_query );
+        roots_images_row_out = roots_images_row;
       }
-      const recent_roots_images_query = "SELECT " +
-        "image_id, image_data, post_id, local_image_id " +
-        "FROM blog_images " +
-        "WHERE post_id = " +
-        recent_roots_where_predicate + ";";
-      const [roots_images_row,roots_images_fields] =
-        await sqlPool.query( recent_roots_images_query );
+console.log( "D" );
 
       //4) Combine them.
       const blog_posts_obj = {
@@ -146,7 +154,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         "root_posts": roots_row,
         "page": 1,
         "recent_posts_images": recent_images_row,
-        "root_posts_images": roots_images_row
+        "root_posts_images": roots_images_row_out
       };
 
       //5) Return them.
@@ -580,7 +588,7 @@ app.post( '/add_portfolio_entry', async function(req,res) {
       "result": "success"
     }));
   } catch( error_obj ) {
-    const error_message = error_obj.toString();
+    const error_message = error_obj;
     await error.log(
       "main.js:app.post:add_portfolio_entry",
       error_message
@@ -640,7 +648,6 @@ let cached = "";
 app.get( '/get_portfolio', async function(req,res) {
   try {
     if( isCached == true ) {
-console.log( "Sending cached." );
       res.send( cached );
       return;
     }
@@ -671,11 +678,11 @@ console.log( "Sending cached." );
   } catch( error_obj ) {
     await error.log(
       "main.js:app.get:get_portfolio",
-      error_obj.toString()
+      error_obj
     );
     res.send( JSON.stringify({
       "result": "failure",
-      "reason": error_obj.toString()
+      "reason": error_obj
     }));
   }
 });

@@ -54,7 +54,7 @@ async function log( source, message ) {
     "(error_id, source, message, timestamp) VALUES " +
     "(" + new_error_id + 
     ", \'" + source +
-    "\', \'" + await process_text( message ) +
+    "\', \'" + await process_text( message.toString() ) +
     "\', " +
     "\'" + timestamp_string + "\'" +
     ");"
