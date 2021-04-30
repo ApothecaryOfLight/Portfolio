@@ -134,7 +134,6 @@ function attach_scroll_listeners( inProjectData, inImageData ) {
   }
 
   next_btn.addEventListener( 'click', (click) => {
-    console.log( "next for " + title );
     const comp = window.getComputedStyle( image_elements[0] );
     const width = comp.getPropertyValue('width').slice(0,-2);
     const offset = getX( image_elements[0].style.transform );
@@ -158,10 +157,7 @@ function attach_scroll_listeners( inProjectData, inImageData ) {
   });
 
   prev_btn.addEventListener( 'click', (click) => {
-    console.log( "prev for " + title );
-
     const comp = window.getComputedStyle( image_elements[0] );
-
     const width = Number(
       comp.getPropertyValue( 'width' ).slice( 0, -2 )
     );

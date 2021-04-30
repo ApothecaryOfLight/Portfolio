@@ -115,7 +115,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         }
       }
       const recent_post_images_query = "SELECT " +
-        "image_id, image_data, post_id " +
+        "image_id, image_data, post_id, local_image_id " +
         "FROM blog_images " +
         "WHERE post_id = " +
         recent_post_where_predicate + ";";
@@ -133,7 +133,7 @@ app.get( '/get_blog_page/:page', async function(req,res) {
         }
       }
       const recent_roots_images_query = "SELECT " +
-        "image_id, image_data, post_id " +
+        "image_id, image_data, post_id, local_image_id " +
         "FROM blog_images " +
         "WHERE post_id = " +
         recent_roots_where_predicate + ";";
@@ -250,9 +250,11 @@ app.post( '/new_blog_post', async function(req,res) {
 
     for( index in req.body.images ) {
       new_blog_post_query += "INSERT INTO blog_images " +
-        "( image_id, post_id, image_data ) " +
+        "( image_id, local_image_id, post_id, image_data ) " +
         "VALUES " +
-        " ( " + req.body.images[index].image_id + ", " +
+        " ( " +
+        req.body.images[index].image_id + ", " +
+        req.body.images[index].local_image_id + ", " +
         new_blog_post_id + ", \'" +
         req.body.images[index].image_data + "\' ); "
     }
@@ -332,7 +334,7 @@ app.post( '/edit_blog_post', async function(req,res) {
 app.get( '/get_blog_images/:post_id', async function(req,res) {
   try {
     const get_images_query = "SELECT " +
-      "image_data, alt_text, image_id " +
+      "image_data, alt_text, image_id, local_image_id " +
       "FROM blog_images " +
       "WHERE post_id = " + req.params.post_id +
       ";"

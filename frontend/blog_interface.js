@@ -69,6 +69,7 @@ function get_image( blog_data, post_id, local_image_id ) {
 }
 
 function emplace_images( blog_data ) {
+console.dir( blog_data );
   //1) Iterate through recent_posts.
   for( index in blog_data.recent_posts ) {
     const post_id = blog_data.recent_posts[index].post_id;
