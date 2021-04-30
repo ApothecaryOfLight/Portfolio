@@ -25,7 +25,7 @@ console.dir( json.portfolio_data );
 }
 
 function render_dynamic_portfolio( portfolioData, image_data ) {
-  let dynamic_portfolio_string;
+  let dynamic_portfolio_string = "";
   for( index in portfolioData ) {
     dynamic_portfolio_string +=
       compose_project( portfolioData[index], image_data );
@@ -34,7 +34,6 @@ function render_dynamic_portfolio( portfolioData, image_data ) {
     document.getElementById("dynamic_project_container");
   dynamic_portfolio_dom_element.innerHTML =
     dynamic_portfolio_string;
-
   attach_scroll_buttons( portfolioData, image_data );
 }
 
