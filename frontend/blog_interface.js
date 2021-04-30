@@ -32,6 +32,10 @@ function render_blog( blog_data ) {
   //1) Compose the most recent blog posts.
   let recent_posts_dom = "";
   for( index in recent_posts ) {
+    const js_date = new Date( recent_posts[index].timestamp );
+    const datestring = js_date.toLocaleTimeString();
+    const timestring = js_date.toLocaleTimeString();
+
     recent_posts_dom += "<div class=\'recent_blog_post\'>";
 
     recent_posts_dom += "<div class=\'recent_blog_header\'>";
@@ -41,7 +45,7 @@ function render_blog( blog_data ) {
     recent_posts_dom += "</div>";
 
     recent_posts_dom += "<div class=\'recent_blog_timestamp\'>";
-    recent_posts_dom += recent_posts[index].timestamp;
+    recent_posts_dom += datestring + " " + timestring;
     recent_posts_dom += "</div>";
 
     recent_posts_dom += "</div>";
@@ -74,7 +78,6 @@ function get_image( blog_data, post_id, local_image_id ) {
 }
 
 function emplace_images( blog_data ) {
-console.dir( blog_data );
   //1) Iterate through recent_posts.
   for( index in blog_data.recent_posts ) {
     const post_id = blog_data.recent_posts[index].post_id;
