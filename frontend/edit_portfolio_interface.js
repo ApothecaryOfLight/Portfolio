@@ -290,8 +290,6 @@ console.log( id + "/" + local_id );
 }
 
 function render_portfolio_image_gallery() {
-console.log( "\n\nrender portfolio images " );
-console.dir( portfolio_images );
   let html_string = "";
   for( index in portfolio_images ) {
     html_string += "<div class=\'portfolio_image_container\'>" +
@@ -308,7 +306,6 @@ console.dir( portfolio_images );
       "</div>" +
       "</div></div>";
   }
-console.log( "STRING: " + html_string.substr(0,50) );
   const portfolio_images_container =
     document.getElementById("portfolio_images_container");
   portfolio_images_container.innerHTML = html_string;
@@ -328,7 +325,6 @@ function get_portfolio_images_object() {
       "image_id": image_id
     });
   }
-console.dir( portfolio_images_object );
   return portfolio_images_object;
 }
 
@@ -348,13 +344,14 @@ function portfolio_submit_entry( existingPortfolioEntryID ) {
 
   const portfolio_entry_object = {
     "portfolio_entry_id": existingPortfolioEntryID,
-    "title": title_field.value,
+    "title": process_outgoing_text( title_field.value ),
     "github": github_field.value,
     "live_page": live_page_field.value,
-    "description": description_field.value,
+    "description": process_outgoing_text( description_field.value ),
     "flags": flags_field.value,
     "images": get_portfolio_images_object()
   };
+console.dir( portfolio_entry_object );
 
   const submit_portfolio_request = new Request(
     ip + "add_portfolio_entry",

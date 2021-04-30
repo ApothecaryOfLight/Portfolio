@@ -450,6 +450,8 @@ app.get( '/get_portfolio_entries', async function(req,res) {
 //TODO: Put all of these queries into a single transaction
 app.post( '/add_portfolio_entry', async function(req,res) {
   try {
+    isCached = false;
+
     //1) Get the portfolio entry ID (or generate new one).
     let new_entity_id;
     if( !req.body.portfolio_entry_id ) {
@@ -630,8 +632,16 @@ app.get(
 });
 
 //TODO: Cache this response on startup until it is updated.
+let isCached = false;
+let cached = "";
+
 app.get( '/get_portfolio', async function(req,res) {
   try {
+    if( isCached == true ) {
+console.log( "Sending cached." );
+      res.send( cached );
+      return;
+    }
     const get_portfolio_query = "SELECT " +
       "portfolio_entry_id, portfolio_title, " +
       "portfolio_text, portfolio_flags, github_link, " +
@@ -646,11 +656,16 @@ app.get( '/get_portfolio', async function(req,res) {
     const [image_rows,image_fields] =
       await sqlPool.query( get_portfolio_images );
 
-    res.send( JSON.stringify({
+    const response = JSON.stringify({
       "result": "success",
       "portfolio_data": port_rows,
       "portfolio_images": image_rows
-    }));
+    });
+
+    cached = response;
+    isCached = true;
+
+    res.send( response );
   } catch( error_obj ) {
     await error.log(
       "main.js:app.get:get_portfolio",
