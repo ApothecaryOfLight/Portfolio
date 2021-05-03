@@ -22,6 +22,13 @@ async function get_blog_page( inPage ) {
     });
 }
 
+function process_blog_text_body( inBody ) {
+  let newText = "<p>";
+  newText += inBody.replace( /<br><br>|<br>/g, "</p><p>" );
+  newText += "</p>";
+  return newText;
+}
+
 function render_blog( blog_data ) {
   emplace_images( blog_data );
   get_blog_page_count();
@@ -36,6 +43,10 @@ function render_blog( blog_data ) {
     const js_date = new Date( recent_posts[index].timestamp );
     const datestring = js_date.toLocaleDateString();
     const timestring = js_date.toLocaleTimeString();
+
+    const body_text = process_blog_text_body(
+      recent_posts[index].body
+    );
 
     recent_posts_dom += "<div class=\'recent_blog_post\'>";
 
@@ -52,7 +63,7 @@ function render_blog( blog_data ) {
     recent_posts_dom += "</div>";
 
     recent_posts_dom += "<div class=\'recent_blog_body\'>";
-    recent_posts_dom += recent_posts[index].body;
+    recent_posts_dom += body_text;
     recent_posts_dom += "</div>";
 
     recent_posts_dom += "</div>";
