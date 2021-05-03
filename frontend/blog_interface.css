@@ -60,3 +60,10 @@
   margin-left: 15%;
   margin-right: 15%;
 }
+
+@media (max-width: 620px) {
+  .blog_image {
+    width: 130%;
+    margin-left: -15%
+  }
+}
