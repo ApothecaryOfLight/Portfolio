@@ -29,8 +29,8 @@ body {
   color: white;
   z-index: 4;
   position: fixed;
-  width: 19%;
-  margin-left: 85%;
+  width: 11rem;
+  margin-left: calc( 100% - 11rem );
   margin-top: 4rem;
   top: 0px;
   height: 0px;
