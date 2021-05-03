@@ -53,17 +53,9 @@
 }
 
 .blog_image {
-  width: 70%;
   display: block;
-  margin-top: 1rem;
+  margin-top: 1rem; 
   margin-bottom: 1rem;
-  margin-left: 15%;
-  margin-right: 15%;
-}
-
-@media (max-width: 620px) {
-  .blog_image {
-    width: 130%;
-    margin-left: -15%
-  }
+  width: 130%;
+  margin-left: -15%;
 }
