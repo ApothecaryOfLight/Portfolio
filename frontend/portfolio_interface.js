@@ -38,9 +38,12 @@ function render_dynamic_portfolio( portfolioData, image_data ) {
 }
 
 function compose_project( projectData, imageData ) {
+console.dir( imageData );
   const title = projectData.portfolio_title;
   let project_string = "<div class=\'project_container\'>" +
-    "<div class=\'pictures_container\'>" +
+    "<div class=\'pictures_container\' " +
+    "style=\'width:640px\'" +
+    ">" +
     "<button id=\'" + title + "_pic_last\' " +
     "class=\'pic_last\'>\<</button>" +
     "<button id=\'" + title + "_pic_next\' " +
