@@ -713,9 +713,12 @@ let isCached = false;
 let cached = "";
 
 app.get( '/get_portfolio', async function(req,res) {
+console.log( "Got request" );
   try {
     if( isCached == true ) {
+console.log( "sending cache" );
       res.send( cached );
+console.log( "sent" );
       return;
     }
     const get_portfolio_query = "SELECT " +
@@ -728,9 +731,17 @@ app.get( '/get_portfolio', async function(req,res) {
 
     const get_portfolio_images = "SELECT " +
       "image_data, portfolio_entry_id " +
-      "FROM portfolio_images;";
+      "FROM portfolio_images " +
+      ";";
     const [image_rows,image_fields] =
       await sqlPool.query( get_portfolio_images );
+
+/*    const get_portfolio_images = "SELECT " +
+      "image_name, portfolio_entry_id " +
+      "FROM portfolio_images " +
+      ";";
+    const [image_rows,image_fields] =
+      await sqlPool.query( get_portfolio_images );*/
 
     const response = JSON.stringify({
       "result": "success",

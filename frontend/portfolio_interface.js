@@ -16,7 +16,7 @@ function get_dynamic_portfolio() {
     .then( response => response.json() )
     .then( json => {
       const rec = Date.now();
-      console.log( (rec - req_time) + "ms" );
+      console.log( "Fetch took: " + (rec - req_time) + "ms" );
       render_dynamic_portfolio(
         json.portfolio_data,
         json.portfolio_images
@@ -25,6 +25,7 @@ function get_dynamic_portfolio() {
 }
 
 function render_dynamic_portfolio( portfolioData, image_data ) {
+console.log( "render_dynamic_portfolio" );
   let dynamic_portfolio_string = "";
   for( index in portfolioData ) {
     dynamic_portfolio_string +=
@@ -37,18 +38,39 @@ function render_dynamic_portfolio( portfolioData, image_data ) {
   attach_scroll_buttons( portfolioData, image_data );
 }
 
+/*Though inexpensive in terms of computing power
+because of the small set size, this is very inefficient
+and should be soon improved upon.*/
+function has_multiple_images( imageData, id ) {
+  let counter = 0;
+  for( index in imageData ) {
+    if( imageData[index].portfolio_entry_id == id ) {
+      counter++;
+    }
+  }
+  if( counter > 1 ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function compose_project( projectData, imageData ) {
-console.dir( imageData );
   const title = projectData.portfolio_title;
   let project_string = "<div class=\'project_container\'>" +
     "<div class=\'pictures_container\' " +
     "style=\'width:640px\'" +
-    ">" +
-    "<button id=\'" + title + "_pic_last\' " +
-    "class=\'pic_last\'>\<</button>" +
-    "<button id=\'" + title + "_pic_next\' " +
-    "class=\'pic_next\'>\></button>" +
-    "<div id=\'" + title + "_scroll\'" +
+    ">";
+
+  const id = projectData.portfolio_entry_id;
+
+  if( has_multiple_images( imageData, id ) ) {
+    project_string += "<button id=\'" + title + "_pic_last\' " +
+      "class=\'pic_last\'>\<</button>"  +
+      "<button id=\'" + title + "_pic_next\' " +
+      "class=\'pic_next\'>\></button>";
+  }
+  project_string += "<div id=\'" + title + "_scroll\'" +
     " class=\'scroll\'" +
     ">";
 
@@ -92,6 +114,14 @@ console.dir( imageData );
   return project_string;
 }
 
+async function get_gallery_images( gallery_name ) {
+
+}
+
+async function render_gallery_images( gallery_name ) {
+
+}
+
 function attach_scroll_buttons( inPortfolioData, inImageData ) {
   for( index in inPortfolioData ) {
     attach_scroll_listeners(
@@ -108,6 +138,11 @@ function getX( inValue ) {
 }
 
 function attach_scroll_listeners( inProjectData, inImageData ) {
+  const id = inProjectData.portfolio_entry_id;
+  if( !has_multiple_images( inImageData, id ) ) {
+    return;
+  }
+
   const title = inProjectData.portfolio_title;
   const next_name = title + "_pic_next";
   const prev_name = title + "_pic_last";
