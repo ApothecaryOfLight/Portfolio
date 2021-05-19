@@ -7,6 +7,12 @@ function launch_portfolio() {
   get_dynamic_portfolio();
 }
 
+/*function render_loading_icon() {
+  const dynamic_portfolio_dom_element =
+    document.getElementById("dynamic_project_container");
+  
+}*/
+
 function get_dynamic_portfolio() {
   const req_time = Date.now();
   const portfolio_request = new Request(
@@ -25,7 +31,6 @@ function get_dynamic_portfolio() {
 }
 
 function render_dynamic_portfolio( portfolioData, image_data ) {
-console.log( "render_dynamic_portfolio" );
   let dynamic_portfolio_string = "";
   for( index in portfolioData ) {
     dynamic_portfolio_string +=
