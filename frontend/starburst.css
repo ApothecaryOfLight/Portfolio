@@ -1,0 +1,150 @@
+
+#starburst_container {
+  height: 15rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5rem;
+  margin-top: 5rem;
+  
+}
+#backward {
+  animation-name: twirl-back;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+#forward {
+  animation-name: twirl;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes twirl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes twirl-back {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+
+#starburst_1 {
+  transform: rotate(60deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+#starburst_2 {
+  transform: rotate(120deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#starburst_3 {
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 1rem solid transparent;
+  border-right: 1rem solid transparent;
+  position: absolute;
+}
+.top {
+  margin-top: 5rem;
+  border-top: 5rem solid rgba(77, 219, 245 );
+}
+.bottom {
+  margin-bottom: 5rem;
+  border-bottom: 5rem solid rgba(77, 219, 245 );
+}
+.ball_top {
+  background: rgba(77, 219, 245 );
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  margin-bottom: 8rem;
+}
+.ball_bottom {
+  background: rgba(77, 219, 245 );
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  margin-top: 8rem;
+}
+
+
+#starburst_min_1 {
+  transform: rotate(90deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+#starburst_min_2 {
+  transform: rotate(150deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#starburst_min_3 {
+  transform: rotate(210deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.arrow_min {
+  width: 0;
+  height: 0;
+  border-left: 1rem solid transparent;
+  border-right: 1rem solid transparent;
+  position: absolute;
+}
+.top_min {
+  margin-top: 3rem;
+  border-top: 3rem solid rgba(77, 219, 245);
+}
+.bottom_min {
+  margin-bottom: 3rem;
+  border-bottom: 3rem solid rgba(77, 219, 245);
+}
+.ball_top_min {
+  background: rgba(77, 219, 245 );
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  margin-bottom: 6rem;
+}
+.ball_bottom_min {
+  background: rgba(77, 219, 245 );
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  margin-top: 6rem;
+}
