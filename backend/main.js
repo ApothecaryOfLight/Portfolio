@@ -23,8 +23,8 @@ var credentials;
 const {exec} = require("child_process");
 
 if( process.argv[2] == "https" ) {
-  privateKey = file_stream.readFileSync('/home/ubuntu/Portfolio/privkey.pem');
-  certificate = file_stream.readFileSync('/home/ubuntu/Portfolio/fullchain.pem');
+  privateKey = file_stream.readFileSync('../privkey.pem');
+  certificate = file_stream.readFileSync('../fullchain.pem');
   credentials = {key: privateKey, cert: certificate};
   server = https.createServer( credentials, app );
 }
@@ -873,8 +873,8 @@ app.post( '/download_database', async function(req,res) {
 });
 
 if( process.argv[2] == "https" ) {
-  server.listen( 3000 );
+  server.listen( 8005 );
 } else {
-  app.listen( 3000 );
+  app.listen( 8005 );
 }
 
