@@ -22,13 +22,6 @@ var credentials;
 /*DB Backup*/
 const {exec} = require("child_process");
 
-if( process.argv[2] == "https" ) {
-  privateKey = file_stream.readFileSync('../privkey.pem');
-  certificate = file_stream.readFileSync('../fullchain.pem');
-  credentials = {key: privateKey, cert: certificate};
-  server = https.createServer( credentials, app );
-}
-
 /*MySQL*/
 const mysql = require('mysql2');
 const sqlPool = mysql.createPoolPromise({
@@ -872,9 +865,19 @@ app.post( '/download_database', async function(req,res) {
   }
 });
 
+
 if( process.argv[2] == "https" ) {
+  privateKey = file_stream.readFileSync('../privkey.pem');
+  certificate = file_stream.readFileSync('../fullchain.pem');
+  credentials = {key: privateKey, cert: certificate};
+  server = https.createServer( credentials, app );
+}
+
+if( process.argv[2] == "https" ) {
+  console.log( "Launching production server..." );
   server.listen( 8005 );
 } else {
+  console.log( "Launching dev server..." );
   app.listen( 8005 );
 }
 
