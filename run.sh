@@ -2,11 +2,12 @@
 cd "${0%/*}"
 if [[ "$1" = "http" ]];
 then
-  IP=$(hostname -I | xargs)
-  echo "const ip = \"ws://${IP}:3005\";" > ./frontend/ip_file.js
+  echo "const ip = \"http://${2}:3005\/\";" > ./frontend/ip_file.js
+  cd backend && screen -d -m -S Portfolio bash -c './run.sh http'
 elif [[ "$1" = "https" ]];
 then
-  echo "const ip = \"wss://abesportfolio.com:3005\";" > ./frontend/ip_file.js
+  echo "const ip = \"https://abesportfolio.com:3005\/\";" > ./frontend/ip_file.js
+  cd backend && screen -d -m -S Portfolio bash -c './run.sh https'
 else
   echo "Command line argument:";
   echo "  run.sh dev";
@@ -15,5 +16,3 @@ else
   echo "    Will run Portfolio with SSL/TSL Certificates.";
   exit -1
 fi
-
-cd backend && screen -d -m -S Portfolio bash -c './run.sh "$1"'

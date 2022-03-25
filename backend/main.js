@@ -706,18 +706,15 @@ let isCached = false;
 let cached = "";
 
 app.get( '/get_portfolio', async function(req,res) {
-console.log( "Got request" );
   try {
     if( isCached == true ) {
-console.log( "sending cache" );
       res.send( cached );
-console.log( "sent" );
-      return;
+    return;
     }
     const get_portfolio_query = "SELECT " +
       "portfolio_entry_id, portfolio_title, " +
       "portfolio_text, portfolio_flags, github_link, " +
-      "live_page " +
+      "live_page, dev_page " +
       "FROM portfolio_entries;";
     const [port_rows,port_fields ] =
       await sqlPool.query( get_portfolio_query );
@@ -729,15 +726,9 @@ console.log( "sent" );
     const [image_rows,image_fields] =
       await sqlPool.query( get_portfolio_images );
 
-/*    const get_portfolio_images = "SELECT " +
-      "image_name, portfolio_entry_id " +
-      "FROM portfolio_images " +
-      ";";
-    const [image_rows,image_fields] =
-      await sqlPool.query( get_portfolio_images );*/
-
     const response = JSON.stringify({
       "result": "success",
+      "isDev": (process.argv[2] == "http"),
       "portfolio_data": port_rows,
       "portfolio_images": image_rows
     });
@@ -865,19 +856,16 @@ app.post( '/download_database', async function(req,res) {
   }
 });
 
-
 if( process.argv[2] == "https" ) {
+  console.log( "Launching production server..." );
   privateKey = file_stream.readFileSync('../privkey.pem');
   certificate = file_stream.readFileSync('../fullchain.pem');
   credentials = {key: privateKey, cert: certificate};
   server = https.createServer( credentials, app );
-}
-
-if( process.argv[2] == "https" ) {
-  console.log( "Launching production server..." );
-  server.listen( 8005 );
-} else {
+  server.listen( 3005 );
+} else if( process.argv[2] == "http" ) {
   console.log( "Launching dev server..." );
-  app.listen( 8005 );
+  app.listen( 3005 );
 }
 
+console.log( "argv: " + process.argv[2] );

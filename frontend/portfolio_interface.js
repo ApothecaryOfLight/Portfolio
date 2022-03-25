@@ -7,12 +7,6 @@ function launch_portfolio() {
   get_dynamic_portfolio();
 }
 
-/*function render_loading_icon() {
-  const dynamic_portfolio_dom_element =
-    document.getElementById("dynamic_project_container");
-  
-}*/
-
 function get_dynamic_portfolio() {
   const req_time = Date.now();
   const portfolio_request = new Request(
@@ -25,16 +19,17 @@ function get_dynamic_portfolio() {
       console.log( "Fetch took: " + (rec - req_time) + "ms" );
       render_dynamic_portfolio(
         json.portfolio_data,
-        json.portfolio_images
+        json.portfolio_images,
+        json.isDev
       );
     });
 }
 
-function render_dynamic_portfolio( portfolioData, image_data ) {
+function render_dynamic_portfolio( portfolioData, image_data, isDev ) {
   let dynamic_portfolio_string = "";
   for( index in portfolioData ) {
     dynamic_portfolio_string +=
-      compose_project( portfolioData[index], image_data );
+      compose_project( portfolioData[index], image_data, isDev );
   }
   const dynamic_portfolio_dom_element =
     document.getElementById("dynamic_project_container");
@@ -43,9 +38,6 @@ function render_dynamic_portfolio( portfolioData, image_data ) {
   attach_scroll_buttons( portfolioData, image_data );
 }
 
-/*Though inexpensive in terms of computing power
-because of the small set size, this is very inefficient
-and should be soon improved upon.*/
 function has_multiple_images( imageData, id ) {
   let counter = 0;
   for( index in imageData ) {
@@ -60,7 +52,7 @@ function has_multiple_images( imageData, id ) {
   }
 }
 
-function compose_project( projectData, imageData ) {
+function compose_project( projectData, imageData, isDev ) {
   const title = projectData.portfolio_title;
   let project_string = "<div class=\'project_container\'>" +
     "<div class=\'pictures_container\' " +
@@ -104,10 +96,17 @@ function compose_project( projectData, imageData ) {
     projectData.github_link + "\'>" +
     "Github Page" + "</a></div><br>";
 
-  project_string += "<div class=\'live_link\'>" +
-    "<a href=\'" +
-    projectData.live_page + "\'>" +
-    "Live Page</a></div><br>";
+  if( !isDev ) {
+    project_string += "<div class=\'live_link\'>" +
+      "<a href=\'" +
+      projectData.live_page + "\'>" +
+      "Live Page</a></div><br>";
+  } else {
+    project_string += "<div class=\'live_link\'>" +
+      "<a href=\'" +
+      ip + projectData.dev_page + "\'>" +
+      "Dev Page</a></div></br>";
+  }
 
   project_string += "<div class=\'description_text\'>" +
     projectData.portfolio_text + "</div>";
