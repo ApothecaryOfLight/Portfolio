@@ -1,1 +1,1 @@
-const ip = 'https://abesportfolio.com:8005/';
+const ip = "ws://172.31.3.83:3005";
