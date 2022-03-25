@@ -104,7 +104,7 @@ function compose_project( projectData, imageData, isDev ) {
   } else {
     project_string += "<div class=\'live_link\'>" +
       "<a href=\'" +
-      ip + projectData.dev_page + "\'>" +
+      ip.substring(0, ip.length-6) + "/" + projectData.dev_page + "\'>" +
       "Dev Page</a></div></br>";
   }
 
