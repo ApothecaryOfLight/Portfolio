@@ -116,9 +116,11 @@ function emplace_images( blog_data ) {
         post_id,
         local_image_id
       );
-      const image_string = "<img class=\'blog_image\' src=\'" +
+      const image_string = "<div class=\'blog_image_container\'>" +
+        "<img class=\'blog_image\' src=\'" +
         image_data +
-        "\'>";
+        "\'>" +
+        "</div>";
       const new_string = first_half + image_string + second_half;
       blog_data.recent_posts[index].body = new_string;
       start_index =
