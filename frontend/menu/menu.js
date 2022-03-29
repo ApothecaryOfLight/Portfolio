@@ -16,12 +16,29 @@ window.addEventListener( 'load', (window_loaded) => {
   menu_collapsible.addEventListener( 'mouseout', menu_unhover_bound );
 });
 
-function populate_menu_buttons( inButtons ) {
+function populate_menu_buttons() {
+  const menu_buttons = [
+    {
+      "dom_name": "portfolio_button",
+      "function": "launch_portfolio()",
+      "button_text": "Portfolio"
+    },
+    {
+      "dom_name": "blog_button",
+      "function": "launch_blog()",
+      "button_text": "Blog"
+    },
+    {
+      "dom_name": "contact_me_button",
+      "function": "scroll_to_contact_me()",
+      "button_text": "Contact Me"
+    }
+  ];
   const menu_collapsible =
     document.getElementById("menu_collapsible");
   let dom_text = "";
-  for( index in inButtons ) {
-    const button_ref = inButtons[index];
+  for( index in menu_buttons ) {
+    const button_ref = menu_buttons[index];
     dom_text += "<div onclick=\'" +
       button_ref.function + "; " +
       "hide_menu(); " +
@@ -29,16 +46,8 @@ function populate_menu_buttons( inButtons ) {
       "class=\'menu_button\'>" + button_ref.button_text +
       "</div>";
   }
-  menu.height = (inButtons.length * 4) + "rem";
+  menu.height = (menu_buttons.length * 4) + "rem";
   menu_collapsible.innerHTML = dom_text;
-}
-
-function bind_buttons( inButtons ) {
-
-}
-
-function unbind_buttons( inButtons ) {
-
 }
 
 const menu = {
@@ -76,3 +85,11 @@ function hide_menu() {
   menu.is_open = false;
 }
 
+function scroll_to_contact_me() {
+  launch_portfolio();
+  const contact_me = document.getElementById("contact_me");
+  contact_me.scrollIntoView({
+    block: 'center',
+    behavior: 'smooth'
+  });
+}

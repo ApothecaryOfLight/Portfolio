@@ -118,14 +118,6 @@ function compose_project( projectData, imageData, isDev ) {
   return project_string;
 }
 
-async function get_gallery_images( gallery_name ) {
-
-}
-
-async function render_gallery_images( gallery_name ) {
-
-}
-
 function attach_scroll_buttons( inPortfolioData, inImageData ) {
   for( index in inPortfolioData ) {
     attach_scroll_listeners(
