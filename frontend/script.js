@@ -29,7 +29,7 @@ window.addEventListener( 'load', (click) => {
     const email = document.getElementById("email").value;
     const msg = document.getElementById("msg").value;
     const send_contact_me = new Request(
-      'https://AbesPortfolio.com:3000/contact_me/',
+      ip + 'contact_me/',
       {
         method: 'POST',
         body: JSON.stringify({
