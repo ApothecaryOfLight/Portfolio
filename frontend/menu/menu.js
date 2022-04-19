@@ -16,24 +16,8 @@ window.addEventListener( 'load', (window_loaded) => {
   menu_collapsible.addEventListener( 'mouseout', menu_unhover_bound );
 });
 
-function populate_menu_buttons() {
-  const menu_buttons = [
-    {
-      "dom_name": "portfolio_button",
-      "function": "launch_portfolio()",
-      "button_text": "Portfolio"
-    },
-    {
-      "dom_name": "blog_button",
-      "function": "launch_blog()",
-      "button_text": "Blog"
-    },
-    {
-      "dom_name": "contact_me_button",
-      "function": "scroll_to_contact_me()",
-      "button_text": "Contact Me"
-    }
-  ];
+function populate_menu_buttons( menu_buttons ) {
+
   const menu_collapsible =
     document.getElementById("menu_collapsible");
   let dom_text = "";
