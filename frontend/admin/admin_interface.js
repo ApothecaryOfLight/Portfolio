@@ -16,11 +16,6 @@ window.addEventListener( 'load', (window_loaded) => {
       "dom_name": "edit_portfolio_button",
       "function": "launch_edit_portfolio_interface()",
       "button_text": "Edit Portfolio"
-    },
-    {
-      "dom_name": "database_backup_button",
-      "function": "launch_database_backup_interface()",
-      "button_text": "Database"
     }
   ];
 
