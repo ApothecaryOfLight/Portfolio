@@ -23,7 +23,4 @@ window.addEventListener( 'load', (click) => {
   
     attach_contact_me_listener();
   
-    window.addEventListener( 'resize', (resize) => {
-      console.log( "resize" );
-    });
   });

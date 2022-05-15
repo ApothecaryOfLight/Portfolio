@@ -210,4 +210,32 @@ function attach_scroll_listeners( inProjectData, inImageData ) {
       image_elements[index].style.transform = effect;
     }
   });
+
+  //Attach an event listener for window resizing.
+  window.addEventListener('resize', (resize_event) => {
+    //Iterate through every image in every gallery.
+    image_elements.forEach( (image_dom) => {
+      //If this image has a transform value (this gallery has been scrolled), then:
+      if( image_dom.style.transform ) {
+        //Get the new post-CSS applied width of the newly scaled image.
+        const comp = window.getComputedStyle( image_dom );
+        const width = Number(
+          comp.getPropertyValue( 'width' ).slice( 0, -2 )
+        );
+
+        //Calculate the new transform position based on the width of the image and
+        //the position of the scroll index (how far the gallery has been scrolled).
+        const mod = (-1*(width * gallery[title])) + "px";
+
+        //Apply the new position.
+        const effect = "translateX(" + mod + ")";
+        image_dom.style.transform = effect;
+      }
+    });
+  });
 }
+
+function attach_resize_event() {
+}
+
+attach_resize_event();
