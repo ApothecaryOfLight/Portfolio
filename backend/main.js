@@ -84,7 +84,7 @@ if( process.argv[2] == "https" ) {
   privateKey = file_stream.readFileSync('../privkey.pem');
   certificate = file_stream.readFileSync('../fullchain.pem');
   credentials = {key: privateKey, cert: certificate};
-  server = https.createServer( credentials, app );
+  const server = https.createServer( credentials, app );
   server.listen( 3005 );
 } else if( process.argv[2] == "http" ) {
   console.log( "Launching dev server..." );
