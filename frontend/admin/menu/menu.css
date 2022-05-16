@@ -1,0 +1,56 @@
+body {
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  #menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+    position: fixed;
+    background: #000000CC;
+    color: white;
+    font-size: 2rem;
+    width: 100vw;
+    padding-left: 1rem;
+    padding-right: 5rem;
+    top: 0px;
+    z-index: 3;
+  }
+  
+  #menu_button {
+    padding-right: 50px
+  }
+  
+  #menu_collapsible {
+    background: #000000CC;
+    color: white;
+    z-index: 4;
+    position: fixed;
+    width: 11rem;
+    margin-left: calc( 100% - 11rem );
+    margin-top: 4rem;
+    top: 0px;
+    height: 0px;
+    transition: height 1s;
+    border-radius: 0px 0px 0px 15%;
+    font-size: 1.6rem;
+    font-weight: bold;
+    overflow: hidden;
+  }
+  
+  .menu_button {
+    margin-left: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .menu_button:hover {
+    color: pink;
+  }
+  
+  #contact_me_button {
+    padding-right: 50px;
+  }
+  

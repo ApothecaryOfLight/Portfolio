@@ -1,24 +1,4 @@
-/*
-Function to launch the edit portfolio interface.
-*/
-function launch_edit_portfolio_interface() {
-  const edit_blog_interface =
-    document.getElementById("edit_blog_interface");
-  const error_log_container =
-    document.getElementById("error_log_container");
-  const edit_portfolio_interface =
-    document.getElementById("edit_portfolio_interface");
-  const database_backup_interface =
-    document.getElementById("database_backup_interface");
-
-  edit_blog_interface.style.display = "none";
-  error_log_container.style.display = "none";
-  edit_portfolio_interface.style.display = "block";
-  database_backup_interface.style.display = "none";
-
-  attach_events();
-  get_portfolio_entries();
-}
+"use strict";
 
 
 /*
@@ -189,16 +169,11 @@ function select_portfolio_entry() {
 Function to render a portfolio entry.
 */
 function render_portfolio_entry( portfolioEntry ) {
-  const title_field =
-    document.getElementById("portfolio_title_field");
-  const github_field =
-    document.getElementById("portfolio_github_field");
-  const live_page_field =
-    document.getElementById("portfolio_live_page_field");
-  const description_field =
-    document.getElementById("portfolio_description_field");
-  const flags_field =
-    document.getElementById("portfolio_flags_field");
+  const title_field = document.getElementById("portfolio_title_field");
+  const github_field = document.getElementById("portfolio_github_field");
+  const live_page_field = document.getElementById("portfolio_live_page_field");
+  const description_field = document.getElementById("portfolio_description_field");
+  const flags_field = document.getElementById("portfolio_flags_field");
 
   title_field.value = portfolioEntry.portfolio_title;
   github_field.value = portfolioEntry.github_link;
@@ -212,16 +187,11 @@ function render_portfolio_entry( portfolioEntry ) {
 Function to set portfolio fields to empty.
 */
 function blank_portfolio_fields( inDropdownValue ) {
-  const title_field =
-    document.getElementById("portfolio_title_field");
-  const github_field =
-    document.getElementById("portfolio_github_field");
-  const live_page_field =
-    document.getElementById("portfolio_live_page_field");
-  const description_field =
-    document.getElementById("portfolio_description_field");
-  const flags_field =
-    document.getElementById("portfolio_flags_field");
+  const title_field = document.getElementById("portfolio_title_field");
+  const github_field = document.getElementById("portfolio_github_field");
+  const live_page_field = document.getElementById("portfolio_live_page_field");
+  const description_field = document.getElementById("portfolio_description_field");
+  const flags_field = document.getElementById("portfolio_flags_field");
 
   title_field.value = "";
   github_field.value = "";
@@ -396,16 +366,11 @@ function get_portfolio_images_object() {
 Function to submit a portfolio entry to the server.
 */
 function portfolio_submit_entry( existingPortfolioEntryID ) {
-  const title_field =
-    document.getElementById("portfolio_title_field");
-  const github_field =
-    document.getElementById("portfolio_github_field");
-  const live_page_field =
-    document.getElementById("portfolio_live_page_field");
-  const description_field =
-    document.getElementById("portfolio_description_field");
-  const flags_field =
-    document.getElementById("portfolio_flags_field");
+  const title_field = document.getElementById("portfolio_title_field");
+  const github_field = document.getElementById("portfolio_github_field");
+  const live_page_field = document.getElementById("portfolio_live_page_field");
+  const description_field = document.getElementById("portfolio_description_field");
+  const flags_field = document.getElementById("portfolio_flags_field");
 
   const portfolio_entry_object = {
     "portfolio_entry_id": existingPortfolioEntryID,

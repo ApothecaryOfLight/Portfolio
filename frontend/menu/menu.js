@@ -3,18 +3,9 @@ Function to attach menu button click event listeners upon window load.
 */
 window.addEventListener( 'load', (window_loaded) => {
   const menu_btn = document.getElementById("menu_button");
-  const menu_btn_hover_bound = menu_hover.bind( null, "menu_button" );
-  const menu_btn_unhover_bound = menu_unhover( null, "menu_button" );
   menu_button.addEventListener( 'click', menu_click );
-  menu_button.addEventListener( 'mouseover', menu_btn_hover_bound );
-  menu_button.addEventListener( 'mouseout', menu_btn_unhover_bound );
 
-  const menu_hover_bound = menu_hover.bind( null, "menu" );
-  const menu_unhover_bound = menu_unhover( null, "menu" );
-  const menu_collapsible =
-    document.getElementById("menu_collapsible");
-  menu_collapsible.addEventListener( 'mouseover', menu_hover_bound );
-  menu_collapsible.addEventListener( 'mouseout', menu_unhover_bound );
+  const menu_collapsible = document.getElementById("menu_collapsible");
 });
 
 

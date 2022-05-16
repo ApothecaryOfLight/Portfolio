@@ -1,17 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!--Hash function-->
   <script src="md5.min.js"></script>
-  <script src="ip_file.js"></script>
-  <script src="admin/edit_blog/edit_blog_interface.js"></script>
-  <script src="admin/edit_portfolio/edit_portfolio_interface.js"></script>
-  <script src="admin/admin_interface.js"></script>
-  <script src="menu/menu.js"></script>
 
+  <!--Dynamically generated IP for dev/prod switching.-->
+  <script src="ip_file.js"></script>
+
+  <!--Edit blog scripts.-->
+  <script src="admin/edit_blog/edit_blog_interface.js"></script>
+  <script src="admin/edit_blog/edit_blog_buttons.js"></script>
+  <script src="admin/edit_blog/edit_blog_image_manager.js"></script>
+  <script src="admin/edit_blog/edit_blog_posts.js"></script>
+  <script src="admin/edit_blog/edit_blog_root_posts.js"></script>
+  <script src="admin/edit_blog/edit_blog_submit_post.js"></script>
+
+  <!--Edit portfolio scripts.-->
+  <script src="admin/edit_portfolio/edit_portfolio_interface.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_buttons.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_events.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_get_project.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_get_projects_list.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_image_manager.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_image_renderer.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_render_project.js"></script>
+  <script src="admin/edit_portfolio/edit_portfolio_submit_project.js"></script>
+
+  <script src="admin/admin_interface.js"></script>
+
+  <!--Menu script-->
+  <script src="admin/menu/menu.js"></script>
+
+  <!--Interface switcher-->
+  <script src="admin/interface_switcher.js"></script>
+
+  <!--Interface switcher-->
+  <script src="admin/error_log/error_log.js"></script>
+
+
+  <!--Edit blog stylesheets-->
   <link rel="stylesheet" href="admin/edit_blog/edit_blog_interface.css"/>
+
+  <!--Edit portfolio stylesheets-->
   <link rel="stylesheet" href="admin/edit_portfolio/edit_portfolio_interface.css"/>
+
   <link rel="stylesheet" href="admin/admin_interface.css"/>
-  <link rel="stylesheet" href="menu/menu.css"/>
+
+  <!--Menu stylesheets-->
+  <link rel="stylesheet" href="admin/menu/menu.css"/>
+
 
   <!--Google resources.-->
   <link rel="preconnect" href="https://fonts.gstatic.com">
