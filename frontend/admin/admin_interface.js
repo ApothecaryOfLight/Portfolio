@@ -1,6 +1,8 @@
+/*
+Event listener for the window onload event that will attach click event listeners
+to the menu buttons.
+*/
 window.addEventListener( 'load', (window_loaded) => {
-  console.log( "Admin interface loaded!" );
-
   const admin_buttons = [
     {
       "dom_name": "error_log_button",
@@ -22,8 +24,11 @@ window.addEventListener( 'load', (window_loaded) => {
   populate_menu_buttons( admin_buttons );
 });
 
+
+/*
+Launches error/event log interface.
+*/
 function launch_error_log_interface() {
-  console.log( "TODO: Move this to edit_blog_interface.js" );
   const edit_blog_interface =
     document.getElementById("edit_blog_interface");
   const error_log_container =
@@ -41,6 +46,10 @@ function launch_error_log_interface() {
   get_errors();
 }
 
+
+/*
+Gets error log from server.
+*/
 function get_errors() {
   const get_errors_request = new Request(
     ip + 'get_errors'
