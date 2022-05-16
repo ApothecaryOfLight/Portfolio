@@ -2,6 +2,18 @@
 
 
 /*
+Function to initialize the edit portfolio interface.
+*/
+function initialize_edit_portfolio_interface() {
+  //Attach event listeners to their appropriate elements.
+  attach_edit_portfolio_events();
+
+  //Get a list of projects from the server and populate the dropdown with them.
+  get_portfolio_entries();
+}
+
+
+/*
 Global array containing event listener functions and references to their
 respective elements.
 */
@@ -49,9 +61,9 @@ function portfolio_delete( inEntityID ) {
 /*
 Attach event listeners to their respective elements.
 */
-function attach_events( inPortfolioEntityID ) {
+function attach_edit_portfolio_events( inPortfolioEntityID ) {
   detach_events();
-  for( index in event_objects ) {
+  for( const index in event_objects ) {
     const event_ref = event_objects[index];
     const dom_ref =
       document.getElementById( event_ref.element_name );
@@ -82,7 +94,7 @@ function attach_events( inPortfolioEntityID ) {
 Detach event listeners from their respective elements.
 */
 function detach_events() {
-  for( index in event_objects ) {
+  for( const index in event_objects ) {
     const event_ref = event_objects[index];
     const delE = document.getElementById( event_ref.element_name );
     const newE = delE.cloneNode( true );
@@ -118,7 +130,7 @@ function compose_portfolio_entries(
 ) {
   let dom_string =
     "<option value=\'-1\'>New Portfolio Entry</option>";
-  for( index in portfolio_entries ) {
+  for( const index in portfolio_entries ) {
     dom_string += "<option value=\'";
     dom_string += portfolio_entries[index].portfolio_entry_id;
     dom_string += "\'>";
@@ -145,7 +157,7 @@ function select_portfolio_entry() {
 
   if( dropdown.value == -1 ) {
     blank_portfolio_fields();
-    attach_events();
+    attach_edit_portfolio_events();
     return;
   }
 
@@ -160,7 +172,7 @@ function select_portfolio_entry() {
       render_portfolio_entry( json.portfolio_entry );
       Object.assign( portfolio_images, json.images );
       render_portfolio_image_gallery();
-      attach_events( entity_value );
+      attach_edit_portfolio_events( entity_value );
     });
 }
 
@@ -283,7 +295,7 @@ Function to generate a new local unique identifier.
 */
 function generate_new_local_id() {
   const local_ids = [];
-  for( index in portfolio_images ) {
+  for( const index in portfolio_images ) {
     local_ids.push( portfolio_images[index].local_image_id );
   }
   let new_local_id = 0;
@@ -298,7 +310,7 @@ Function to delete an image from the gallery.
 */
 function delete_image_from_gallery( id, local_id ) {
   if( id ) {
-    for( index in portfolio_images ) {
+    for( const index in portfolio_images ) {
       if( id ) {
         if( portfolio_images[index].image_id == id ) {
           portfolio_images.splice( index, 1 );
@@ -320,7 +332,7 @@ Function to render the portfolio image gallery.
 */
 function render_portfolio_image_gallery() {
   let html_string = "";
-  for( index in portfolio_images ) {
+  for( const index in portfolio_images ) {
     html_string += "<div class=\'portfolio_image_container\'>" +
       "<div class=\'portfolio_image_body\'>" +
       "<img class=\'portfolio_image_image\' " +
@@ -346,7 +358,7 @@ Function to get portfolio images and prepare them to be sent to the server.
 */
 function get_portfolio_images_object() {
   const portfolio_images_object = [];
-  for( index in portfolio_images ) {
+  for( const index in portfolio_images ) {
     let image_id;
     if( !portfolio_images[index].image_id ) {
       image_id = null;

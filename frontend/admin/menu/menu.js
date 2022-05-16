@@ -16,17 +16,20 @@ window.addEventListener( 'load', (window_loaded) => {
   const admin_menu_buttons = [
     {
       "dom_name": "error_log_button",
-      "function": "switch_interface(\"error_log_container\"); get_errors()",
+      "show_function": "switch_interface(\"error_log_container\")",
+      "initialize_function": "get_errors()",
       "button_text": "Error Log"
     },
     {
       "dom_name": "edit_blog_button",
-      "function": "switch_interface(\"edit_blog_interface\")",
+      "show_function": "switch_interface(\"edit_blog_interface\")",
+      "initialize_function": "launch_edit_blog_interface()",
       "button_text": "Edit Blog"
     },
     {
       "dom_name": "edit_portfolio_button",
-      "function": "switch_interface(\"edit_portfolio_interface\")",
+      "show_function": "switch_interface(\"edit_portfolio_interface\")",
+      "initialize_function": "initialize_edit_portfolio_interface()",
       "button_text": "Edit Portfolio"
     }
   ];
@@ -50,7 +53,8 @@ function populate_menu_buttons( menu_buttons ) {
   for( const index in menu_buttons ) {
     const button_ref = menu_buttons[index];
     dom_text += "<div onclick=\'" +
-      button_ref.function + "; " +
+      button_ref.show_function + "; " +
+      button_ref.initialize_function + "; " +
       "hide_menu(); " +
       "\' " +
       "class=\'menu_button\'>" + button_ref.button_text +

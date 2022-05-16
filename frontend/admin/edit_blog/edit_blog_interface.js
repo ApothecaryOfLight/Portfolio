@@ -2,8 +2,7 @@
 Function to launch the edit blog interface.
 */
 function launch_edit_blog_interface() {
-  show_edit_blog_interface();
-  blog_interface_attach_events();
+  attach_blog_interface_events();
 
   render_edit_blog_interface();
 }
@@ -16,23 +15,6 @@ function render_edit_blog_interface() {
   get_roots();
   get_existing_posts();
   blank_fields();
-}
-
-
-/*
-Function to show the elements of the edit blog interface.
-*/
-function show_edit_blog_interface() {
-  const edit_blog_interface =
-    document.getElementById("edit_blog_interface");
-  const error_log_container =
-    document.getElementById("error_log_container");
-  const edit_portfolio_interface =
-    document.getElementById("edit_portfolio_interface");
-
-  error_log_container.style.display = "none";
-  edit_blog_interface.style.display = "block";
-  edit_portfolio_interface.style.display = "none";
 }
 
 
@@ -312,7 +294,7 @@ const events = [
 /*
 Function to attach blog edit events to their respective elements.
 */
-function blog_interface_attach_events( inPostID ) {
+function attach_blog_interface_events( inPostID ) {
   blog_interface_detach_events();
   for( index in events ) {
     const event_ref = events[index];
@@ -442,15 +424,14 @@ function delete_post( inPostID ) {
 Function to create a new blog post.
 */
 function new_blog_old_post() {
-  const edit_post_dropdown =
-    document.getElementById("new_blog_old_post");
+  const edit_post_dropdown = document.getElementById("new_blog_old_post");
   const edit_post_id = edit_post_dropdown.value;
   if( edit_post_id != -1 ) {
     load_blog_post( edit_post_id );
-    blog_interface_attach_events( edit_post_id );
+    attach_blog_interface_events( edit_post_id );
   } else {
     blank_fields();
-    blog_interface_attach_events();
+    attach_blog_interface_events();
     get_new_post_id();
   }
 }
@@ -466,7 +447,7 @@ function get_new_post_id() {
   fetch( new_id_request )
     .then( response => response.json() )
     .then( json => {
-      blog_interface_attach_events( json.new_post_id );
+      attach_blog_interface_events( json.new_post_id );
     });
 }
 
