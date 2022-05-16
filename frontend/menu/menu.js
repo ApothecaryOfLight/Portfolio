@@ -1,6 +1,7 @@
+/*
+Function to attach menu button click event listeners upon window load.
+*/
 window.addEventListener( 'load', (window_loaded) => {
-  console.log( "Loaded window." );
-
   const menu_btn = document.getElementById("menu_button");
   const menu_btn_hover_bound = menu_hover.bind( null, "menu_button" );
   const menu_btn_unhover_bound = menu_unhover( null, "menu_button" );
@@ -16,8 +17,11 @@ window.addEventListener( 'load', (window_loaded) => {
   menu_collapsible.addEventListener( 'mouseout', menu_unhover_bound );
 });
 
-function populate_menu_buttons( menu_buttons ) {
 
+/*
+Function to populate the create the menu buttons.
+*/
+function populate_menu_buttons( menu_buttons ) {
   const menu_collapsible =
     document.getElementById("menu_collapsible");
   let dom_text = "";
@@ -34,12 +38,20 @@ function populate_menu_buttons( menu_buttons ) {
   menu_collapsible.innerHTML = dom_text;
 }
 
+
+/*
+Global object to contain menu dropdown information.
+*/
 const menu = {
   is_open: false,
   height: "12px"
 }
+
+
+/*
+Function to show or hide the menu.
+*/
 function menu_click( click_event ) {
-  console.log( "click!" );
   if( menu.is_open == false ) {
     show_menu();
   } else {
@@ -47,14 +59,10 @@ function menu_click( click_event ) {
   }
 }
 
-function menu_hover( hover_event ) {
-//  console.log( "hover " + hover_event );
-}
 
-function menu_unhover( hover_event ) {
-//  console.log( "unhover " + hover_event );
-}
-
+/*
+Function to draw the menu with a smooth open animation.
+*/
 function show_menu() {
   const menu_collapsible =
     document.getElementById("menu_collapsible");
@@ -62,6 +70,10 @@ function show_menu() {
   menu.is_open = true;
 }
 
+
+/*
+Function to hide the menu with a smooth close animation.
+*/
 function hide_menu() {
   const menu_collapsible =
     document.getElementById("menu_collapsible");
@@ -69,6 +81,10 @@ function hide_menu() {
   menu.is_open = false;
 }
 
+
+/*
+Menu button function to scroll to the contact me element.
+*/
 function scroll_to_contact_me() {
   launch_portfolio();
   const contact_me = document.getElementById("contact_me");

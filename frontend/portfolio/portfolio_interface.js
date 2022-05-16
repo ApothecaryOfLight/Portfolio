@@ -1,3 +1,6 @@
+/*
+Function to launch the portfolio.
+*/
 function launch_portfolio() {
   const portfolio = document.getElementById("portfolio_interface");
   const blog = document.getElementById("blog_interface");
@@ -7,6 +10,10 @@ function launch_portfolio() {
   get_dynamic_portfolio();
 }
 
+
+/*
+Function to load the portfolio from the server.
+*/
 function get_dynamic_portfolio() {
   const req_time = Date.now();
   const portfolio_request = new Request(
@@ -25,6 +32,10 @@ function get_dynamic_portfolio() {
     });
 }
 
+
+/*
+Function to render the portfolio.
+*/
 function render_dynamic_portfolio( portfolioData, image_data, isDev ) {
   let dynamic_portfolio_string = "";
   for( index in portfolioData ) {
@@ -52,6 +63,10 @@ function has_multiple_images( imageData, id ) {
   }
 }
 
+
+/*
+Function to render an individual project.
+*/
 function compose_project( projectData, imageData, isDev ) {
   const title = projectData.portfolio_title;
   let project_string = "<div class=\'project_container\'>" +
@@ -118,6 +133,10 @@ function compose_project( projectData, imageData, isDev ) {
   return project_string;
 }
 
+
+/*
+Function to attach scroll buttons to an image gallery.
+*/
 function attach_scroll_buttons( inPortfolioData, inImageData ) {
   for( index in inPortfolioData ) {
     attach_scroll_listeners(
@@ -127,12 +146,24 @@ function attach_scroll_buttons( inPortfolioData, inImageData ) {
   }
 }
 
+
+/*
+Global object containing portfolio image gallery information.
+*/
 const gallery = {};
 
+
+/*
+Function to get the transformX numerical value by discarding the letters and parentheses.
+*/
 function getX( inValue ) {
   return inValue.slice( 11, -3 );
 }
 
+
+/*
+Function to attach event listeners to the image gallery scroll buttons.
+*/
 function attach_scroll_listeners( inProjectData, inImageData ) {
   const id = inProjectData.portfolio_entry_id;
   if( !has_multiple_images( inImageData, id ) ) {
@@ -234,8 +265,3 @@ function attach_scroll_listeners( inProjectData, inImageData ) {
     });
   });
 }
-
-function attach_resize_event() {
-}
-
-attach_resize_event();

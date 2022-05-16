@@ -1,3 +1,6 @@
+/*
+Function to attach an event listener to the contact me button.
+*/
 function attach_contact_me_listener() {
     const send_message = document.getElementById("submit_contact_me");
     send_message.addEventListener( 'click', (click) => {

@@ -1,3 +1,6 @@
+/*
+Function to launch the blog interface.
+*/
 function launch_blog() {
   const portfolio = document.getElementById("portfolio_interface");
   const blog = document.getElementById("blog_interface");
@@ -7,6 +10,10 @@ function launch_blog() {
   get_blog_page( 1 );
 }
 
+
+/*
+Function to get a specific blog page.
+*/
 async function get_blog_page( inPage ) {
   const get_blog_request = new Request(
     ip + 'get_blog_page/' + inPage );
@@ -22,6 +29,10 @@ async function get_blog_page( inPage ) {
     });
 }
 
+
+/*
+Function to run regex on blog text to sanitize it for the server.
+*/
 function process_blog_text_body( inBody ) {
   let newText = "<p>";
   newText += inBody.replace( /<br><br>|<br>/g, "</p><p>" );
@@ -29,6 +40,10 @@ function process_blog_text_body( inBody ) {
   return newText;
 }
 
+
+/*
+Function to render a blog post.
+*/
 function render_blog( blog_data ) {
   emplace_images( blog_data );
   get_blog_page_count();
@@ -74,10 +89,18 @@ function render_blog( blog_data ) {
   blog.innerHTML = recent_posts_dom;
 }
 
+
+/*
+Function to find an image tag in a blog post, for the purposes of emplacing images.
+*/
 function find_image_tag( inText ) {
   return inText.indexOf( "image[[[" );
 }
 
+
+/*
+Function to get an image from the server.
+*/
 function get_image( blog_data, post_id, local_image_id ) {
   const ref = blog_data.recent_posts_images;
   for( indexB in ref ) {
@@ -89,6 +112,10 @@ function get_image( blog_data, post_id, local_image_id ) {
   }
 }
 
+
+/*
+Function to emplace images into a blog post.
+*/
 function emplace_images( blog_data ) {
   //1) Iterate through recent_posts.
   for( index in blog_data.recent_posts ) {
@@ -130,7 +157,9 @@ function emplace_images( blog_data ) {
 }
 
 
-/*Pagination*/
+/*
+Function to get the number of pages in the blog.
+*/
 async function get_blog_page_count() {
   const get_blog_page_request = new Request(
     ip + "page_count"
@@ -147,6 +176,10 @@ async function get_blog_page_count() {
     });
 }
 
+
+/*
+Function to render the blog page buttons.
+*/
 function render_blog_pagination( inPostCount ) {
   const blog_pagination_container =
     document.getElementById("blog_interface_pagination_container");
@@ -157,8 +190,4 @@ function render_blog_pagination( inPostCount ) {
       i + "</div>";
   }
   blog_pagination_container.innerHTML = page_buttons;
-}
-
-function compose_blog_post( blog_post_data ) {
-
 }

@@ -1,5 +1,7 @@
+/*
+Function to launch the edit portfolio interface.
+*/
 function launch_edit_portfolio_interface() {
-  console.log( "Launch edit portfolio interface" );
   const edit_blog_interface =
     document.getElementById("edit_blog_interface");
   const error_log_container =
@@ -18,6 +20,11 @@ function launch_edit_portfolio_interface() {
   get_portfolio_entries();
 }
 
+
+/*
+Global array containing event listener functions and references to their
+respective elements.
+*/
 const event_objects = [
   {
     "element_name": "portfolio_dropdown",
@@ -41,6 +48,10 @@ const event_objects = [
   }
 ];
 
+
+/*
+Delete portfolio entry.
+*/
 function portfolio_delete( inEntityID ) {
   if( inEntityID ) {
     const delete_request = new Request(
@@ -54,6 +65,10 @@ function portfolio_delete( inEntityID ) {
   }
 }
 
+
+/*
+Attach event listeners to their respective elements.
+*/
 function attach_events( inPortfolioEntityID ) {
   detach_events();
   for( index in event_objects ) {
@@ -82,6 +97,10 @@ function attach_events( inPortfolioEntityID ) {
   }
 }
 
+
+/*
+Detach event listeners from their respective elements.
+*/
 function detach_events() {
   for( index in event_objects ) {
     const event_ref = event_objects[index];
@@ -92,7 +111,9 @@ function detach_events() {
 }
 
 
-/*Portfolio Entires*/
+/*
+Function to get portfolio entries from the server.
+*/
 function get_portfolio_entries( inDropdownValue ) {
   const get_portfolio_entries_request = new Request(
     ip + "get_portfolio_entries"
@@ -107,6 +128,10 @@ function get_portfolio_entries( inDropdownValue ) {
     });
 }
 
+
+/*
+Function to render portfolio entries.
+*/
 function compose_portfolio_entries(
   portfolio_entries,
   inDropdownValue
@@ -130,6 +155,10 @@ function compose_portfolio_entries(
   }
 }
 
+
+/*
+Function be called when the user selects a portfolio entry from the drop down.
+*/
 function select_portfolio_entry() {
   const dropdown =
     document.getElementById("portfolio_dropdown");
@@ -155,6 +184,10 @@ function select_portfolio_entry() {
     });
 }
 
+
+/*
+Function to render a portfolio entry.
+*/
 function render_portfolio_entry( portfolioEntry ) {
   const title_field =
     document.getElementById("portfolio_title_field");
@@ -174,6 +207,10 @@ function render_portfolio_entry( portfolioEntry ) {
   flags_field.value = portfolioEntry.portfolio_flags;
 }
 
+
+/*
+Function to set portfolio fields to empty.
+*/
 function blank_portfolio_fields( inDropdownValue ) {
   const title_field =
     document.getElementById("portfolio_title_field");
@@ -204,18 +241,23 @@ function blank_portfolio_fields( inDropdownValue ) {
 }
 
 
-/**/
-function new_portfolio_entry() {
-
-}
-
-
-/*Images*/
+/*
+Global array to hold portfolio images.
+*/
 const portfolio_images = [];
+
+
+/*
+Function to add a portfolio image.
+*/
 function portfolio_add_image() {
   portfolio_select_image();
 }
 
+
+/*
+Function to load a portfolio image from the user's computer.
+*/
 function portfolio_select_image() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -231,6 +273,10 @@ function portfolio_select_image() {
   input.click();
 }
 
+
+/*
+Function to process a new portfolio image.
+*/
 function portfolio_add_image_to_gallery( inImageData ) {
   //1) Get size.
   const size = inImageData.total/1000000;
@@ -261,6 +307,10 @@ function portfolio_add_image_to_gallery( inImageData ) {
   render_portfolio_image_gallery();
 }
 
+
+/*
+Function to generate a new local unique identifier.
+*/
 function generate_new_local_id() {
   const local_ids = [];
   for( index in portfolio_images ) {
@@ -272,9 +322,11 @@ function generate_new_local_id() {
   }
 }
 
+
+/*
+Function to delete an image from the gallery.
+*/
 function delete_image_from_gallery( id, local_id ) {
-console.log( "\n\ndelete_image_from_gallery." );
-console.log( id + "/" + local_id );
   if( id ) {
     for( index in portfolio_images ) {
       if( id ) {
@@ -292,6 +344,10 @@ console.log( id + "/" + local_id );
   }
 }
 
+
+/*
+Function to render the portfolio image gallery.
+*/
 function render_portfolio_image_gallery() {
   let html_string = "";
   for( index in portfolio_images ) {
@@ -314,6 +370,10 @@ function render_portfolio_image_gallery() {
   portfolio_images_container.innerHTML = html_string;
 }
 
+
+/*
+Function to get portfolio images and prepare them to be sent to the server.
+*/
 function get_portfolio_images_object() {
   const portfolio_images_object = [];
   for( index in portfolio_images ) {
@@ -332,7 +392,9 @@ function get_portfolio_images_object() {
 }
 
 
-/*Submit*/
+/*
+Function to submit a portfolio entry to the server.
+*/
 function portfolio_submit_entry( existingPortfolioEntryID ) {
   const title_field =
     document.getElementById("portfolio_title_field");
@@ -354,7 +416,6 @@ function portfolio_submit_entry( existingPortfolioEntryID ) {
     "flags": flags_field.value,
     "images": get_portfolio_images_object()
   };
-console.dir( portfolio_entry_object );
 
   const submit_portfolio_request = new Request(
     ip + "add_portfolio_entry",
