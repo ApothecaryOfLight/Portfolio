@@ -1,5 +1,6 @@
 "use strict";
 
+
 /*
 Function to submit a blog post.
 */

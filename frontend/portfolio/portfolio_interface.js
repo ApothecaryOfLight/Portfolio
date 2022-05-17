@@ -1,3 +1,6 @@
+"use strict";
+
+
 /*
 Function to launch the portfolio.
 */

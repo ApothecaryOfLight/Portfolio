@@ -1,3 +1,6 @@
+"use strict";
+
+
 /*
 Function to launch the edit blog interface.
 */
@@ -165,12 +168,12 @@ function generate_temp_image_id() {
   const ids = [];
 
   //Push every existing image ID into the ids array we created above.
-  for( index in images ) {
+  for( const index in images ) {
     ids.push( images[index].local_image_id );
   }
 
   //Find the first unique identifier that does not already exist.
-  for( i=0; i<100; i++ ) {
+  for( const i=0; i<100; i++ ) {
     if( !ids.includes( i ) ) {
       return i;
     }
