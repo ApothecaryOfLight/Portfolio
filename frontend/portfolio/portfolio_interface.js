@@ -12,4 +12,6 @@ function launch_portfolio() {
 
   //Get the portfolio from the server.
   get_dynamic_portfolio();
+  
+  window.scroll({ top: 0, behavior: 'smooth' });
 }

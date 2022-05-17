@@ -15,4 +15,6 @@ function launch_blog() {
 
   //Request the first blog page from the server.
   get_blog_page( 1 );
+
+  window.scroll({ top: 0, behavior: 'smooth' });
 }

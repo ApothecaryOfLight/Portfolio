@@ -14,8 +14,7 @@ function render_blog( blog_data ) {
   get_blog_page_count();
 
   //Get a reference to the blog post conatiner.
-  const blog =
-    document.getElementById("blog_interface_recent_post_container");
+  const blog = document.getElementById("blog_interface_recent_post_container");
 
   //Set the contents of the blog post container to the posts stored in the object.
   const recent_posts = blog_data.recent_posts;
