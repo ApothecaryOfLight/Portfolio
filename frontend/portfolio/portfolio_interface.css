@@ -12,7 +12,7 @@
 .project_container {
 	display: flex;
 	flex-direction: row;
-	width: 100vs;
+	width: calc( 100vw - 3em );
 	margin-bottom: 7rem;
 	margin-top: 3rem;
 }
@@ -24,6 +24,8 @@
 	grid-template-columns: 4rem auto 4rem;
 	grid-template-rows: auto 4rem auto;
 	align-items: center;
+
+	margin-left: 2rem;
 }
 
 #oinker_scroll {
@@ -159,6 +161,7 @@
 	}
 	.description_container {
 		width: 100%;
+		margin-left: 1em;
 	}
 }
 

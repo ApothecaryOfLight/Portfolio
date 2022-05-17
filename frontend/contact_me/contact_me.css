@@ -18,6 +18,7 @@
 @media (max-width:900px) {
     #contact_me {
         width: 90%;
+        margin-right: 0px;
     }
 }
 
