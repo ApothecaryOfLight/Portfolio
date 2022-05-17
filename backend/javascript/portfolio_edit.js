@@ -224,23 +224,23 @@ exports.attach_route_get_portfolio_entry = attach_route_get_portfolio_entry;
 function delete_entity( app, sqlPool ) {
     app.get( '/delete_entity/:entity_id', async function(req,res) {
         try {
-        const delete_query = "DELETE FROM portfolio_entries " +
-            "WHERE portfolio_entry_id = " +
-            req.params.entity_id + ";";
-        const [del_row,del_field] = await
-            sqlPool.query( delete_query );
-        res.send( JSON.stringify({
-            "result": "success"
-        }));
+            const delete_query = "DELETE FROM portfolio_entries " +
+                "WHERE portfolio_entry_id = " +
+                req.params.entity_id + ";";
+            const [del_row,del_field] = await
+                sqlPool.query( delete_query );
+            res.send( JSON.stringify({
+                "result": "success"
+            }));
         } catch( error_obj  ) {
-        await error.log(
-            "portfolio_eidt.js::delete_entity",
-            error_obj
-        );
-        res.send( JSON.stringify({
-            "result": "failure",
-            "reason": error_obj
-        }));
+            await error.log(
+                "portfolio_eidt.js::delete_entity",
+                error_obj
+            );
+            res.send( JSON.stringify({
+                "result": "failure",
+                "reason": error_obj
+            }));
         }
     });
 }
