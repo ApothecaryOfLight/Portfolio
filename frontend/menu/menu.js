@@ -26,7 +26,7 @@ function populate_menu_buttons( menu_buttons ) {
   let dom_text = "";
 
   //Iterate through each menu button.
-  for( index in menu_buttons ) {
+  for( const index in menu_buttons ) {
     //Convert this menu button into HTML.
     const button_ref = menu_buttons[index];
     dom_text += "<div onclick=\'" +

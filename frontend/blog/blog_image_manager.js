@@ -45,7 +45,7 @@ blog_data: Blog post to emplace images in.
 */
 function emplace_images( blog_data ) {
   //Iterate through recent_posts.
-  for( index in blog_data.recent_posts ) {
+  for( const index in blog_data.recent_posts ) {
     const post_id = blog_data.recent_posts[index].post_id;
     let start_index = blog_data.recent_posts[index].body.indexOf( "[[[image=" );
     while( start_index != -1 ) {

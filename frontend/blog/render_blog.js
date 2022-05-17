@@ -24,7 +24,7 @@ function render_blog( blog_data ) {
   let recent_posts_dom = "";
 
   //Iterate through each blog post.
-  for( index in recent_posts ) {
+  for( const index in recent_posts ) {
     //Get a timestamp and convert it into Human readable format.
     const js_date = new Date( recent_posts[index].timestamp );
     const datestring = js_date.toLocaleDateString();

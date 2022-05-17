@@ -41,7 +41,7 @@ function render_blog_pagination( inPostCount ) {
   let page_buttons = "";
 
   //Create a page button for each page that should be available.
-  for( i=1; i<=page_count; i++ ) {
+  for( const i=1; i<=page_count; i++ ) {
     page_buttons += "<div class=\'page_button\'>" +
       i + "</div>";
   }

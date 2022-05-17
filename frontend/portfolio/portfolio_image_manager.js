@@ -68,7 +68,7 @@ function attach_scroll_listeners( inProjectData, inImageData ) {
   const image_refs = [];
   const image_names = [];
   let counter = 0;
-  for( let image_index in inImageData ) {
+  for( const image_index in inImageData ) {
     const project_id = inImageData[image_index].portfolio_entry_id;
     if( project_id == inProjectData.portfolio_entry_id ) {
       image_refs.push( inImageData[image_index] );
@@ -82,7 +82,7 @@ function attach_scroll_listeners( inProjectData, inImageData ) {
 
   //Get the element IDs of each image.
   const image_elements = [];
-  for( name_index in image_names ) {
+  for( const name_index in image_names ) {
     image_elements.push(
       document.getElementById( image_names[name_index] )
     );
