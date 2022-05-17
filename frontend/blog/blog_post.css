@@ -1,0 +1,26 @@
+.recent_blog_post {
+    border-bottom: 1rem double black;
+    margin-bottom: 3rem;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-bottom: 4rem;
+}
+
+.recent_blog_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.recent_blog_title {
+    border-bottom: 2px solid black;
+}
+
+.recent_blog_timestamp {
+
+}
+
+.recent_blog_body {
+    text-indent: 3rem;
+}
