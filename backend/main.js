@@ -68,9 +68,10 @@ blog_edit.attach_route_new_blog_post( app, sqlPool );
 blog_edit.attach_route_delete_post( app, sqlPool );
 blog_edit.attach_route_edit_blog_post( app, sqlPool );
 blog_edit.attach_route_get_blog_images_post_id( app, sqlPool );
-blog_edit.attach_route_get_root_posts( app, sqlPool );
+blog_edit.attach_route_get_series_list( app, sqlPool );
 blog_edit.attach_get_existing_posts( app, sqlPool );
 blog_edit.attach_route_get_blog_post_post_id( app, sqlPool );
+blog_edit.attach_route_get_blog_posts_by_series_id( app, sqlPool );
 
 portfolio_view.attach_route_get_portfolio( app, sqlPool );
 

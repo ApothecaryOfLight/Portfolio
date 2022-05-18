@@ -14,7 +14,7 @@ function render_blog_images() {
   let html_string = "";
 
   //Iterate through the images, converting each to HTML.
-  for( index in images ) {
+  for( const index in images ) {
     html_string += "<div class=\'image_container\'>" +
       "<div class=\'image_header\'>" +
       "<input type=\'checkbox\'/>Blurb Image" +
@@ -68,7 +68,7 @@ inLocalID: Locally generated and stored ID of the image to delete.
 */
 function delete_blog_image( inLocalID ) {
   //Iterate through the images.
-  for( image_index in images ) {
+  for( const image_index in images ) {
     //If this is the image to be deleted:
     if( images[image_index].local_image_id == inLocalID ) {
       //Remove this image from the array.

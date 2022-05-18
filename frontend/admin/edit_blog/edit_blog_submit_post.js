@@ -6,17 +6,17 @@ Function to submit a blog post.
 */
 function submit_post() {
   //Get references to the text field DOM elements.
+  const series_id_field = document.getElementById("blog_series_dropdown");
   const title_field = document.getElementById("new_blog_title");
   const body_field = document.getElementById("new_blog_body");
-  const root_id_field = document.getElementById("new_blog_root");
 
   //Get the text value of the text fields.
   const title_text = title_field.value;
   const body_text = body_field.value;
-  const root_id = root_id_field.value;
+  const series_id = series_id_field.value;
 
   //Get a reference to the blog post dropdown selector.
-  const edit_post_dropdown = document.getElementById("new_blog_old_post");
+  const edit_post_dropdown = document.getElementById("blog_post_dropdown");
 
   //Get the currently selected blog post from the dropdown selector.
   const edit_post_id = edit_post_dropdown.value;
@@ -27,7 +27,7 @@ function submit_post() {
     const new_post_object = {
       "title": process_outgoing_text( title_text ),
       "body": process_outgoing_text( body_text ),
-      "root": root_id,
+      "series": series_id,
       "postorder": "???",
       "password_hash": "???",
       "images": images

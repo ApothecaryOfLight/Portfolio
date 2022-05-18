@@ -2,72 +2,55 @@
 
 
 /*
-Function to get root blog posts.
+Function to get a list of blog series.
 */
-function get_roots() {
+function get_series_list() {
   //Request the root blog posts from the server.
   const roots_request = new Request (
-    ip + "get_root_posts"
+    ip + "get_series_list"
   );
   fetch( roots_request )
     .then( response => response.json() )
     .then( json => {
-      //Render the root blog posts.
-      compose_roots( json.roots );
+      //Render the list of blog series.
+      compose_series_list( json.series_list );
     });
 }
 
 
 /*
-Function to render the blog roots drop down menu.
+Function to render the blog series drop down menu.
 
-roots: Object containing the root blog posts.
+series: Object containing the series list.
 */
-function compose_roots( roots ) {
+function compose_series_list( series_list ) {
+  console.log("compose_series_list");
   //Create a string containing the HTML to render the dropdown selector for
   //root posts.
   let dom_string = "<option value=\'-1\'>New Series</option>";
 
   //Iterate through every blog post in the root blog posts object.
-  for( const index in roots ) {
+  for( const index in series_list ) {
     dom_string += "<option value=\'";
-    dom_string += roots[index].post_id + "\'>";
-    dom_string += roots[index].title + "</option>";
+    dom_string += series_list[index].series_id + "\'>";
+    dom_string += series_list[index].series_title + "</option>";
   }
 
   //Get a reference to the root blog post dropdown selector.
-  const dropdown = document.getElementById("new_blog_root");
+  const dropdown = document.getElementById("blog_series_dropdown");
 
   //Set the HTML content of the dropdown selector to the HTML string.
   dropdown.innerHTML = dom_string;
 }
 
 
-/*
-Function to create a new blog post.
-*/
-function new_blog_old_post() {
-  //Get a reference to the root blog post dropdown selector.
-  const edit_post_dropdown = document.getElementById("new_blog_old_post");
+function select_blog_series() {
+  //Get a reference to the blog series dropdown selector.
+  const select_series_dropdown = document.getElementById("blog_series_dropdown");
 
   //Get the currently selected value from the dropdown selector.
-  const edit_post_id = edit_post_dropdown.value;
-
-  //If it is -1, then it is a new root post.
-  if( edit_post_id != -1 ) {
-    //Load the selected post by ID.
-    load_blog_post( edit_post_id );
-
-    //Attach relevant event listeners.
-    attach_blog_interface_events( edit_post_id );
-  } else {
-    //Reset the input fields.
-    blank_fields();
-
-    //Attach the relevant event listeners.
-    attach_blog_interface_events();
-
-    //Get a new unique identifier for the post.
-    get_new_post_id();
-  }
+  const series_id = select_series_dropdown.value;
+  
+  //Request a list of blog posts in this series from the server.
+  get_blog_posts_by_series_id( series_id );
 }

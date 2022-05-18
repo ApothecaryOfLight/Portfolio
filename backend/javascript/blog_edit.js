@@ -6,20 +6,15 @@ const error = require('../error_logging.js');
 function attach_route_new_blog_post( app, sqlPool ) {
     app.post( '/new_blog_post', async function(req,res) {
         try {
+            //Get the timestamp
             const timestamp = error.get_timestamp();
+
+            //Get a new unique identifier
             const new_post_id_query = "SELECT " +
                 "Portfolio.generate_new_id( 1 ) as new_id;";
             const [new_id_row,new_id_field] =
                 await sqlPool.query( new_post_id_query );
             const new_blog_post_id = new_id_row[0].new_id;
-        
-            //Get the root id.
-            let root_id;
-            if( req.body.root == -1 ) {
-                root_id = "NULL";
-            } else {
-                root_id = req.body.root;
-            }
         
             //Get a blog image ID for each image.
             for( index in req.body.images ) {
@@ -31,16 +26,17 @@ function attach_route_new_blog_post( app, sqlPool ) {
                 new_image_id_row[0].new_image_id;
             }
         
+            //create the insertion query for the blog text.
             let new_blog_post_query = "INSERT INTO blog_posts " +
-                "(title, body, timestamp, root_id, postorder, post_id) " +
+                "(title, body, timestamp, post_id) " +
                 "VALUES ( " +
                 "\'" + req.body.title + "\', " +
                 "\'" + req.body.body + "\', " +
                 "\'" + timestamp + "\', " +
-                root_id + "," +
                 "0, " +
                 new_blog_post_id + " ); ";
         
+            //Create the insertion query for the blog images.
             for( index in req.body.images ) {
                 new_blog_post_query += "INSERT INTO blog_images " +
                 "( image_id, local_image_id, post_id, image_data ) " +
@@ -52,6 +48,7 @@ function attach_route_new_blog_post( app, sqlPool ) {
                 req.body.images[index].image_data + "\' ); "
             }
         
+            //Query the SQL server.
             const [new_blog_post_row,new_blog_post_field] =
                 await sqlPool.query( new_blog_post_query );
             res.send( JSON.stringify({
@@ -99,19 +96,10 @@ exports.attach_route_delete_post = attach_route_delete_post;
 
 function attach_route_edit_blog_post( app, sqlPool ) {
     app.post( '/edit_blog_post', async function(req,res) {
-        try {
-            let root_id;
-            if( req.body.root == -1 ) {
-                root_id = "NULL";
-            } else {
-                root_id = req.body.root;
-            }
-        
+        try {        
             const update_query = "UPDATE blog_posts " +
                 "SET title = \'" + req.body.title + "\', " +
-                "body = \'" + req.body.body + "\', " +
-                "root_id = " + root_id + ", " +
-                "postorder = 0 " + " " +
+                "body = \'" + req.body.body + "\' " +
                 "WHERE post_id = " + req.body.post_id + ";"
             const [update_row,update_field] =
                 await sqlPool.query( update_query );
@@ -234,21 +222,20 @@ function attach_route_get_blog_images_post_id( app, sqlPool ) {
 exports.attach_route_get_blog_images_post_id = attach_route_get_blog_images_post_id;
 
 
-function attach_route_get_root_posts( app, sqlPool ) {
-    app.get( '/get_root_posts', async function(req,res) {
+function attach_route_get_series_list( app, sqlPool ) {
+    app.get( '/get_series_list', async function(req,res) {
         try {
-            const query_roots = "SELECT title, post_id " +
-                "FROM blog_posts " +
-                "WHERE root_id IS NULL;"
-            const [roots_row,roots_field] =
-                await sqlPool.query( query_roots );
+            const query_series = "SELECT DISTINCT series_title, series_id " +
+                "FROM blog_series;"
+            const [series_row,series_field] =
+                await sqlPool.query( query_series );
             res.send( JSON.stringify({
                 "result": "success",
-                "roots": roots_row
+                "series_list": series_row
             }));
         } catch( error_obj ) {
             await error.log(
-                "blog_edit.js::attach_route_get_root_posts",
+                "blog_edit.js::attach_route_get_series_list",
                 error_obj
             );
             res.send( JSON.stringify({
@@ -258,7 +245,7 @@ function attach_route_get_root_posts( app, sqlPool ) {
         }
     });
 }
-exports.attach_route_get_root_posts = attach_route_get_root_posts;
+exports.attach_route_get_series_list = attach_route_get_series_list;
 
 
 function attach_get_existing_posts( app, sqlPool ) {
@@ -291,7 +278,7 @@ function attach_route_get_blog_post_post_id( app, sqlPool ) {
     app.get( '/get_blog_post/:post_id', async function(req,res) {
         try {
             const get_post = "SELECT " +
-                "title, body, timestamp, post_id, root_id, postorder " +
+                "title, body, timestamp, post_id " +
                 "FROM blog_posts " +
                 "WHERE post_id = " + req.params.post_id + ";";
             const [post_row,post_field] = await sqlPool.query( get_post );
@@ -312,3 +299,34 @@ function attach_route_get_blog_post_post_id( app, sqlPool ) {
     });
 }
 exports.attach_route_get_blog_post_post_id = attach_route_get_blog_post_post_id;
+
+
+function attach_route_get_blog_posts_by_series_id( app, sqlPool ) {
+    app.get( '/get_blog_posts_by_series_id/:series_id', async function(req,res) {
+        try {
+            const get_blog_posts = "SELECT blog_posts.title, blog_posts.post_id " +
+                "FROM blog_posts " +
+                "INNER JOIN blog_series " +
+                "ON blog_posts.post_id = blog_series.post_id " +
+                "WHERE blog_series.series_id = " + req.params.series_id + ";";
+            console.log( get_blog_posts );
+            const [existing_row,existing_field] =
+                await sqlPool.query( get_blog_posts );
+            res.send( JSON.stringify({
+                "result": "success",
+                "existing": existing_row
+            }));
+
+        } catch( error_obj ) {
+            await error.log(
+                "blog_edit.js::attach_route_get_blog_posts_by_series_id",
+                error_obj
+            );
+            res.send( JSON.stringify({
+                "result": "failure",
+                "reason": error_obj
+            }));
+        }
+    });
+}
+exports.attach_route_get_blog_posts_by_series_id = attach_route_get_blog_posts_by_series_id;

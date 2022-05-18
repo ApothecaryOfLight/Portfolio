@@ -13,9 +13,9 @@ function attach_blog_interface_events( inPostID ) {
       func: submit_post
     },
     {
-      element_name: "new_blog_old_post",
+      element_name: "blog_post_dropdown",
       event: "change",
-      func: new_blog_old_post
+      func: select_blog_post
     },
     {
       element_name: "add_new_image",
@@ -26,6 +26,11 @@ function attach_blog_interface_events( inPostID ) {
       element_name: "new_blog_delete",
       event: "click",
       func: delete_post
+    },
+    {
+      element_name: "blog_series_dropdown",
+      event: "change",
+      func: select_blog_series
     }
   ];
 
@@ -67,15 +72,16 @@ Function to detach event listeners from their elements.
 function blog_interface_detach_events( events ) {
   //Iterate through every event object.
   for( const index in events ) {
-    //Get a reference to this event.
+    //Get a reference to the event object.
     const event_ref = events[index];
 
-    //Get a reference to this DOM element.
-    const delE = document.getElementById( event_ref.element_name );
+    //Get a reference to the DOM element.
+    const element_ref = document.getElementById( event_ref.element_name );
 
-    //Clone this element and replace it with it's clone, which will delete all
-    //attached event listeners.
-    const newE = delE.cloneNode( true );
-    delE.parentNode.replaceChild( newE, delE );
+    //Remove event listener.
+    element_ref.removeEventListener(
+      event_ref.event,
+      event_ref.func
+    );
   }
 }

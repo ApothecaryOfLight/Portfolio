@@ -77,20 +77,24 @@
   </div>
 
   <div id="edit_blog_interface">
+    <div id="blog_series_dropdown_prompt_container">
+      Series:
+      <select id="blog_series_dropdown">
+        <option value="-1">New Series</option>
+      </select>
+    </div>
+    <div id="blog_series_title_prompt_contianer">
+      New Series Title:
+      <input id="blog_series_title" type="text"/>
+    </div>
     <div id="new_blog_existing_prompt_container">
-      Existing Post:
-      <select id="new_blog_old_post">
+      Title:
+      <select id="blog_post_dropdown">
       </select>
     </div>
     <div id="new_blog_title_prompt_contianer">
-      Title:
+      New Title:
       <input id="new_blog_title" type="text"/>
-    </div>
-    <div id="new_blog_root_prompt_container">
-      Root:
-      <select id="new_blog_root">
-        <option value="-1">New Series</option>
-      </select>
     </div>
     <div id="new_blog_delete_prompt_container">
       <button id="new_blog_delete">Delete Post</button>

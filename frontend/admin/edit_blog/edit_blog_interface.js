@@ -18,7 +18,7 @@ Function to render the edit blog interface.
 */
 function render_edit_blog_interface() {
   //Get a list of blog posts that are roots (first in a series).
-  get_roots();
+  get_series_list();
 
   //Get a list of blog posts that are not roots (not first in a series).
   get_existing_posts();
@@ -32,15 +32,18 @@ function render_edit_blog_interface() {
 /*
 Set text and image fields to blank.
 */
-function blank_fields() {
+function blank_fields( inSeriesID ) {
+  console.log("blakning fields")
   //Get references to the input elements.
+  const series_field = document.getElementById("blog_series_dropdown");
   const title_field = document.getElementById("new_blog_title");
-  const root_field = document.getElementById("new_blog_root");
   const body_field = document.getElementById("new_blog_body");
 
   //Reset the input elements.
   title_field.value = "";
-  root_field.value = "-1";
+  if( !inSeriesID ) {
+    series_field.value = "0";
+  }
   body_field.value = "";
 
   //Empty the images array.
@@ -65,23 +68,14 @@ post_data: Object containing the blog post to edit.
 function render_blog_post( post_data ) {
   //Get references to the input fields.
   const title_field = document.getElementById("new_blog_title");
-  const root_field = document.getElementById("new_blog_root");
   const body_field = document.getElementById("new_blog_body");
-  const dropdown = document.getElementById("new_blog_old_post");
+  const dropdown = document.getElementById("blog_post_dropdown");
 
   //Set the dropdown selector to this blog post.
   dropdown.value = post_data.post_id;
 
   //Regex the text of the title so it will be Human readable.
   title_field.value = process_incoming_text( post_data.title );
-
-  //If this is a root post, set the root value of the dropdown selector.
-  if( post_data.root_id != null ) {
-    root_field.value = post_data.root_id;
-  } else {
-    //Otherwise, if it's not a root post, set the dropdown to a new root post.
-    root_field.value = -1;
-  }
 
   //Regex the text of the blog post so it will be Human readable.
   body_field.value = process_incoming_text( post_data.body );
@@ -178,4 +172,19 @@ function generate_temp_image_id() {
       return i;
     }
   }
+}
+
+
+function get_blog_posts_by_series_id( series_id ) {
+  //Request a list of blog posts with a specific series ID from the server.
+  const request_blog_posts_by_series_id = new Request(
+    ip + "get_blog_posts_by_series_id/" + series_id
+  );
+  fetch( request_blog_posts_by_series_id )
+    .then( response => response.json() )
+    .then( json => {
+      console.dir( json );
+      blank_fields( series_id );
+      compose_existing( json.existing );
+    });
 }
