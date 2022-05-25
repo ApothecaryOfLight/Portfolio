@@ -109,11 +109,11 @@ function select_blog_post( edit_blog_post ) {
     //Reset the input fields.
     blank_fields( series_id );
 
-    edit_blog_post.post_id = null;
+    edit_blog_post.post_id = -1;
     edit_blog_post.series_id = series_id;
 
     //Get a new unique identifier for the post.
-    get_new_post_id();
+    //get_new_post_id();
   }
 }
 

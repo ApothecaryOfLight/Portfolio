@@ -132,9 +132,9 @@ function generate_temp_image_id() {
   }
 
   //Find the first unique identifier that does not already exist.
-  for( const i=0; i<100; i++ ) {
-    if( !ids.includes( i ) ) {
-      return i;
+  for( let new_id=0; new_id<100; new_id++ ) {
+    if( !ids.includes( new_id ) ) {
+      return new_id;
     }
   }
 }

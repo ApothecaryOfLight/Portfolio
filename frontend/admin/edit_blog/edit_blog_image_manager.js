@@ -5,35 +5,33 @@
 Render the images in a blog post.
 */
 function render_blog_images() {
-  //If there is no image, simply return.
-  if( images.length == 0 ) {
-    return;
-  }
-  
   //Create a string to store the stringbashed HTML.
   let html_string = "";
 
-  //Iterate through the images, converting each to HTML.
-  for( const index in images ) {
-    html_string += "<div class=\'image_container\'>" +
-      "<div class=\'image_header\'>" +
-      "<input type=\'checkbox\'/>Blurb Image" +
-      "</div>" +
-      "<div class=\'image_body\'>" +
-      "<img class=\'image_image\' " +
-      "src=\'" + images[index].image_data + "\'>" +
-      "<div class=\'image_tools\'>" +
-      "<button class=\'image_delete\' " +
-      "onclick=\'delete_blog_image(" +
-      images[index].local_image_id +
-      ")\' " +
-      ">X</button>" +
-      "<button class=\'image_copy_link\' " +
-      "onclick=\'copy_link( " +
-      images[index].local_image_id + ")\' " +
-      ">Copy Link</button>" +
-      "</div>" +
-      "</div></div>";
+  //If there are images, render them, with associated buttons and check boxes.
+  if( images.length != 0 ) {
+    //Iterate through the images, converting each to HTML.
+    for( const index in images ) {
+      html_string += "<div class=\'image_container\'>" +
+        "<div class=\'image_header\'>" +
+        "<input type=\'checkbox\'/>Blurb Image" +
+        "</div>" +
+        "<div class=\'image_body\'>" +
+        "<img class=\'image_image\' " +
+        "src=\'" + images[index].image_data + "\'>" +
+        "<div class=\'image_tools\'>" +
+        "<button class=\'image_delete\' " +
+        "onclick=\'delete_blog_image(" +
+        images[index].local_image_id +
+        ")\' " +
+        ">X</button>" +
+        "<button class=\'image_copy_link\' " +
+        "onclick=\'copy_link( " +
+        images[index].local_image_id + ")\' " +
+        ">Copy Link</button>" +
+        "</div>" +
+        "</div></div>";
+    }
   }
 
   //Get a reference to the image container element.
@@ -48,6 +46,8 @@ function render_blog_images() {
 Create an image reference to emplace in a blog post.
 */
 function copy_link( inLocalID ) {
+  console.log("copy link");
+  console.log( inLocalID );
   //Create a string representing the image.
   const image_place_text = "[[[image=" + inLocalID + "]]]";
 
@@ -93,26 +93,31 @@ function select_image() {
   //Create a reference to an input element.
   const input = document.createElement('input');
 
-  //Set the values of the input element to take an image file.
+  //Set the input element to take files.
   input.type = 'file';
+
+  //Set the input element to accept image file types.
   input.accept = 'image/*';
+
+  //Set the input element to accept multiple files.
+  input.setAttribute("multiple","");
 
   //Attach an event listener to the input element.
   input.onchange = e => {
-    //Get a reference to the image file.
-    const file = e.target.files[0];
+    //Iterate through each file being added.
+    for( let file_index = 0; file_index < e.target.files.length; file_index++ ) {
+      //Create a file reader.
+      const reader = new FileReader();
 
-    //Create a file reader.
-    const reader = new FileReader();
+      //Read the file.
+      reader.readAsDataURL( e.target.files[file_index] );
 
-    //Read the file.
-    reader.readAsDataURL( file );
-
-    //Attach an event listener to fire once the file is fully loaded.
-    reader.onload = readerEvent => {
-      //Store the image now that it's processed.
-      store_image( readerEvent );
-    }
+      //Attach an event listener to fire once the file is fully loaded.
+      reader.onload = readerEvent => {
+        //Store the image now that it's processed.
+        store_image( readerEvent );
+      }
+    };
   }
 
   //Trigger the input element.

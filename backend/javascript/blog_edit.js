@@ -33,8 +33,9 @@ function attach_route_new_blog_post( app, sqlPool ) {
                 "\'" + req.body.post_title + "\', " +
                 "\'" + req.body.body + "\', " +
                 "\'" + timestamp + "\', " +
-                "0, " +
                 new_blog_post_id + " ); ";
+
+                console.log( new_blog_post_query );
 
             //Create the insertion query for the blog series.
             //A series_id of -2 signifies that this post will not belong to any series.

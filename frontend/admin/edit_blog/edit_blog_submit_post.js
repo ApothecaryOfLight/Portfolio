@@ -8,23 +8,23 @@ function submit_post( blog_edit_data ) {
   //Get references to the text field DOM elements.
   const series_id_field = document.getElementById("blog_series_dropdown");
   const series_title_field = document.getElementById("blog_series_title");
+
+  const post_id_field = document.getElementById("blog_post_dropdown");
   const post_title_field = document.getElementById("new_blog_title");
+
   const body_field = document.getElementById("new_blog_body");
 
-  //Get the text value of the text fields.
+  //Get the text and id values of the fields.
   const series_id = series_id_field.value;
   const series_title = series_title_field.value;
+
+  const post_id = post_id_field.value;
   const post_title = post_title_field.value;
+
   const body_text = body_field.value;
 
-  //Get a reference to the blog post dropdown selector.
-  const edit_post_dropdown = document.getElementById("blog_post_dropdown");
-
-  //Get the currently selected blog post from the dropdown selector.
-  const edit_post_id = edit_post_dropdown.value;
-
   //If this is a new blog post, then the ID will be -1.
-  if( edit_post_id  == -1 ) {
+  if( post_id  == -1 ) {
     //Create an object that contains the new blog post.
     const new_post_object = {
       "series_id": series_id,
@@ -57,10 +57,11 @@ function submit_post( blog_edit_data ) {
     //Create an object containing the edited blog post, and send it to the
     //server.
     const edit_post_object = JSON.stringify({
-      "post_id": edit_post_id,
-      "title": process_outgoing_text( title_text ),
+      "series_id": series_id,
+      "series_title": process_outgoing_text( series_title ),
+      "post_id": post_id,
+      "post_title": process_outgoing_text( post_title ),
       "body": process_outgoing_text( body_text ),
-      "root": root_id,
       "postorder": "???",
       "password_hash": "???",
       "images": images
