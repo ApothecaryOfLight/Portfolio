@@ -35,3 +35,7 @@
 .image_image {
   max-height: 400px;
 }
+
+#blog_series_title_prompt_contianer {
+  display: none;
+}

@@ -25,6 +25,14 @@ function switch_interface( target_interface ) {
         } else {
             //If this is not the target interface, hide it.
             interface_reference.style.display = "none";
+            detach_events( interface_name );
         }
     });
+}
+
+
+function detach_events( interface_name ) {
+    if( interface_name == "edit_blog_interface" ) {
+        blog_interface_detach_events();
+    }
 }

@@ -5,8 +5,13 @@
 Function to launch the edit blog interface.
 */
 function launch_edit_blog_interface() {
+  const blog_edit_data = {
+    post_id: null,
+    series_id: null
+  };
+
   //Attach event listeners.
-  attach_blog_interface_events();
+  attach_edit_blog_interface_events(blog_edit_data);
 
   //Render the edit blog interface itself.
   render_edit_blog_interface();
@@ -28,12 +33,10 @@ function render_edit_blog_interface() {
 }
 
 
-
 /*
 Set text and image fields to blank.
 */
 function blank_fields( inSeriesID ) {
-  console.log("blakning fields")
   //Get references to the input elements.
   const series_field = document.getElementById("blog_series_dropdown");
   const title_field = document.getElementById("new_blog_title");
@@ -108,44 +111,6 @@ function delete_post( inPostID ) {
 
 
 /*
-Function to get a unique identifier for a new blog post.
-*/
-function get_new_post_id() {
-  //Create a request of the server to get a new unique identifier.
-  const new_id_request = new Request(
-    ip + "new_id"
-  );
-  fetch( new_id_request )
-    .then( response => response.json() )
-    .then( json => {
-      attach_blog_interface_events( json.new_post_id );
-    });
-}
-
-
-/*
-Function to release a unique identifier for a new blog post if the post is
-discarded.
-
-inPostID: ID of the post that was discarded.
-*/
-function release_post_id( inPostID ) {
-  //Ensure that there is a Post ID provided.
-  if( inPostID ) {
-    //Create a request for the server to release a reserved unique identifier.
-    const release_id_request = new Request(
-      ip + "release_id/" + inPostID
-    );
-    fetch( release_id_request )
-      .then( response => response.json() )
-      .then( json => {
-        console.log( "ID released." );
-      });
-  }
-}
-
-
-/*
 Function to generate a temporary unique identifier for a blog image.
 
 NB: This is terrible. Just terrible. There's no need to iterate over
@@ -183,7 +148,6 @@ function get_blog_posts_by_series_id( series_id ) {
   fetch( request_blog_posts_by_series_id )
     .then( response => response.json() )
     .then( json => {
-      console.dir( json );
       blank_fields( series_id );
       compose_existing( json.existing );
     });

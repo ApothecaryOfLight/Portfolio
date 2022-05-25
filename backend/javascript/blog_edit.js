@@ -30,11 +30,27 @@ function attach_route_new_blog_post( app, sqlPool ) {
             let new_blog_post_query = "INSERT INTO blog_posts " +
                 "(title, body, timestamp, post_id) " +
                 "VALUES ( " +
-                "\'" + req.body.title + "\', " +
+                "\'" + req.body.post_title + "\', " +
                 "\'" + req.body.body + "\', " +
                 "\'" + timestamp + "\', " +
                 "0, " +
                 new_blog_post_id + " ); ";
+
+            //Create the insertion query for the blog series.
+            //A series_id of -2 signifies that this post will not belong to any series.
+            //A series_id of -1 signifies that this post will begin a new series.
+            //Any other value will be the unique identifier of an existing series to add
+            //this post on to.
+            if( req.body.series_id != -2 ) {
+                new_blog_post_query += "INSERT INTO blog_series " +
+                "( series_title, timestamp, post_id, number_in_series, series_id ) " +
+                "VALUES ( " +
+                "\'" + req.body.series_title + "\', " +
+                "\'" + timestamp + "\', " +
+                new_blog_post_id + ", " +
+                "0, " +
+                "\'" + req.body.series_id +  + " ); ";
+            }
         
             //Create the insertion query for the blog images.
             for( index in req.body.images ) {
@@ -251,8 +267,10 @@ exports.attach_route_get_series_list = attach_route_get_series_list;
 function attach_get_existing_posts( app, sqlPool ) {
     app.get( '/get_existing_posts', async function(req,res) {
         try {
-            const query_existing = "SELECT title, post_id " +
-                "FROM blog_posts";
+            const query_existing = "SELECT blog_posts.title, blog_posts.post_id " +
+                "FROM blog_posts " +
+                "OUTER JOIN blog_series " +
+                "ON blog_posts.post_id = blog_series.post_id;";
             const [existing_row,existing_field] =
                 await sqlPool.query( query_existing );
             res.send( JSON.stringify({
@@ -309,7 +327,6 @@ function attach_route_get_blog_posts_by_series_id( app, sqlPool ) {
                 "INNER JOIN blog_series " +
                 "ON blog_posts.post_id = blog_series.post_id " +
                 "WHERE blog_series.series_id = " + req.params.series_id + ";";
-            console.log( get_blog_posts );
             const [existing_row,existing_field] =
                 await sqlPool.query( get_blog_posts );
             res.send( JSON.stringify({

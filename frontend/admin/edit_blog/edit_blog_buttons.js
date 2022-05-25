@@ -1,67 +1,59 @@
 "use strict";
 
+//Create an array of objects to attach functions to their respective elements.
+const blog_edit_events = [
+  {
+    element_name: "submit_post",
+    event: "click",
+    func: submit_post,
+    func_ref: null
+  },
+  {
+    element_name: "blog_post_dropdown",
+    event: "change",
+    func: select_blog_post,
+    func_ref: null
+  },
+  {
+    element_name: "add_new_image",
+    event: "click",
+    func: select_image,
+    func_ref: null
+  },
+  {
+    element_name: "new_blog_delete",
+    event: "click",
+    func: delete_post,
+    func_ref: null
+  },
+  {
+    element_name: "blog_series_dropdown",
+    event: "change",
+    func: select_blog_series,
+    func_ref: null
+  }
+];
   
 /*
 Function to attach blog edit events to their respective elements.
 */
-function attach_blog_interface_events( inPostID ) {
-  //Create an array of objects to attach functions to their respective elements.
-  const events = [
-    {
-      element_name: "submit_post",
-      event: "click",
-      func: submit_post
-    },
-    {
-      element_name: "blog_post_dropdown",
-      event: "change",
-      func: select_blog_post
-    },
-    {
-      element_name: "add_new_image",
-      event: "click",
-      func: select_image
-    },
-    {
-      element_name: "new_blog_delete",
-      event: "click",
-      func: delete_post
-    },
-    {
-      element_name: "blog_series_dropdown",
-      event: "change",
-      func: select_blog_series
-    }
-  ];
-
-  //Detach existing event listeners.
-  blog_interface_detach_events( events );
-
+function attach_edit_blog_interface_events( blog_edit_data ) {
   //Iterate through every object and attach events.
-  for( const index in events ) {
+  for( const index in blog_edit_events ) {
     //Get a reference to the event object.
-    const event_ref = events[index];
+    const event_ref = blog_edit_events[index];
 
     //Get a reference to the DOM element.
     const element_ref = document.getElementById( event_ref.element_name );
 
-    //If these events pertain to a blog post, add that to the bound function.
-    if( inPostID ) {
-      //Bind the function with the provided post ID.
-      const func_ref = event_ref.func.bind( null, inPostID );
-      
-      //Add the function as the callback to the event.
-      element_ref.addEventListener(
-        event_ref.event,
-        func_ref
-      );
-    } else {
-      //Add the function as a callback to the event.
-      element_ref.addEventListener(
-        event_ref.event,
-        event_ref.func
-      );
-    }
+    //Bind the function with a reference to the blog edit data.
+    event_ref.func_ref = event_ref.func.bind( null, blog_edit_data );
+    
+    //Add the function as the callback to the event.
+    element_ref.addEventListener(
+      event_ref.event,
+      event_ref.func_ref
+    );
   }
 }
 
@@ -69,11 +61,11 @@ function attach_blog_interface_events( inPostID ) {
 /*
 Function to detach event listeners from their elements.
 */
-function blog_interface_detach_events( events ) {
+function blog_interface_detach_events() {
   //Iterate through every event object.
-  for( const index in events ) {
+  for( const index in blog_edit_events ) {
     //Get a reference to the event object.
-    const event_ref = events[index];
+    const event_ref = blog_edit_events[index];
 
     //Get a reference to the DOM element.
     const element_ref = document.getElementById( event_ref.element_name );

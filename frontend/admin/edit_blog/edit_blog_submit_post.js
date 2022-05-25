@@ -4,16 +4,18 @@
 /*
 Function to submit a blog post.
 */
-function submit_post() {
+function submit_post( blog_edit_data ) {
   //Get references to the text field DOM elements.
   const series_id_field = document.getElementById("blog_series_dropdown");
-  const title_field = document.getElementById("new_blog_title");
+  const series_title_field = document.getElementById("blog_series_title");
+  const post_title_field = document.getElementById("new_blog_title");
   const body_field = document.getElementById("new_blog_body");
 
   //Get the text value of the text fields.
-  const title_text = title_field.value;
-  const body_text = body_field.value;
   const series_id = series_id_field.value;
+  const series_title = series_title_field.value;
+  const post_title = post_title_field.value;
+  const body_text = body_field.value;
 
   //Get a reference to the blog post dropdown selector.
   const edit_post_dropdown = document.getElementById("blog_post_dropdown");
@@ -25,9 +27,10 @@ function submit_post() {
   if( edit_post_id  == -1 ) {
     //Create an object that contains the new blog post.
     const new_post_object = {
-      "title": process_outgoing_text( title_text ),
+      "series_id": series_id,
+      "series_title": process_outgoing_text( series_title ),
+      "post_title": process_outgoing_text( post_title ),
       "body": process_outgoing_text( body_text ),
-      "series": series_id,
       "postorder": "???",
       "password_hash": "???",
       "images": images
