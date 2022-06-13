@@ -7,6 +7,17 @@
   <!--Dynamically generated IP for dev/prod switching.-->
   <script src="ip_file.js"></script>
 
+  <!--Edit blog Image Gallery-->
+  <script src="admin/edit_blog/edit_blog_image_gallery.js"></script>
+  <link rel="stylesheet" href="admin/edit_blog/edit_blog_image_gallery.css"/>
+  <script src="admin/edit_blog/blog_edit_gallery_image.js"></script>
+  <link rel="stylesheet" href="admin/edit_blog/blog_edit_gallery_image.css"/>
+  <script src="admin/edit_blog/blog_edit_gallery_image_overlay.js"></script>
+  <link rel="stylesheet" href="admin/edit_blog/blog_edit_gallery_image_overlay.css"/>
+
+  <!--Edit Blog emplaced images-->
+  <link rel="stylesheet" href="admin/edit_blog/blog_edit_image_emplaced.css"/>
+
   <!--Edit blog scripts.-->
   <script src="admin/edit_blog/edit_blog_interface.js"></script>
   <script src="admin/edit_blog/edit_blog_image_manager.js"></script>
@@ -84,34 +95,38 @@
         <option value="-1">New Series</option>
       </select>
     </div>
+
     <div id="blog_series_title_prompt_contianer">
       New Series Title:
       <input id="blog_series_title" type="text"/>
     </div>
+
     <div id="new_blog_existing_prompt_container">
       Title:
       <select id="blog_post_dropdown">
       </select>
     </div>
+
     <div id="new_blog_title_prompt_contianer">
       New Title:
       <input id="new_blog_title" type="text"/>
     </div>
-    <div id="new_blog_delete_prompt_container">
+
+    <div id="blog_edit_button_container">
       <button id="new_blog_delete">Delete Post</button>
+      <button id="submit_post">Save Blog Post</button>
     </div>
-    <div id="new_blog_body_prompt_container">
-      Body:
-      <textarea id="new_blog_body"></textarea>
+
+
+    <div id="interface">
+      <div contenteditable="true" id="myInput"></div>
+      <div id="image_gallery">
+        <div id="button_container">
+          <button id="get_image">Add Images</button>
+        </div>
+      </div>
     </div>
-    <div id="new_blog_image_prompt_container">
-      Images:
-      <div id="new_blog_images_container"></div>
-      <button id="add_new_image">Add Image</button>
-    </div>
-    <div>
-      <button id="submit_post">Submit Blog Post</button>
-    </div>
+
   </div>
 
   <div id="edit_portfolio_interface">

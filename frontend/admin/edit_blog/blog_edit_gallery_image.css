@@ -1,0 +1,9 @@
+.blog_edit_gallery_image_container {
+    width: 100%;
+}
+
+.blog_edit_gallery_image {
+    width: 95%;
+    height: 95%;
+    padding: 2.5%;
+}

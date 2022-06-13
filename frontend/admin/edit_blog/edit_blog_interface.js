@@ -40,25 +40,19 @@ function blank_fields( inSeriesID ) {
   //Get references to the input elements.
   const series_field = document.getElementById("blog_series_dropdown");
   const title_field = document.getElementById("new_blog_title");
-  const body_field = document.getElementById("new_blog_body");
+  const body_field = document.getElementById("myInput");
+  const button_container = document.getElementById("button_container");
 
   //Reset the input elements.
   title_field.value = "";
   if( !inSeriesID ) {
     series_field.value = "0";
   }
-  body_field.value = "";
+  body_field.textContent = "";
 
-  //Empty the images array.
-  while( images.length > 0 ) {
-    images.pop();
+  while( button_container.nextSibling ) {
+    button_container.nextSibling.remove();
   }
-
-  //Get a reference to the image container.
-  const image_container = document.getElementById("new_blog_images_container");
-
-  //Blank the image container.
-  image_container.innerHTML = "";
 }
 
 
@@ -71,7 +65,7 @@ post_data: Object containing the blog post to edit.
 function render_blog_post( post_data ) {
   //Get references to the input fields.
   const title_field = document.getElementById("new_blog_title");
-  const body_field = document.getElementById("new_blog_body");
+  //const body_field = document.getElementById("new_blog_body");
   const dropdown = document.getElementById("blog_post_dropdown");
 
   //Set the dropdown selector to this blog post.
@@ -81,7 +75,8 @@ function render_blog_post( post_data ) {
   title_field.value = process_incoming_text( post_data.title );
 
   //Regex the text of the blog post so it will be Human readable.
-  body_field.value = process_incoming_text( post_data.body );
+  const myInput = document.getElementById("myInput");
+  myInput.textContent = process_incoming_text( post_data.body );
 }
 
 

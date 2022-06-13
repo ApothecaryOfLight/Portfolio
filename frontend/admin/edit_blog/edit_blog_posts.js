@@ -64,7 +64,7 @@ function load_blog_post( inPostID, inSeriesID ) {
     });
 
   //Request the blog images for this post from the server.
-  const existing_images_request = new Request (
+  /*const existing_images_request = new Request (
     ip + "get_blog_images/" + inPostID
   );
   fetch( existing_images_request )
@@ -75,7 +75,7 @@ function load_blog_post( inPostID, inSeriesID ) {
 
       //Render the images.
       render_blog_images();
-    });
+    });*/
 }
 
 

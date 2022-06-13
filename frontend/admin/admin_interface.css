@@ -11,3 +11,7 @@
 #error_log_container {
   margin-top: 5rem;
 }
+
+body {
+  height: calc( 100vh - 5rem );
+}

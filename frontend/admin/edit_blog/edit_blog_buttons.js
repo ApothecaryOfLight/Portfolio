@@ -15,9 +15,9 @@ const blog_edit_events = [
     func_ref: null
   },
   {
-    element_name: "add_new_image",
+    element_name: "get_image",
     event: "click",
-    func: select_image,
+    func: upload_images,
     func_ref: null
   },
   {
