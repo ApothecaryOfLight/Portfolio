@@ -1,10 +1,10 @@
 "use strict";
 
 
-function recursively_traverse_tree( node, objectified_post ) {
+function recursively_traverse_tree( node, objectified_post, images_array ) {
   if( node.firstChild ) {
-      for( key in node.childNodes ) {
-          recursively_traverse_tree( node.childNodes[key], objectified_post );
+      for( const key in node.childNodes ) {
+          recursively_traverse_tree( node.childNodes[key], objectified_post, images_array );
       }
   } else {
       const type = node.nodeName;
@@ -18,14 +18,18 @@ function recursively_traverse_tree( node, objectified_post ) {
           }
           return;
       } else if( type == "IMG" ) {
+          const image_id = images_array.length;
           objectified_post.push({
               type: "image",
-              content: {
-                  src: node.src,
-                  name: "image name",
-                  alt: "alt desc"
-              }
+              image_id: image_id
           });
+
+          images_array[image_id] = {
+            image_id: image_id,
+            image_data: node.src,
+            name: "image name",
+            alt: "alt desc"
+          }
           return;
       }   
   }
@@ -45,9 +49,12 @@ function submit_post( blog_edit_data ) {
 
   //Process the blog post itself into a object to send to the server.
   const objectified_post = [];
+  const images_array = [];
   const myInput = document.getElementById("myInput");
-  recursively_traverse_tree( myInput, objectified_post );
+  recursively_traverse_tree( myInput, objectified_post, images_array );
   const stringified_object = JSON.stringify( objectified_post );
+  console.log( stringified_object );
+  console.dir( JSON.parse(stringified_object) );
 
   //Get the text and id values of the series and post fields.
   const series_id = series_id_field.value;
@@ -57,17 +64,16 @@ function submit_post( blog_edit_data ) {
 
 
   const new_post_object = {
-    "series_id": series_id,
-    "post_id": post_id,
-    "series_title": process_outgoing_text( series_title ),
-    "post_title": process_outgoing_text( post_title ),
-    "body": process_outgoing_text( stringified_object )
+    series_id: series_id,
+    post_id: post_id,
+    series_title: process_outgoing_text( series_title ),
+    post_title: process_outgoing_text( post_title ),
+    body: process_outgoing_text( stringified_object ),
+    images: images_array
   };
 
-  console.dir( new_post_object );
-
   //If this is a new blog post, then the ID will be -1.
-/*  if( post_id == -1 ) {
+  if( post_id == -1 ) {
     //Create an object that contains the new blog post.
     const new_post_object = {
       "series_id": series_id,
@@ -76,7 +82,7 @@ function submit_post( blog_edit_data ) {
       "body": process_outgoing_text( stringified_object ),
       "postorder": "???",
       "password_hash": "???",
-      "images": images
+      "images": images_array
     };
     
 
@@ -106,10 +112,10 @@ function submit_post( blog_edit_data ) {
       "series_title": process_outgoing_text( series_title ),
       "post_id": post_id,
       "post_title": process_outgoing_text( post_title ),
-      "body": process_outgoing_text( body_text ),
+      "body": process_outgoing_text( stringified_object ),
       "postorder": "???",
       "password_hash": "???",
-      "images": images
+      "images": images_array
     });
     const edit_post_request = new Request(
       ip + 'edit_blog_post',
@@ -128,5 +134,4 @@ function submit_post( blog_edit_data ) {
         render_edit_blog_interface();
       });
   }
-*/
 }

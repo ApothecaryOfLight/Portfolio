@@ -6,8 +6,10 @@ Function to get blog posts.
 */
 function get_existing_posts() {
   //Create a request for the server for a list of existing blog posts.
+  const series_dropdown_ref = document.getElementById("blog_series_dropdown");
+  const series_id = series_dropdown_ref.value;
   const existing_request = new Request (
-    ip + "get_existing_posts"
+    ip + "get_existing_posts/" + series_id
   );
   fetch( existing_request )
     .then( response => response.json() )
@@ -60,7 +62,8 @@ function load_blog_post( inPostID, inSeriesID ) {
       blank_fields( inSeriesID );
 
       //Render the blog post in the input fields.
-      render_blog_post( json.post_data );
+      console.dir( json );
+      render_blog_post( json.post_data, json.images );
     });
 
   //Request the blog images for this post from the server.
@@ -83,6 +86,8 @@ function load_blog_post( inPostID, inSeriesID ) {
 Function to create a new blog post.
 */
 function select_blog_post( edit_blog_post ) {
+  blank_input();
+  
   //Get a reference to the root blog post dropdown selector.
   const edit_post_dropdown = document.getElementById("blog_post_dropdown");
 
@@ -111,9 +116,6 @@ function select_blog_post( edit_blog_post ) {
 
     edit_blog_post.post_id = -1;
     edit_blog_post.series_id = series_id;
-
-    //Get a new unique identifier for the post.
-    //get_new_post_id();
   }
 }
 

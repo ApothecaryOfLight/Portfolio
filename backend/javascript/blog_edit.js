@@ -5,6 +5,7 @@ const error = require('../error_logging.js');
 
 function attach_route_new_blog_post( app, sqlPool ) {
     app.post( '/new_blog_post', async function(req,res) {
+        console.log( "new post" );
         try {
             //Get the timestamp
             const timestamp = error.get_timestamp();
@@ -15,54 +16,59 @@ function attach_route_new_blog_post( app, sqlPool ) {
             const [new_id_row,new_id_field] =
                 await sqlPool.query( new_post_id_query );
             const new_blog_post_id = new_id_row[0].new_id;
-        
-            //Get a blog image ID for each image.
-            for( index in req.body.images ) {
-                const new_image_id_query = "SELECT " +
-                "Portfolio.generate_new_id( 2 ) as new_image_id;";
-                const [new_image_id_row,new_image_id_field] =
-                await sqlPool.query( new_image_id_query );
-                req.body.images[index].image_id =
-                new_image_id_row[0].new_image_id;
-            }
-        
-            //create the insertion query for the blog text.
-            let new_blog_post_query = "INSERT INTO blog_posts " +
-                "(title, body, timestamp, post_id) " +
-                "VALUES ( " +
-                "\'" + req.body.post_title + "\', " +
-                "\'" + req.body.body + "\', " +
-                "\'" + timestamp + "\', " +
-                new_blog_post_id + " ); ";
 
-                console.log( new_blog_post_query );
 
-            //Create the insertion query for the blog series.
-            //A series_id of -2 signifies that this post will not belong to any series.
-            //A series_id of -1 signifies that this post will begin a new series.
-            //Any other value will be the unique identifier of an existing series to add
-            //this post on to.
-            if( req.body.series_id != -2 ) {
-                new_blog_post_query += "INSERT INTO blog_series " +
-                "( series_title, timestamp, post_id, number_in_series, series_id ) " +
-                "VALUES ( " +
-                "\'" + req.body.series_title + "\', " +
-                "\'" + timestamp + "\', " +
-                new_blog_post_id + ", " +
-                "0, " +
-                "\'" + req.body.series_id +  + " ); ";
+        
+            let new_blog_post_query = "";
+            if( req.body.series_id == -2 ) { //No series
+                new_blog_post_query = "INSERT INTO blog_posts " +
+                    "(title, body, timestamp, post_id, series_id) " +
+                    "VALUES ( " +
+                    "\'" + req.body.post_title + "\', " +
+                    "\'" + req.body.body + "\', " +
+                    "\'" + timestamp + "\', " +
+                    new_blog_post_id + ", " +
+                    req.body.series_id + " ); ";
+            } else if( req.body.series_id == -1 ) { //New series
+                const new_series_id_query = "SELECT " +
+                    "Portfolio.generate_new_id( 3 ) as new_id;";
+                const [new_id_row,new_id_field] =
+                    await sqlPool.query( new_series_id_query );
+                const new_series_id = new_id_row[0].new_id;
+
+                new_blog_post_query = "INSERT INTO blog_posts " +
+                    "(title, body, timestamp, post_id, series_id, series_title) " +
+                    "VALUES ( " +
+                    "\'" + req.body.post_title + "\', " +
+                    "\'" + req.body.body + "\', " +
+                    "\'" + timestamp + "\', " +
+                    new_blog_post_id + ", "  +
+                    new_series_id + ", " +
+                    "\'" + req.body.series_title + "\' " +
+                    " ); ";
+            } else if( req.body.series_id >= 0 ) {
+                new_blog_post_query = "INSERT INTO blog_posts " +
+                    "(title, body, timestamp, post_id, series_id, series_title) " +
+                    "VALUES ( " +
+                    "\'" + req.body.post_title + "\', " +
+                    "\'" + req.body.body + "\', " +
+                    "\'" + timestamp + "\', " +
+                    new_blog_post_id + ", "  +
+                    req.body.series_id + ", " +
+                    "\'" + req.body.series_title + "\' " +
+                    " ); ";
             }
+
         
             //Create the insertion query for the blog images.
-            for( index in req.body.images ) {
+            for( const index in req.body.images ) {
                 new_blog_post_query += "INSERT INTO blog_images " +
-                "( image_id, local_image_id, post_id, image_data ) " +
-                "VALUES " +
-                " ( " +
-                req.body.images[index].image_id + ", " +
-                req.body.images[index].local_image_id + ", " +
-                new_blog_post_id + ", \'" +
-                req.body.images[index].image_data + "\' ); "
+                    "( image_id, post_id, image_data ) " +
+                    "VALUES " +
+                    " ( " +
+                    req.body.images[index].image_id + ", " +
+                    new_blog_post_id + ", \'" +
+                    req.body.images[index].image_data + "\' ); ";
             }
         
             //Query the SQL server.
@@ -243,7 +249,7 @@ function attach_route_get_series_list( app, sqlPool ) {
     app.get( '/get_series_list', async function(req,res) {
         try {
             const query_series = "SELECT DISTINCT series_title, series_id " +
-                "FROM blog_series;"
+                "FROM blog_posts;"
             const [series_row,series_field] =
                 await sqlPool.query( query_series );
             res.send( JSON.stringify({
@@ -266,12 +272,11 @@ exports.attach_route_get_series_list = attach_route_get_series_list;
 
 
 function attach_get_existing_posts( app, sqlPool ) {
-    app.get( '/get_existing_posts', async function(req,res) {
+    app.get( '/get_existing_posts/:series_id', async function(req,res) {
         try {
-            const query_existing = "SELECT blog_posts.title, blog_posts.post_id " +
+            const query_existing = "SELECT blog_posts.title, blog_posts.post_id, blog_posts.series_id " +
                 "FROM blog_posts " +
-                "OUTER JOIN blog_series " +
-                "ON blog_posts.post_id = blog_series.post_id;";
+                "WHERE series_id = " + req.params.series_id + ";";
             const [existing_row,existing_field] =
                 await sqlPool.query( query_existing );
             res.send( JSON.stringify({
@@ -301,9 +306,18 @@ function attach_route_get_blog_post_post_id( app, sqlPool ) {
                 "FROM blog_posts " +
                 "WHERE post_id = " + req.params.post_id + ";";
             const [post_row,post_field] = await sqlPool.query( get_post );
+
+
+            const get_images = "SELECT " +
+                "image_id, image_data, alt_text, optional_link " +
+                "FROM blog_images " +
+                "WHERE post_id = " + req.params.post_id + ";";
+            const [images_row,images_field] = await sqlPool.query( get_images );
+
             res.send( JSON.stringify({
                 "result": "success",
-                "post_data": post_row[0]
+                "post_data": post_row[0],
+                "images": images_row
             }));
         } catch( error_obj ) {
             await error.log(
@@ -325,9 +339,7 @@ function attach_route_get_blog_posts_by_series_id( app, sqlPool ) {
         try {
             const get_blog_posts = "SELECT blog_posts.title, blog_posts.post_id " +
                 "FROM blog_posts " +
-                "INNER JOIN blog_series " +
-                "ON blog_posts.post_id = blog_series.post_id " +
-                "WHERE blog_series.series_id = " + req.params.series_id + ";";
+                "WHERE series_id = " + req.params.series_id + ";";
             const [existing_row,existing_field] =
                 await sqlPool.query( get_blog_posts );
             res.send( JSON.stringify({

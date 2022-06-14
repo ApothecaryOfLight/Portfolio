@@ -26,7 +26,7 @@ function attach_route_get_blog_page( app, sqlPool ) {
                 }
             }
             const recent_post_images_query = "SELECT " +
-            "image_id, image_data, post_id, local_image_id " +
+            "image_id, image_data, post_id " +
             "FROM blog_images " +
             "WHERE post_id = " +
             recent_post_where_predicate + ";";

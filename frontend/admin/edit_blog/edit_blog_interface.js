@@ -40,19 +40,25 @@ function blank_fields( inSeriesID ) {
   //Get references to the input elements.
   const series_field = document.getElementById("blog_series_dropdown");
   const title_field = document.getElementById("new_blog_title");
-  const body_field = document.getElementById("myInput");
   const button_container = document.getElementById("button_container");
 
   //Reset the input elements.
   title_field.value = "";
   if( !inSeriesID ) {
-    series_field.value = "0";
+    series_field.value = "-2";
   }
-  body_field.textContent = "";
 
   while( button_container.nextSibling ) {
     button_container.nextSibling.remove();
   }
+
+  blank_input();
+}
+
+
+function blank_input() {
+  const body_field = document.getElementById("myInput");
+  body_field.textContent = "";
 }
 
 
@@ -62,7 +68,8 @@ Function to render a blog post.
 
 post_data: Object containing the blog post to edit.
 */
-function render_blog_post( post_data ) {
+function render_blog_post( post_data, images ) {
+  console.dir( post_data );
   //Get references to the input fields.
   const title_field = document.getElementById("new_blog_title");
   //const body_field = document.getElementById("new_blog_body");
@@ -74,9 +81,34 @@ function render_blog_post( post_data ) {
   //Regex the text of the title so it will be Human readable.
   title_field.value = process_incoming_text( post_data.title );
 
+  render_blog_post_body( post_data.body, images );
+}
+
+
+function render_blog_post_body( body_string, images ) {
+  //const body_object = JSON.parse( body_string );
   //Regex the text of the blog post so it will be Human readable.
   const myInput = document.getElementById("myInput");
-  myInput.textContent = process_incoming_text( post_data.body );
+
+  console.dir( images );
+
+  let out_string = "";
+  const blog_post_object = JSON.parse( process_incoming_text( body_string ) );
+  console.dir( blog_post_object );
+  for( const key in blog_post_object ) {
+    const section_reference = blog_post_object[key];
+    if( section_reference.type == "text" ) {
+      const new_paragraph = document.createElement("p");
+      new_paragraph.textContent = section_reference.content;
+      myInput.appendChild( new_paragraph );
+    } else if( section_reference.type == "image" ) {
+      const new_image = document.createElement("img");
+      new_image.src = images[section_reference.image_id].image_data;
+      add_visible_image_to_gallery( images[section_reference.image_id].image_data )
+      new_image.classList = "emplaced_image";
+      myInput.appendChild( new_image );
+    }
+  }
 }
 
 
@@ -85,23 +117,22 @@ Function to delete a blog post.
 
 inPostID: Unique identifier of the blog post itself.
 */
-function delete_post( inPostID ) {
-  //Ensure that a post ID is provided.
-  if( inPostID ) {
-    //Send a request to the server to delete this particular post.
-    const delete_post = new Request(
-      ip + "delete_post/" + inPostID
-    );
-    fetch( delete_post )
-      .then( response => response.json() )
-      .then( json => {
-        //Refresh the list of posts.
-        get_existing_posts();
+function delete_post() {
+  const post_dropdown_ref = document.getElementById("blog_post_dropdown");
+  const post_id = post_dropdown_ref.value;
+  //Send a request to the server to delete this particular post.
+  const delete_post = new Request(
+    ip + "delete_post/" + post_id
+  );
+  fetch( delete_post )
+    .then( response => response.json() )
+    .then( json => {
+      //Refresh the list of posts.
+      get_existing_posts();
 
-        //Reset the input fields.
-        blank_fields();
-      });
-  }
+      //Reset the input fields.
+      blank_fields();
+    });
 }
 
 

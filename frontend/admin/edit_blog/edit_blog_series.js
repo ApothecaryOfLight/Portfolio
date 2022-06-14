@@ -46,13 +46,16 @@ function compose_series_list( series_list ) {
 
 
 function select_blog_series() {
+
   //Get a reference to the blog series dropdown selector.
   const select_series_dropdown = document.getElementById("blog_series_dropdown");
 
   //Get the currently selected value from the dropdown selector.
   const series_id = select_series_dropdown.value;
+  blank_fields(series_id);
   
   const series_title_field = document.getElementById("blog_series_title_prompt_contianer");
+  const series_title_dropdown_ref = document.getElementById("blog_post_dropdown");
   if( series_id >= 0 ) {
     //If there is a positive value for series_id, that means we're editing an
     //existing series.
@@ -60,8 +63,10 @@ function select_blog_series() {
     //Hide the new series title text field.
     series_title_field.style.display = "none";
 
+    
+
     //Request a list of blog posts in this series from the server.
-    get_blog_posts_by_series_id( series_id );
+    get_existing_posts();
   } else if( series_id == -1 ) {
     //If the series_id is -1, that means we're working with a new series.
     series_title_field.style.display = "block";
@@ -69,6 +74,7 @@ function select_blog_series() {
     //If the series_id is -2, that means we're working with posts that don't
     //belong to any series.
     series_title_field.style.display = "none";
+    get_existing_posts();
   }
 }
 
