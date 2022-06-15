@@ -27,6 +27,7 @@ function render_edit_blog_interface() {
 
   //Get a list of blog posts that are not roots (not first in a series).
   get_existing_posts();
+  get_series_list();
 
   //Empty available input fields.
   blank_fields();
@@ -36,18 +37,26 @@ function render_edit_blog_interface() {
 /*
 Set text and image fields to blank.
 */
-function blank_fields( inSeriesID ) {
+function blank_fields( inSeriesID = "-2", inPostID = "-1" ) {
   //Get references to the input elements.
-  const series_field = document.getElementById("blog_series_dropdown");
-  const title_field = document.getElementById("new_blog_title");
-  const button_container = document.getElementById("button_container");
-
+  const series_dropdown = document.getElementById("blog_series_dropdown");
+  const series_title = document.getElementById("blog_series_title");
+  const post_title_dropdown = document.getElementById("blog_post_dropdown");
+  const post_title_field = document.getElementById("new_blog_title");
+  
   //Reset the input elements.
-  title_field.value = "";
-  if( !inSeriesID ) {
-    series_field.value = "-2";
+  series_dropdown.value = inSeriesID;
+  series_title.textContent = "";
+  if( inSeriesID != "-2" ) {
+    series_title.textContent = series_dropdown.text;
+  }
+  post_title_dropdown.value = inPostID;
+  post_title_field.textContent = "";
+  if( inPostID != "-1" ) {
+    post_title_field.textContent = post_title_dropdown.text;
   }
 
+  const button_container = document.getElementById("button_container");
   while( button_container.nextSibling ) {
     button_container.nextSibling.remove();
   }
@@ -129,6 +138,7 @@ function delete_post() {
     .then( response => response.json() )
     .then( json => {
       //Refresh the list of posts.
+      get_series_list();
       get_existing_posts();
 
       //Reset the input fields.

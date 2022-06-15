@@ -62,9 +62,9 @@ function submit_post( blog_edit_data ) {
 
   //Get the text and id values of the series and post fields.
   const series_id = series_id_field.value;
-  const series_title = series_title_field.value;
   const post_id = post_id_field.value;
   const post_title = post_title_field.value;
+  const series_title = series_title_field.value;
 
 
   const new_post_object = {

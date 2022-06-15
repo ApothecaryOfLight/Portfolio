@@ -59,26 +59,11 @@ function load_blog_post( inPostID, inSeriesID ) {
     .then( response => response.json() )
     .then( json => {
       //Reset the input fields.
-      blank_fields( inSeriesID );
+      blank_fields( inSeriesID, inPostID );
 
       //Render the blog post in the input fields.
-      console.dir( json );
       render_blog_post( json.post_data, json.images );
     });
-
-  //Request the blog images for this post from the server.
-  /*const existing_images_request = new Request (
-    ip + "get_blog_images/" + inPostID
-  );
-  fetch( existing_images_request )
-    .then( response => response.json() )
-    .then( json => {
-      //Assign the images from the server to the global images.
-      Object.assign( images, json.images_data );
-
-      //Render the images.
-      render_blog_images();
-    });*/
 }
 
 

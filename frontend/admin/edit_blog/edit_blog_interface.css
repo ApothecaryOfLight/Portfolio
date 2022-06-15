@@ -33,7 +33,7 @@
 }
 
 #blog_series_title_prompt_contianer {
-  display: none;
+  display: inline-block;
 }
 
 #interface {
