@@ -51,7 +51,9 @@ function store_image( inImageData ) {
   add_visible_image_to_gallery( rawImageData );
 }
 
-function add_visible_image_to_gallery( raw_image_data ) {
+function add_visible_image_to_gallery( raw_image_data, image_id ) {
+  image_id = image_id ?? null;
+
   const image_container = document.createElement("div");
   image_container.classList = "blog_edit_gallery_image_container";
 
@@ -61,6 +63,7 @@ function add_visible_image_to_gallery( raw_image_data ) {
   image_container.appendChild( create_gallery_image_overlay(image_container, image) );
   image_container.appendChild( image );
   image.setAttribute( "draggable", "false" );
+  image.setAttribute( "data-image_id", image_id );
 
   const gallery_ref = document.getElementById("image_gallery");
   gallery_ref.appendChild( image_container );

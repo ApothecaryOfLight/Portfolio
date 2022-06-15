@@ -18,19 +18,25 @@ function recursively_traverse_tree( node, objectified_post, images_array ) {
           }
           return;
       } else if( type == "IMG" ) {
-          const image_id = images_array.length;
-          objectified_post.push({
-              type: "image",
-              image_id: image_id
-          });
-
-          images_array[image_id] = {
+        const image_id = node.getAttribute( "data-image_id" );
+        const local_image_id = images_array.length;
+        const post_order = objectified_post.length;
+        objectified_post.push({
+            type: "image",
             image_id: image_id,
-            image_data: node.src,
-            name: "image name",
-            alt: "alt desc"
-          }
-          return;
+            local_image_id: local_image_id,
+            post_order: post_order
+        });
+
+        images_array[local_image_id] = {
+          image_id: image_id,
+          image_data: node.src,
+          local_image_id: local_image_id,
+          post_order: post_order,
+          name: "image name",
+          alt: "alt desc"
+        }
+        return;
       }   
   }
 }
@@ -53,8 +59,6 @@ function submit_post( blog_edit_data ) {
   const myInput = document.getElementById("myInput");
   recursively_traverse_tree( myInput, objectified_post, images_array );
   const stringified_object = JSON.stringify( objectified_post );
-  console.log( stringified_object );
-  console.dir( JSON.parse(stringified_object) );
 
   //Get the text and id values of the series and post fields.
   const series_id = series_id_field.value;
@@ -132,6 +136,9 @@ function submit_post( blog_edit_data ) {
       .then( json => {
         //Rerender the edit blog interface, resetting all the input fields.
         render_edit_blog_interface();
+        if( json.result == "failure" ) {
+          alert( "Server error!" );
+        }
       });
   }
 }

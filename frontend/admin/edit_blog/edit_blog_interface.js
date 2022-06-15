@@ -69,7 +69,6 @@ Function to render a blog post.
 post_data: Object containing the blog post to edit.
 */
 function render_blog_post( post_data, images ) {
-  console.dir( post_data );
   //Get references to the input fields.
   const title_field = document.getElementById("new_blog_title");
   //const body_field = document.getElementById("new_blog_body");
@@ -90,11 +89,13 @@ function render_blog_post_body( body_string, images ) {
   //Regex the text of the blog post so it will be Human readable.
   const myInput = document.getElementById("myInput");
 
-  console.dir( images );
+
+  for( let index = 0; index < images.length; index ++ ) {
+      add_visible_image_to_gallery( images[index].image_data, images[index].image_id )
+  }
 
   let out_string = "";
   const blog_post_object = JSON.parse( process_incoming_text( body_string ) );
-  console.dir( blog_post_object );
   for( const key in blog_post_object ) {
     const section_reference = blog_post_object[key];
     if( section_reference.type == "text" ) {
@@ -103,9 +104,9 @@ function render_blog_post_body( body_string, images ) {
       myInput.appendChild( new_paragraph );
     } else if( section_reference.type == "image" ) {
       const new_image = document.createElement("img");
-      new_image.src = images[section_reference.image_id].image_data;
-      add_visible_image_to_gallery( images[section_reference.image_id].image_data )
+      new_image.src = images[section_reference.local_image_id].image_data;
       new_image.classList = "emplaced_image";
+      new_image.setAttribute( "data-image_id", images[section_reference.local_image_id].image_id );
       myInput.appendChild( new_image );
     }
   }

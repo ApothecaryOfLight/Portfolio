@@ -17,6 +17,9 @@ function create_gallery_image_overlay( image_container_ref, image_ref ) {
       const image_element = document.createElement("img");
       image_element.src = image_ref.src;
       image_element.classList = "emplaced_image";
+
+      const image_id = image_ref.getAttribute("data-image_id");
+      image_element.setAttribute( "data-image_id", image_id );
   
       const myEditField = document.getElementById("myInput");
       myEditField.appendChild( image_element );

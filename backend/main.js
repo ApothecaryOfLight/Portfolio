@@ -3,6 +3,7 @@
 /* Express */
 const express = require('express');
 const app = express();
+app.use( express.json({limit:'20mb'}) );
 
 /*CORS*/
 const cors = require('cors');
