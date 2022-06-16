@@ -48,7 +48,6 @@ function compose_series_list( series_list ) {
 function select_blog_series() {
   //Get a reference to the blog series dropdown selector.
   const select_series_dropdown = document.getElementById("blog_series_dropdown");
-  console.dir( select_series_dropdown );
   const series_title_field = document.getElementById("blog_series_title");
 
 

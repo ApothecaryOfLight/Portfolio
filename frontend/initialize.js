@@ -4,6 +4,8 @@ Event listener for the window to finish loading.
 Will launch the portfolio and load the menu buttons.
 */
 window.addEventListener( 'load', (click) => {
+  window.scroll({ top: 0, behavior: 'smooth' });
+  
   launch_portfolio();
 
   const menu_buttons = [

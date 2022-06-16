@@ -1,5 +1,5 @@
 
-#starburst_container {
+.starburst_container {
   height: 15rem;
   width: 100%;
   display: flex;
@@ -7,7 +7,6 @@
   justify-content: center;
   margin-left: 5rem;
   margin-top: 5rem;
-  
 }
 #backward {
   animation-name: twirl-back;

@@ -5,6 +5,8 @@
 Function to launch the blog interface.
 */
 function launch_blog() {
+  window.scroll({ top: 0, behavior: 'smooth' });
+  
   //Get references to the portfolio and blog interfaces.
   const portfolio = document.getElementById("portfolio_interface");
   const blog = document.getElementById("blog_interface");
@@ -13,8 +15,10 @@ function launch_blog() {
   portfolio.style.display = "none";
   blog.style.display = "flex";
 
+  const starburst_ref = document.getElementById("blog_starburst_container");
+  starburst_ref.style.display = "block";
+
   //Request the first blog page from the server.
   get_blog_page( 1 );
 
-  window.scroll({ top: 0, behavior: 'smooth' });
 }
