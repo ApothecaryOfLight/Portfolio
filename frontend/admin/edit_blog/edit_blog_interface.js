@@ -33,6 +33,16 @@ function render_edit_blog_interface() {
 }
 
 
+function get_text_of_dropdown( dropdown_ref ) {
+  const value = dropdown_ref.value;
+  for( const key in dropdown_ref.options ) {
+    if( dropdown_ref.options[key].value == value ) {
+      return dropdown_ref.options[key].text;
+    }
+  }
+}
+
+
 /*
 Set text and image fields to blank.
 */
@@ -47,12 +57,12 @@ function blank_fields( inSeriesID = "-2", inPostID = "-1" ) {
   series_dropdown.value = inSeriesID;
   series_title.value = "";
   if( inSeriesID != -2 ) {
-    series_title.value = series_dropdown.text;
+    series_title.value = get_text_of_dropdown( series_dropdown );
   }
   post_title_dropdown.value = inPostID;
   post_title_field.value = "";
   if( inPostID != -1 ) {
-    post_title_field.value = post_title_dropdown.text;
+    post_title_field.value = get_text_of_dropdown( post_title_dropdown );
   }
 
   const button_container = document.getElementById("button_container");

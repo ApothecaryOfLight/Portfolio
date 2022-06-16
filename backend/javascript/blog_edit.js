@@ -74,7 +74,6 @@ async function add_blog_post( req, res, sqlPool, inTimestamp ) {
             await sqlPool.query( new_post_id_query );
         const new_blog_post_id = new_id_row[0].new_id;
 
-
         const image_id_map = [];
         //Create the insertion query for the blog images.
         for( const index in req.body.images ) {
@@ -101,7 +100,6 @@ async function add_blog_post( req, res, sqlPool, inTimestamp ) {
         //Set the new image IDs in the body of the new post.
         const body_text = replace_image_id_nulls( req.body.body, image_id_map );
 
-
         //Get the timestamp
         let timestamp;
         if( inTimestamp != null ) {
@@ -109,8 +107,6 @@ async function add_blog_post( req, res, sqlPool, inTimestamp ) {
         } else {
             timestamp = error.get_timestamp();
         }
-
-
     
         let new_blog_post_query = "";
         if( req.body.series_id == -2 ) { //No series

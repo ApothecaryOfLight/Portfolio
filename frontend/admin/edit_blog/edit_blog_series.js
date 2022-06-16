@@ -65,23 +65,26 @@ function select_blog_series() {
   blank_fields(series_id);
   
   const series_title_field_container = document.getElementById("blog_series_title_prompt_contianer");
-  const series_title_dropdown_ref = document.getElementById("blog_post_dropdown");
+  const post_title_dropdown_container = document.getElementById("new_blog_existing_prompt_container");
   if( series_id >= 0 ) {
     //If there is a positive value for series_id, that means we're editing an
     //existing series.
 
     //Hide the new series title text field.
-    series_title_field_container.style.display = "none";    
+    series_title_field_container.style.display = "none"; 
+    post_title_dropdown_container.style.display = "inline-block";   
 
     //Request a list of blog posts in this series from the server.
     get_existing_posts();
   } else if( series_id == -1 ) {
     //If the series_id is -1, that means we're working with a new series.
     series_title_field_container.style.display = "block";
+    post_title_dropdown_container.style.display = "none";
   } else if( series_id == -2 ) {
     //If the series_id is -2, that means we're working with posts that don't
     //belong to any series.
     series_title_field_container.style.display = "none";
+    post_title_dropdown_container.style.display = "inline-block";
     get_existing_posts();
   }
 }
