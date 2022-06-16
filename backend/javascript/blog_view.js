@@ -26,7 +26,7 @@ function attach_route_get_blog_page( app, sqlPool ) {
                 }
             }
             const recent_post_images_query = "SELECT " +
-            "image_id, image_data, post_id " +
+            "image_id, image_data, post_id, alt_text, optional_link, local_image_id, post_section " +
             "FROM blog_images " +
             "WHERE post_id = " +
             recent_post_where_predicate + ";";
@@ -35,9 +35,9 @@ function attach_route_get_blog_page( app, sqlPool ) {
     
             //Combine them.
             const blog_posts_obj = {
-                "recent_posts": rec_row,
+                "posts": rec_row,
                 "page": 1,
-                "recent_posts_images": recent_images_row
+                "images": recent_images_row
             };
     
             //Return them.

@@ -6,7 +6,7 @@ Function to render a blog post.
 
 blog_data: Blog data to render.
 */
-function render_blog( blog_data ) {
+/*function render_blog( blog_data ) {
   //Process the blog text, inserting images into the text body.
   emplace_images( blog_data );
 
@@ -58,4 +58,98 @@ function render_blog( blog_data ) {
 
   //Set the blog post contents to the HTML string we created.
   blog.innerHTML = recent_posts_dom;
+}*/
+
+/*
+Function to apply regex to outgoing text, replacing SQL sensitive characters with
+HTML character codes.
+*/
+function process_outgoing_text( inText ) {
+  let processed_text = inText.replace(
+    /\'/g,
+    "&#39;"
+  );
+  processed_text = processed_text.replace(
+    /\"/g,
+    "&#34;"
+  );
+  processed_text = processed_text.replace(
+    /\\/g,
+    "&#92;"
+  );
+  processed_text = processed_text.replace(
+    /\//g,
+    "&#47;"
+  );
+  processed_text = processed_text.replace(
+    /[\r\n\b]/g,
+    "<br>"
+  );
+  return processed_text;
+}
+
+
+/*
+Function to apply regex to incoming text, replacing SQL HTML character codes with
+sensitive characters.
+*/
+function process_incoming_text( inText ) {
+  let processed_text = inText.replace(
+    /&#39;/g,
+    "\'"
+  );
+  processed_text = processed_text.replace(
+    /&#34;/g,
+    "\""
+  );
+  processed_text = processed_text.replace(
+    /&#92;/g,
+    "\\"
+  );
+  processed_text = processed_text.replace(
+    /&#47;/g,
+    "\/"
+  );
+  processed_text = processed_text.replace(
+    /<br>/g,
+    "\n"
+  );
+  return processed_text;
+}
+
+
+function get_image_ref( image_id, images ) {
+  console.log( "imgid: " + image_id );
+  for( let i=0; i<images.length; i++ ) {
+    console.log( "image_id: " + image_id + " vs images: " + images[i].image_id );
+    if( image_id == images[i].image_id ) {
+      console.log( "WHAT THE FUCK" );
+      return images[i];
+    }
+  }
+}
+
+function render_blog( recent_posts ) {
+  console.dir( recent_posts );
+  const myBlogContainer = document.getElementById("blog_interface_recent_post_container");
+  recent_posts.posts.forEach( (post) => {  
+    const blog_post_object = JSON.parse( process_incoming_text( post.body ) );
+    for( const key in blog_post_object ) {
+      const section_reference = blog_post_object[key];
+      if( section_reference.type == "text" ) {
+        const new_paragraph = document.createElement("p");
+        new_paragraph.textContent = section_reference.content;
+        myBlogContainer.appendChild( new_paragraph );
+      } else if( section_reference.type == "image" ) {
+        const new_image = document.createElement("img");
+        const image_ref = get_image_ref( section_reference.image_id, recent_posts.images );
+        console.dir( image_ref );
+
+        new_image.src = image_ref.image_data;
+        new_image.classList = "blog_image";
+        myBlogContainer.appendChild( new_image );
+      }
+    }
+  })
+ 
 }
