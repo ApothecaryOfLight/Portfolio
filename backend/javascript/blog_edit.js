@@ -104,7 +104,6 @@ async function add_blog_post( req, res, sqlPool, inTimestamp ) {
 
         //Get the timestamp
         let timestamp;
-        console.log( inTimestamp == null );
         if( inTimestamp != null ) {
             timestamp = inTimestamp;
         } else {

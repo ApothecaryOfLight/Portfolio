@@ -89,6 +89,7 @@ function submit_post( blog_edit_data ) {
       "images": images_array
     };
     
+    
 
 
     //Send the new blog post to the server.

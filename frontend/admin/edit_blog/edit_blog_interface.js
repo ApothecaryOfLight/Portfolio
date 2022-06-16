@@ -27,7 +27,6 @@ function render_edit_blog_interface() {
 
   //Get a list of blog posts that are not roots (not first in a series).
   get_existing_posts();
-  get_series_list();
 
   //Empty available input fields.
   blank_fields();
@@ -46,14 +45,14 @@ function blank_fields( inSeriesID = "-2", inPostID = "-1" ) {
   
   //Reset the input elements.
   series_dropdown.value = inSeriesID;
-  series_title.textContent = "";
-  if( inSeriesID != "-2" ) {
-    series_title.textContent = series_dropdown.text;
+  series_title.value = "";
+  if( inSeriesID != -2 ) {
+    series_title.value = series_dropdown.text;
   }
   post_title_dropdown.value = inPostID;
-  post_title_field.textContent = "";
-  if( inPostID != "-1" ) {
-    post_title_field.textContent = post_title_dropdown.text;
+  post_title_field.value = "";
+  if( inPostID != -1 ) {
+    post_title_field.value = post_title_dropdown.text;
   }
 
   const button_container = document.getElementById("button_container");
