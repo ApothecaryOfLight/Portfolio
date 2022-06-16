@@ -63,7 +63,7 @@ function replace_image_id_nulls( body_text, image_id_map ) {
     return body_reregexed;
 }
 
-async function add_blog_post( req, res, sqlPool ) {
+async function add_blog_post( req, res, sqlPool, inTimestamp ) {
     try {
         let new_blog_post_image_query = "";
 
@@ -103,7 +103,13 @@ async function add_blog_post( req, res, sqlPool ) {
 
 
         //Get the timestamp
-        const timestamp = error.get_timestamp();
+        let timestamp;
+        console.log( inTimestamp == null );
+        if( inTimestamp != null ) {
+            timestamp = inTimestamp;
+        } else {
+            timestamp = error.get_timestamp();
+        }
 
 
     
@@ -206,8 +212,17 @@ exports.attach_route_delete_post = attach_route_delete_post;
 
 function attach_route_edit_blog_post( app, sqlPool ) {
     app.post( '/edit_blog_post', async function(req,res) {
+        const get_timestamp_query =
+            "SELECT timestamp " +
+            "FROM blog_posts " +
+            "WHERE post_id = " + req.body.post_id + ";";
+        const [timestamp_row,timestamp_field] =
+            await sqlPool.query( get_timestamp_query );
+
+
+        
         await delete_blog_post( req.body.post_id, res, sqlPool );
-        add_blog_post( req, res, sqlPool );
+        add_blog_post( req, res, sqlPool, timestamp_row[0].timestamp );
     });
 }
 exports.attach_route_edit_blog_post = attach_route_edit_blog_post;

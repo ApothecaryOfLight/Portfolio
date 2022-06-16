@@ -33,7 +33,8 @@ const sqlPool = mysql.createPoolPromise({
   password: 'Portfolio_Password',
   database: 'Portfolio',
   connectionLimit: 50,
-  multipleStatements: true
+  multipleStatements: true,
+  dateStrings: true
 });
 
 /*Error Logging*/
