@@ -20,19 +20,19 @@ function recursively_traverse_tree( node, objectified_post, images_array ) {
       } else if( type == "IMG" ) {
         const image_id = node.getAttribute( "data-image_id" );
         const local_image_id = images_array.length;
-        const post_order = objectified_post.length;
+        const post_section = objectified_post.length;
         objectified_post.push({
             type: "image",
             image_id: image_id,
             local_image_id: local_image_id,
-            post_order: post_order
+            post_section: post_section
         });
 
         images_array[local_image_id] = {
           image_id: image_id,
           image_data: node.src,
           local_image_id: local_image_id,
-          post_order: post_order,
+          post_section: post_section,
           name: "image name",
           alt: "alt desc"
         }

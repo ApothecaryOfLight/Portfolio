@@ -88,12 +88,12 @@ async function add_blog_post( req, res, sqlPool, inTimestamp ) {
             image_id_map[ req.body.images[index].local_image_id ] = new_image_id;
 
             new_blog_post_image_query += "INSERT INTO blog_images " +
-                "( image_id, local_image_id, post_order, post_id, image_data ) " +
+                "( image_id, local_image_id, post_section, post_id, image_data ) " +
                 "VALUES " +
                 " ( " +
                 new_image_id + ", " +
                 req.body.images[index].local_image_id + ", " +
-                req.body.images[index].post_order + ", " +
+                req.body.images[index].post_section + ", " +
                 new_blog_post_id + ", " +
                 "\'" + req.body.images[index].image_data + "\' ); ";
         }
@@ -322,7 +322,7 @@ function attach_route_get_blog_post_post_id( app, sqlPool ) {
 
 
             const get_images = "SELECT " +
-                "image_id, local_image_id, post_order, image_data, alt_text, optional_link " +
+                "image_id, local_image_id, post_section, image_data, alt_text, optional_link " +
                 "FROM blog_images " +
                 "WHERE post_id = " + req.params.post_id + ";";
             const [images_row,images_field] = await sqlPool.query( get_images );
