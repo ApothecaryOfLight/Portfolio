@@ -56,6 +56,10 @@ function render_blog( recent_posts ) {
         image_container.appendChild( new_image );
 
         blog_post_container.appendChild( image_container );
+      } else if( section_reference.type == "code" ) {
+        const code_section = document.createElement("pre");
+        code_section.textContent = section_reference.content;
+        blog_post_container.appendChild( code_section );
       }
     }
 

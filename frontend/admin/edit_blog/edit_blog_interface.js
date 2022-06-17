@@ -126,6 +126,10 @@ function render_blog_post_body( body_string, images ) {
       new_image.classList = "emplaced_image";
       new_image.setAttribute( "data-image_id", images[section_reference.local_image_id].image_id );
       myInput.appendChild( new_image );
+    } else if( section_reference.type == "code" ) {
+      const code_section = document.createElement("pre");
+      code_section.textContent = section_reference.content;
+      myInput.appendChild( code_section );
     }
   }
 }

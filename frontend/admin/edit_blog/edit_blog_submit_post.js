@@ -10,13 +10,17 @@ function recursively_traverse_tree( node, objectified_post, images_array ) {
       const type = node.nodeName;
 
       if( type == "#text" || type == "DIV" ) {
-          if( node.textContent ) {
-              objectified_post.push({
-                  type: "text",
-                  content: node.textContent
-              });
+        if( node.textContent ) {
+          let node_type = "text";
+          if( node.parentElement.nodeName == "PRE" ) {
+            node_type = "code";
           }
-          return;
+          objectified_post.push({
+              type: node_type,
+              content: node.textContent
+          });
+        }
+        return;
       } else if( type == "IMG" ) {
         const image_id = node.getAttribute( "data-image_id" );
         const local_image_id = images_array.length;
