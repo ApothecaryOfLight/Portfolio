@@ -58,6 +58,7 @@ function render_blog( recent_posts ) {
         blog_post_container.appendChild( image_container );
       } else if( section_reference.type == "code" ) {
         const code_section = document.createElement("pre");
+        code_section.classList = "blog_post_code_section";
         code_section.textContent = section_reference.content;
         blog_post_container.appendChild( code_section );
       }
