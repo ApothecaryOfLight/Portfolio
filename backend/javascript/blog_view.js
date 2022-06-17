@@ -8,12 +8,12 @@ function attach_route_get_blog_page( app, sqlPool ) {
         try {
             //Get the 5 most recent posts
             const recent_posts = "SELECT " +
-            "title, timestamp, body, post_id " +
+            "title, timestamp, body, post_id, series_title " +
             "FROM blog_posts " +
             "ORDER BY timestamp DESC " +
             "LIMIT 5;";
             const [rec_row,rec_field] =
-            await sqlPool.query( recent_posts );
+                await sqlPool.query( recent_posts );
     
             //Get the images for the posts.
             const recent_post_ids = [];
