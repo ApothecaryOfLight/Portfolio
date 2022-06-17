@@ -61,6 +61,14 @@ function render_blog( recent_posts ) {
         code_section.classList = "blog_post_code_section";
         code_section.textContent = section_reference.content;
         blog_post_container.appendChild( code_section );
+
+        const copy_code_button = document.createElement("div");
+        copy_code_button.classList = "blog_post_code_section_copy_button";
+        copy_code_button.textContent = "Copy";
+        copy_code_button.onclick = () => {
+          navigator.clipboard.writeText( section_reference.content );
+        }
+        code_section.appendChild( copy_code_button );
       }
     }
 
