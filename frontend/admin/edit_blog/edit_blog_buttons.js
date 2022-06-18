@@ -31,6 +31,12 @@ const blog_edit_events = [
     event: "change",
     func: select_blog_series,
     func_ref: null
+  },
+  {
+    element_name: "add_code_block_button",
+    event: "click",
+    func: add_code_block,
+    func_ref: null
   }
 ];
   
@@ -76,4 +82,11 @@ function blog_interface_detach_events() {
       event_ref.func
     );
   }
+}
+
+function add_code_block() {
+  const code_block = document.createElement("pre");
+  const myInput = document.getElementById("myInput");
+  code_block.textContent = "Code Here";
+  myInput.appendChild( code_block );
 }
