@@ -8,17 +8,5 @@
     margin-top: 1rem; 
     margin-bottom: 1rem;
     width: 75%;
-    min-width: 500px;
-}
-
-@media (max-width: 500px) {
-    .blog_image {
-        width: 100vw;
-    }
-}
-
-@media (min-width: 1000px ) {
-    .blog_image {
-        width: 50%;
-    }
+    max-width: 50%;
 }
