@@ -23,6 +23,12 @@ function render_blog( recent_posts ) {
     blog_post_header_container.classList = "blog_post_header_container";
     blog_post_container.appendChild( blog_post_header_container );
 
+    //Create the timestamp of the blog post.
+    const blog_post_timestamp = document.createElement("div");
+    blog_post_timestamp.classList = "blog_post_timestamp";
+    blog_post_timestamp.textContent = post.timestamp;
+    blog_post_header_container.appendChild( blog_post_timestamp );
+
     //Create the series title element of the blog.
     const blog_post_series_title = document.createElement("div");
     blog_post_series_title.classList = "blog_post_series_title";

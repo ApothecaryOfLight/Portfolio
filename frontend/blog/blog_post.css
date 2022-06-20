@@ -21,7 +21,7 @@
     font-size: 3rem;
 }
 .blog_post_timestamp {
-
+    float: right;
 }
 .blog_post_tag_container {
 
