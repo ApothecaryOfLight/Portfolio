@@ -69,3 +69,15 @@
 
   padding-left: 3px;
 }
+
+.blog_post_code_section {
+  background-color:#faebd7;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 3px #F4D4AA solid;
+  white-space: break-spaces;
+  font-family: Monaco, monospace;
+}

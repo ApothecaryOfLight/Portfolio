@@ -88,5 +88,10 @@ function add_code_block() {
   const code_block = document.createElement("pre");
   const myInput = document.getElementById("myInput");
   code_block.textContent = "Code Here";
+  code_block.classList = "blog_post_code_section";
   myInput.appendChild( code_block );
+
+  const extra_div = document.createElement("div");
+  extra_div.textContent = "Text here";
+  myInput.appendChild( extra_div );
 }
