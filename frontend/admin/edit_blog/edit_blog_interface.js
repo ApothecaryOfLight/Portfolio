@@ -129,6 +129,7 @@ function render_blog_post_body( body_string, images ) {
     } else if( section_reference.type == "code" ) {
       const code_section = document.createElement("pre");
       code_section.textContent = section_reference.content;
+      code_section.classList = "blog_post_code_section";
       myInput.appendChild( code_section );
     }
   }
