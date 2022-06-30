@@ -11,6 +11,9 @@ image_data: The image data of all images.
 isDev: Boolean that will be used to distinguish between dev and prod project links.
 */
 function render_dynamic_portfolio( portfolioData, image_data, isDev ) {
+  const starburst_container = document.getElementById("starburst_container");
+  starburst_container.style["display"] = "none";
+
   //Create a string to store the projects as HTML.
   let dynamic_portfolio_string = "";
 

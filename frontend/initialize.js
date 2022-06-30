@@ -3,7 +3,10 @@ Event listener for the window to finish loading.
 
 Will launch the portfolio and load the menu buttons.
 */
-window.addEventListener( 'load', (click) => {
+window.addEventListener( 'load', (event) => {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
   window.scroll({ top: 0, behavior: 'smooth' });
   
   launch_portfolio();
@@ -29,4 +32,8 @@ window.addEventListener( 'load', (click) => {
   populate_menu_buttons( menu_buttons );
 
   attach_contact_me_listener();
+});
+
+window.addEventListener('beforeunload', (e) => {
+  window.scroll({ top: 0 });
 });

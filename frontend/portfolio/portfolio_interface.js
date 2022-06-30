@@ -11,10 +11,10 @@ function launch_portfolio() {
 
   //Hide the blog interface, show the portfolio interface.
   blog.style.display = "none";
-  portfolio.style.display = "block";
+  portfolio.style.display = "flex";
 
   //Get the portfolio from the server.
+  window.scroll({ top: 0, behavior: 'smooth' });
   get_dynamic_portfolio();
   
-  window.scroll({ top: 0, behavior: 'smooth' });
 }

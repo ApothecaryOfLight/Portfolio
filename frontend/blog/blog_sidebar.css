@@ -1,0 +1,44 @@
+#blog_sidebar_container {
+    position: fixed;
+    width: 0rem;
+    transition: width 3s;
+    align-self: flex-start;
+}
+
+#blog_sidebar_container_button_expand {
+    width: 2rem;
+    height: 2rem;
+    background-color: green;
+    right:0px;
+}
+
+#blog_sidebar_container_button_expand:hover {
+    background-color: turquoise;
+}
+
+#blog_sidebar_conatiner_button_collapse {
+    width: 2rem;
+    height: 2rem;
+    background-color: red;
+    display: none;
+}
+
+#blog_sidebar_conatiner_button_collapse {
+    background-color: purple;
+}
+
+.blog_sidebar_post_container {
+
+}
+
+.blog_sidebar_post_series {
+    
+}
+
+.blog_sidebar_post_title {
+
+}
+
+.blog_sidebar_post_teasertext {
+
+}

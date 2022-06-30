@@ -2,10 +2,8 @@
 
 
 function render_blog( recent_posts ) {
-  console.dir( recent_posts );
-
   //1) Get a reference to the loading graphic and hide it.
-  const starburst_ref = document.getElementById("blog_starburst_container");
+  const starburst_ref = document.getElementById("starburst_container");
   starburst_ref.style.display = "none";
 
   //2) Get a reference to the blog post container, where the blog posts will be rendered.
@@ -13,7 +11,6 @@ function render_blog( recent_posts ) {
 
   //3) Process each blog post.
   recent_posts.posts.forEach( (post) => {
-    console.dir( post );
     //Create a container for the blog post.
     const blog_post_container = document.createElement("div");
     blog_post_container.classList = "blog_post_container";
@@ -42,7 +39,7 @@ function render_blog( recent_posts ) {
     blog_post_header_container.appendChild( blog_post_title );
 
     const blog_post_object = JSON.parse( process_incoming_text( post.body ) );
-    console.dir( blog_post_object );
+    
     for( const key in blog_post_object ) {
       const section_reference = blog_post_object[key];
       if( section_reference.type == "text" ) {

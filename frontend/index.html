@@ -4,12 +4,12 @@
   <title>Abe's Portfolio</title>
 
   <!--My stylesheets."-->
+  <link rel="stylesheet" href="loading_animation/starburst.css"/>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="error/error_modal.css"/>
   <link rel="stylesheet" href="admin/admin_interface.css"/>
   <link rel="stylesheet" href="menu/menu.css"/>
   <link rel="stylesheet" href="contact_me/contact_me.css"/>
-  <link rel="stylesheet" href="loading_animation/starburst.css"/>
 
   <!--Portfolio stylesheets-->
   <link rel="stylesheet" href="portfolio/portfolio_interface.css"/>
@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="blog/blog_post.css"/>
   <link rel="stylesheet" href="blog/blog_pagination.css"/>
   <link rel="stylesheet" href="blog/blog_images.css"/>
+  <link rel="stylesheet" href="blog/blog_sidebar.css"/>
 
   <!--Dynamic IP file.-->
   <script src="ip_file.js"></script>
@@ -70,69 +71,6 @@
   <div id="contact_me_button" class="menu_button">Contact Me</div>
 </div>
 
-<div id="blog_interface">
-  <div id="blog_interface_recent_post_container">
-    <div id="blog_starburst_container" class="starburst_container">
-      <div id="forward">
-        <div id="starburst_1">
-          <div class="ball_top"></div>
-          <div class="ball_bottom"></div>
-          <div class="arrow top"></div>
-          <div class="arrow bottom"></div>
-        </div>
-        <div id="starburst_2">
-          <div class="ball_top"></div>
-          <div class="ball_bottom"></div>
-          <div class="arrow top"></div>
-          <div class="arrow bottom"></div>
-        </div>
-        <div id="starburst_3">
-          <div class="ball_top"></div>
-          <div class="ball_bottom"></div>
-          <div class="arrow top"></div>
-          <div class="arrow bottom"></div>
-        </div>
-      </div>
-
-    <div id="backward">
-      <div id="starburst_min_1">
-        <div class="ball_top_min"></div>
-        <div class="ball_bottom_min"></div>
-        <div class="arrow_min top_min"></div>
-        <div class="arrow_min bottom_min"></div>
-      </div>
-      <div id="starburst_min_2">
-        <div class="ball_top_min"></div>
-        <div class="ball_bottom_min"></div>
-        <div class="arrow_min top_min"></div>
-        <div class="arrow_min bottom_min"></div>
-      </div>
-      <div id="starburst_min_3">
-        <div class="ball_top_min"></div>
-        <div class="ball_bottom_min"></div>
-        <div class="arrow_min top_min"></div>
-        <div class="arrow_min bottom_min"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  </div>
-  <div id="blog_interface_pagination_container"></div>
-  <div id="blog_interface_root_post_container"></div>
-</div>
-
-
-<div id="portfolio_interface">
-<div id="info">
-  <div id="bio">
-    <p>Hi! My name is Abe and I'm starting my career in web development. I'm self taught and a hard worker. I love making solutions and learning!</p>
-    <p>I'm currently most comfortable with HTML/CSS/Javascript for frontend and NodeJS/MySQL for backend, but I am dedicated to learning new tools to expand my skillset.</p>
-    <p>Check out my work below!</p>
-  </div>
-</div>
-
-<div id="dynamic_project_container">
 <div id="starburst_container" class="starburst_container">
   <div id="forward">
     <div id="starburst_1">
@@ -176,29 +114,57 @@
     </div>
   </div>
 </div>
+
+
+<div id="blog_interface">
+  <div id="blog_sidebar_container">
+    <div id="blog_sidebar_container_button_expand">
+      ->
+    </div>
+  </div>      
+  <div id="blog_interface_recent_post_container"></div>
 </div>
 
-<div id="contact_me">
-  <div id="contact_me_title">
-    Contact me!<br>
   </div>
-  Name:<br>
-  <input id="name" type="text" class="single_line_input" placeholder="Name"/><br>
-
-  Organization:<br>
-  <input id="org" type="text" class="single_line_input" placeholder="Organization"/><br>
-
-  Phone:<br>
-  <input id="phone" type="text" class="single_line_input" placeholder="Phone #"/><br>
-
-  Email:<br>
-  <input id="email" type="text" class="single_line_input" placeholder="Email"/><br>
-
-  Message:<br>
-  <textarea id="msg" class="multi_line_input" placeholder="Message here"/></textarea><br>
-
-  <button id="submit_contact_me">Send Message!</button>
+  <div id="blog_interface_pagination_container"></div>
+  <div id="blog_interface_root_post_container"></div>
 </div>
+
+
+<div id="portfolio_interface">
+
+
+  <div id="info">
+    <div id="bio">
+      <p>Hi! My name is Abe and I'm starting my career in web development. I'm self taught and a hard worker. I love making solutions and learning!</p>
+      <p>I'm currently most comfortable with HTML/CSS/Javascript for frontend and NodeJS/MySQL for backend, but I am dedicated to learning new tools to expand my skillset.</p>
+      <p>Check out my work below!</p>
+    </div>
+  </div>
+
+  <div id="dynamic_project_container"></div>
+
+  <div id="contact_me">
+    <div id="contact_me_title">
+      Contact me!<br>
+    </div>
+    Name:<br>
+    <input id="name" type="text" class="single_line_input" placeholder="Name"/><br>
+
+    Organization:<br>
+    <input id="org" type="text" class="single_line_input" placeholder="Organization"/><br>
+
+    Phone:<br>
+    <input id="phone" type="text" class="single_line_input" placeholder="Phone #"/><br>
+
+    Email:<br>
+    <input id="email" type="text" class="single_line_input" placeholder="Email"/><br>
+
+    Message:<br>
+    <textarea id="msg" class="multi_line_input" placeholder="Message here"/></textarea><br>
+
+    <button id="submit_contact_me">Send Message!</button>
+  </div>
 </div>
 
 </body>
