@@ -18,7 +18,7 @@ function launch_blog() {
   const starburst_ref = document.getElementById("starburst_container");
   starburst_ref.style.display = "flex";
 
-  //attach_sidebar_events();
+  attach_sidebar_events();
 
   //Request the first blog page from the server.
   get_blog_page( 1 );

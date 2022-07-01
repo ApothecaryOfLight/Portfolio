@@ -1,8 +1,13 @@
 #blog_sidebar_container {
     position: fixed;
     width: 0rem;
-    transition: width 3s;
+    transition: width 1s;
     align-self: flex-start;
+    background: purple;
+    height: 80vh;
+
+    border-radius: 0 2rem 2rem 0;
+    border: solid 0.15rem;
 }
 
 #blog_sidebar_container_button_expand {
@@ -10,21 +15,24 @@
     height: 2rem;
     background-color: green;
     right:0px;
+    border-radius: 0 2rem 2rem 0;
 }
 
 #blog_sidebar_container_button_expand:hover {
     background-color: turquoise;
 }
 
-#blog_sidebar_conatiner_button_collapse {
+#blog_sidebar_container_button_collapse {
     width: 2rem;
     height: 2rem;
     background-color: red;
     display: none;
+    float: right;
+    border-radius: 0 2rem 0 1rem;
 }
 
-#blog_sidebar_conatiner_button_collapse {
-    background-color: purple;
+#blog_sidebar_container_button_collapse:hover {
+    background-color: blue;
 }
 
 .blog_sidebar_post_container {
