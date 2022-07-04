@@ -35,18 +35,19 @@ function render_blog_pagination( inPostCount ) {
     document.getElementById("blog_interface_pagination_container");
 
   //Calculate the number of pages that should be available.
-  const page_count = Math.ceil( (inPostCount - 5)/8 );
+  const page_count = Math.ceil( (inPostCount/5) );
 
-  //Create a string to store the HTML of the page buttons.
-  let page_buttons = "";
-
-  //Create a page button for each page that should be available.
-  for( const i=1; i<=page_count; i++ ) {
-    page_buttons += "<div class=\'page_button\'>" +
-      i + "</div>";
+  //Remove existing page buttons, if any.
+  while( blog_pagination_container.firstChild ) {
+    blog_pagination_container.firstChild.remove();
   }
 
-  //Set the page button container's contents to the page buttons we string-bashed
-  //together.
-  blog_pagination_container.innerHTML = page_buttons;
+  //Create a page button for each page that should be available.
+  for( let i=1; i<=page_count; i++ ) {
+    const new_page_button = document.createElement("div");
+    new_page_button.classList = "page_button";
+    new_page_button.textContent = i;
+    new_page_button.onclick = get_blog_page.bind( null, i );
+    blog_pagination_container.appendChild( new_page_button );
+  }
 }

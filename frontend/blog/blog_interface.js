@@ -22,5 +22,5 @@ function launch_blog() {
 
   //Request the first blog page from the server.
   get_blog_page( 1 );
-
+  get_blog_page_count();
 }

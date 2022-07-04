@@ -65,6 +65,8 @@ admin.attach_route_get_errors( app );
 
 blog_view.attach_route_get_blog_page( app, sqlPool );
 blog_view.attach_route_page_count( app, sqlPool );
+blog_view.attach_route_get_blog_posts_by_series( app, sqlPool );
+blog_view.attach_route_get_blog_post_by_id( app, sqlPool );
 
 blog_edit.attach_route_new_blog_post( app, sqlPool );
 blog_edit.attach_route_delete_post( app, sqlPool );

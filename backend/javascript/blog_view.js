@@ -8,10 +8,10 @@ function attach_route_get_blog_page( app, sqlPool ) {
         try {
             //Get the 5 most recent posts
             const recent_posts = "SELECT " +
-            "title, timestamp, body, post_id, series_title " +
+            "title, timestamp, body, post_id, series_title, series_id " +
             "FROM blog_posts " +
             "ORDER BY timestamp DESC " +
-            "LIMIT 5;";
+            "LIMIT " + (req.params.page-1)*5 + ",5;";
             const [rec_row,rec_field] =
                 await sqlPool.query( recent_posts );
     
@@ -84,3 +84,88 @@ function attach_route_page_count( app, sqlPool ) {
     });
 }
 exports.attach_route_page_count = attach_route_page_count;
+
+
+
+function attach_route_get_blog_posts_by_series( app, sqlPool ) {
+    app.post( '/get_blog_series', async function(req,res) {
+        try {
+            //Get a list of posts within that series.
+            const blog_post_titles_by_series = "SELECT " +
+            "title, post_id, series_title, series_id " +
+            "FROM blog_posts " +
+            "WHERE series_id = " + req.body.series_id + " " +
+            "ORDER BY timestamp DESC ";
+            const [rec_row,rec_field] =
+                await sqlPool.query( blog_post_titles_by_series );
+
+    
+            //Package them up.
+            const blog_posts_obj = {
+                "series": rec_row
+            };
+    
+            //Send them to client.
+            res.send( JSON.stringify({
+                "result": "success",
+                "posts_by_series": blog_posts_obj
+            }));
+        } catch( error_obj ) {
+            await error.log(
+                "blog_view.js::attach_route_get_blog_posts_by_series",
+                error_obj
+            );
+            res.send( JSON.stringify({
+                "result": "failure",
+                "reason": error_obj
+            }));
+        }
+    });
+}
+exports.attach_route_get_blog_posts_by_series = attach_route_get_blog_posts_by_series;
+
+
+function attach_route_get_blog_post_by_id( app, sqlPool ) {
+    app.get( '/get_blog_post_by_id/:post_id', async function(req,res) {
+        try {
+            //Get a list of posts within that series.
+            const blog_post_titles_by_series = "SELECT " +
+            "title, timestamp, body, post_id, series_title, series_id " +
+            "FROM blog_posts " +
+            "WHERE post_id = " + req.params.post_id + ";";
+            const [rec_row,rec_field] =
+                await sqlPool.query( blog_post_titles_by_series );
+
+            const recent_post_images_query = "SELECT " +
+                "image_id, image_data, post_id, alt_text, optional_link, local_image_id, post_section " +
+                "FROM blog_images " +
+                "WHERE post_id = " +
+                req.params.post_id + ";";
+            const [recent_images_row,recent_images_fields] =
+                await sqlPool.query( recent_post_images_query );
+
+    
+            //Package them up.
+            const blog_posts_obj = {
+                "blog_post": rec_row,
+                "blog_post_images": recent_images_row
+            };
+    
+            //Send them to client.
+            res.send( JSON.stringify({
+                "result": "success",
+                "posts_by_series": blog_posts_obj
+            }));
+        } catch( error_obj ) {
+            await error.log(
+                "blog_view.js::attach_route_get_blog_post_by_id",
+                error_obj
+            );
+            res.send( JSON.stringify({
+                "result": "failure",
+                "reason": error_obj
+            }));
+        }
+    });
+}
+exports.attach_route_get_blog_post_by_id = attach_route_get_blog_post_by_id;

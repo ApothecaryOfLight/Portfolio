@@ -50,3 +50,16 @@
 .blog_sidebar_post_teasertext {
 
 }
+
+
+#blog_sidebar_container_posts {
+    display: none;
+    width: 15rem;
+    overflow-x: hidden;
+}
+.sidebar_series_title_header {
+
+}
+.sidebar_post_title {
+
+}

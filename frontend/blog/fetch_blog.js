@@ -23,3 +23,24 @@ async function get_blog_page( inPage ) {
       }
     });
 }
+
+
+async function get_blog_post_by_id( inPostID ) {
+  //Request a specific blog page from the server.
+  const get_blog_request = new Request(
+    ip + 'get_blog_post_by_id/' + inPostID );
+  fetch( get_blog_request )
+    .then( response => response.json() )
+    .then( json => {
+      if( json.result == "success" ) {
+        //Render this page.
+        clear_blog();
+        render_blog_post( json.posts_by_series.blog_post[0], json.posts_by_series.blog_post_images );
+        blog_sidebar_collapse_button();
+      } else {
+        //Otherwise, log an error.
+        console.log( "ERROR" );
+        console.log( json.reason );
+      }
+    });
+}
