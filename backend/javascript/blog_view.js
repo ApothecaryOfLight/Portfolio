@@ -169,3 +169,35 @@ function attach_route_get_blog_post_by_id( app, sqlPool ) {
     });
 }
 exports.attach_route_get_blog_post_by_id = attach_route_get_blog_post_by_id;
+
+
+
+
+function attach_route_get_blog_series_all( app, sqlPool ) {
+    app.get( '/get_blog_series_all', async function(req,res) {
+        try {
+            //Get a list of all series, without duplicates.
+            const blog_series_query = "SELECT DISTINCT " +
+            "series_id, series_title " +
+            "FROM blog_posts;";
+            const [rec_row,rec_field] =
+                await sqlPool.query( blog_series_query );
+    
+            //Send them to client.
+            res.send( JSON.stringify({
+                result: "success",
+                series_list: rec_row
+            }));
+        } catch( error_obj ) {
+            await error.log(
+                "blog_view.js::attach_route_get_blog_series_all",
+                error_obj
+            );
+            res.send( JSON.stringify({
+                "result": "failure",
+                "reason": error_obj
+            }));
+        }
+    });
+}
+exports.attach_route_get_blog_series_all = attach_route_get_blog_series_all;

@@ -22,7 +22,15 @@ async function get_blog_page_count() {
       }
     });
   }
-  
+
+
+function clear_blog_pagination() {
+  const blog_pagination_container = document.getElementById("blog_interface_pagination_container");
+  //Remove existing page buttons, if any.
+  while( blog_pagination_container.firstChild ) {
+    blog_pagination_container.firstChild.remove();
+  }
+}
   
 /*
 Function to render the blog page buttons.
@@ -31,16 +39,12 @@ inPostCount: Number of blog posts.
 */
 function render_blog_pagination( inPostCount ) {
   //Get a reference to the blog page button container.
-  const blog_pagination_container =
-    document.getElementById("blog_interface_pagination_container");
+  const blog_pagination_container = document.getElementById("blog_interface_pagination_container");
 
   //Calculate the number of pages that should be available.
   const page_count = Math.ceil( (inPostCount/5) );
 
-  //Remove existing page buttons, if any.
-  while( blog_pagination_container.firstChild ) {
-    blog_pagination_container.firstChild.remove();
-  }
+  clear_blog_pagination();
 
   //Create a page button for each page that should be available.
   for( let i=1; i<=page_count; i++ ) {
