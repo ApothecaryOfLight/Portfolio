@@ -39,6 +39,7 @@ async function get_blog_post_by_id( inPostID ) {
         clear_blog_pagination();
         render_blog_post( json.posts_by_series.blog_post[0], json.posts_by_series.blog_post_images );
         blog_sidebar_collapse_button();
+        window.scroll({ top: 0, behavior: 'smooth' });
       } else {
         //Otherwise, log an error.
         console.log( "ERROR" );
