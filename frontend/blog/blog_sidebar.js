@@ -112,6 +112,11 @@ function render_blog_sidebar_series_list( inSeriesList ) {
         blog_sidebar_container_posts.firstChild.remove();
     }
 
+    const series_title_header = document.createElement("div");
+    series_title_header.innerText = "All Series";
+    series_title_header.classList = "sidebar_all_series_title_header";
+    blog_sidebar_container_posts.appendChild( series_title_header );
+
     inSeriesList.forEach( (series) => {
         const series_title = document.createElement("div");
         series_title.innerText = series.series_title;

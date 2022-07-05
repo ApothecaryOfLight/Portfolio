@@ -73,12 +73,22 @@
     display: block;
     width: 15rem;
     overflow-x: hidden;
+    padding-left: .5rem;
 }
 .sidebar_series_title_header {
     font-weight: bold;
     padding-bottom: 1rem;
     text-decoration: underline;
-    width: 15rem;
+    width: 13.5rem;
+    text-align: center;
+}
+.sidebar_all_series_title_header {
+    font-weight: bold;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    text-decoration: underline;
+    width: 13.5rem;
+    text-align: center;
 }
 .sidebar_post_title {
 
