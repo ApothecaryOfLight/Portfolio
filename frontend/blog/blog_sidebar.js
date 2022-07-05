@@ -14,6 +14,20 @@ function attach_sidebar_events() {
     get_series_list();
 }
 
+function detach_sidebar_events() {
+    const sidebar_button_expand_ref = document.getElementById("blog_sidebar_container_button_expand");
+    sidebar_button_expand_ref.removeEventListener('click',blog_sidebar_expand_button);
+    
+    const sidebar_button_collapse_ref = document.getElementById("blog_sidebar_container_button_collapse");
+    sidebar_button_collapse_ref.removeEventListener('click',blog_sidebar_collapse_button);
+    
+    const blog_sidebar_container_back_to_series_button = document.getElementById("blog_sidebar_container_back_to_series_button");
+    blog_sidebar_container_back_to_series_button.removeEventListener('click',get_series_list);
+
+    const blog_sidebar_container = document.getElementById("blog_sidebar_container");
+    blog_sidebar_container.ontransitionend = null;
+}
+
 function blog_sidebar_transitionend( transitionEvent ) {
     const blog_sidebar_ref = document.getElementById("blog_sidebar_container");
     if( transitionEvent.target.style["width"] == "0rem" ) {

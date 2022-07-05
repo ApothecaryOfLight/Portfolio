@@ -103,6 +103,8 @@ function hide_menu() {
 Menu button function to scroll to the contact me element.
 */
 function scroll_to_contact_me() {
+  detach_sidebar_events();
+
   //Ensure that the portfolio interface is displayed.
   launch_portfolio();
 

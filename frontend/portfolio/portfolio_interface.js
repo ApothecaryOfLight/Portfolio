@@ -5,6 +5,8 @@
 Function to launch the portfolio.
 */
 function launch_portfolio() {
+  detach_sidebar_events();
+  
   //Get references to the portfolio and blog interfaces.
   const portfolio = document.getElementById("portfolio_interface");
   const blog = document.getElementById("blog_interface");
