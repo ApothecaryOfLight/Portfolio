@@ -36,6 +36,7 @@ async function get_blog_post_by_id( inPostID ) {
       if( json.result == "success" ) {
         //Render this page.
         clear_blog();
+        clear_blog_pagination();
         render_blog_post( json.posts_by_series.blog_post[0], json.posts_by_series.blog_post_images );
         blog_sidebar_collapse_button();
       } else {
