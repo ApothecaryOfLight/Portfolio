@@ -35,7 +35,7 @@ function blog_sidebar_expand_button() {
     blog_sidebar_container_button_expand.style["display"] = "none";
     
     const blog_sidebar_container_button_collapse = document.getElementById("blog_sidebar_container_button_collapse");
-    blog_sidebar_container_button_collapse.style["display"] = "block";
+    blog_sidebar_container_button_collapse.style["display"] = "flex";
 }
 
 function blog_sidebar_collapse_button() {
@@ -43,7 +43,7 @@ function blog_sidebar_collapse_button() {
     blog_sidebar_ref.style["width"] = "0rem";
 
     const blog_sidebar_container_button_expand = document.getElementById("blog_sidebar_container_button_expand");
-    blog_sidebar_container_button_expand.style["display"] = "block";
+    blog_sidebar_container_button_expand.style["display"] = "flex";
     
     const blog_sidebar_container_button_collapse = document.getElementById("blog_sidebar_container_button_collapse");
     blog_sidebar_container_button_collapse.style["display"] = "none";

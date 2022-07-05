@@ -26,6 +26,8 @@
 
     z-index: 1;
     position: absolute;
+    display: flex;
+    align-items: center;
 }
 
 #blog_sidebar_container_button_expand:hover {
@@ -36,6 +38,7 @@
     width: 2rem;
     height: 2rem;
     display: none;
+    align-items: center;
     float: right;
     top: -2px;
     right: -3px;
