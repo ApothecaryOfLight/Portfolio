@@ -62,3 +62,10 @@
     background-color:lightblue;
     transition: background-color 1s;
 }
+
+.hover_highlight {
+    transition: color 1s;
+}
+.hover_highlight:hover {
+    color: cadetblue;
+}

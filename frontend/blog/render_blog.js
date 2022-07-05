@@ -20,7 +20,7 @@ function render_blog_post( post, images ) {
 
    //Create the series title element of the blog.
    const blog_post_series_title = document.createElement("div");
-   blog_post_series_title.classList = "blog_post_series_title";
+   blog_post_series_title.classList = "blog_post_series_title hover_highlight";
    blog_post_series_title.textContent = post.series_title + ":";
    blog_post_series_title.onclick = blog_sidebar_fetch_posts_by_series.bind( null, post.series_id );
    blog_post_header_container.appendChild( blog_post_series_title );
