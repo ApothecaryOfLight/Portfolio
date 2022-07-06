@@ -59,10 +59,8 @@ function process_incoming_text( inText ) {
 }
 
 function process_timestamp( inTimestampString ) {
-  console.log( "IN: " + inTimestampString );
   const timestamp = new Date(inTimestampString);
   timestamp.setHours( timestamp.getHours() - 8 );
-  console.log( "PROC: " + timestamp );
   const timezoned_string = timestamp.toISOString().replace( "T", " " ).substring(0,19);
   const stamp_split = timezoned_string.split(" ");
   const time_split = stamp_split[1].split(":");
@@ -77,6 +75,5 @@ function process_timestamp( inTimestampString ) {
   } else if( hour == 12 ) {
     suffix = " PM";
   }
-  console.log( stamp_split[0] + " " + hour + ":" + time_split[1] + suffix );
   return stamp_split[0] + " " + hour + ":" + time_split[1] + suffix;
 }
