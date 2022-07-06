@@ -15,7 +15,7 @@ function render_blog_post( post, images ) {
    //Create the timestamp of the blog post.
    const blog_post_timestamp = document.createElement("div");
    blog_post_timestamp.classList = "blog_post_timestamp";
-   blog_post_timestamp.textContent = post.timestamp;
+   blog_post_timestamp.textContent = process_timestamp(post.timestamp);
    blog_post_header_container.appendChild( blog_post_timestamp );
 
    //Create the series title element of the blog.
