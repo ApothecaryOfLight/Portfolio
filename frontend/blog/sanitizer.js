@@ -59,10 +59,11 @@ function process_incoming_text( inText ) {
 }
 
 function process_timestamp( inTimestampString ) {
-  const timestamp = new Date(inTimestampString);
-  timestamp.setHours( timestamp.getHours() - 8 );
-  const timezoned_string = timestamp.toISOString().replace( "T", " " ).substring(0,19);
-  const stamp_split = timezoned_string.split(" ");
+  const formatted_string = inTimestampString.replace(" ","T") + ".000Z";
+  const timestamp = new Date(formatted_string);
+  timestamp.setHours( timestamp.getHours() - 4 );
+  const timezoned_string = timestamp.toISOString().substring(0,16);
+  const stamp_split = timezoned_string.split("T");
   const time_split = stamp_split[1].split(":");
   let hour = time_split[0];
   if( hour.startsWith("0") ) {
